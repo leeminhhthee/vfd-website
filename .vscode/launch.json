@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dev Debug",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "skipFiles": ["<node_internals>/**"],
+      "preLaunchTask": "Check and Install Dependencies",
+      "outputCapture": "std", 
+      "console": "internalConsole", 
+    }
+  ]
+}

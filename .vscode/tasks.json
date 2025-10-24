@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Check and Install Dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "problemMatcher": [],
+      "detail": "Check and install missing packages"
+    },
+    {
+      "label": "Run Next.js Dev Server",
+      "type": "shell",
+      "command": "npm run dev",
+      "dependsOn": ["Check and Install Dependencies"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Generate i18n JSON",
+      "type": "shell",
+      "command": "npm run generate:i18n",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+  ]
+}
