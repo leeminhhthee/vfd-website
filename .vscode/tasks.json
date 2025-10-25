@@ -6,7 +6,6 @@
       "type": "shell",
       "command": "npm install",
       "problemMatcher": [],
-      "detail": "Check and install missing packages"
     },
     {
       "label": "Run Next.js Dev Server",
@@ -19,7 +18,7 @@
       }
     },
     {
-      "label": "Generate i18n JSON",
+      "label": "dev generate: generate_localizations",
       "type": "shell",
       "command": "npm run generate:i18n",
       "group": "none",
@@ -30,6 +29,12 @@
         "clear": false
       },
       "problemMatcher": []
+    },
+    {
+      "label": "dev generate: generate_assets",
+      "type": "shell",
+      "command": "npm run gen:assets",
+      "problemMatcher": [],
     },
   ]
 }

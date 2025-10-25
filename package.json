@@ -2,12 +2,14 @@
   "name": "vfd-website",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate:i18n": "node i18n/generate-locales.js"
+    "generate:i18n": "node scripts/generate-locales.js",
+    "gen:assets": "node scripts/genAssets.js"
   },
   "dependencies": {
     "csv-parse": "^6.1.0",
