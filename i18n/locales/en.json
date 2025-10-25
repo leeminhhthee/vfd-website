@@ -1,5 +1,8 @@
 {
   "home": "Home",
   "news": "News",
+  "photo": "Photo",
+  "project": "Project",
+  "introduction": "Introduction",
   "welcome": "Welcome to our website"
 }

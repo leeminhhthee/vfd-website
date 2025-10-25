@@ -21,8 +21,8 @@ const localesDir = "./i18n/locales";
     await fs.writeJSON(`${localesDir}/vi.json`, vi, { spaces: 2 });
     await fs.writeJSON(`${localesDir}/en.json`, en, { spaces: 2 });
 
-    console.log("✅ Generated vi.json and en.json successfully!");
+    console.log("Generated vi.json and en.json successfully!");
   } catch (err) {
-    console.error("❌ Error generating locales:", err);
+    console.error("Error generating locales:", err);
   }
 })();
