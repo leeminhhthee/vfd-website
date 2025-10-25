@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { trans, setLanguage } from "./generated/AppLocalization";
+import { trans } from "./generated/AppLocalization";
 import { ASSETS } from "./generated/assets";
 
 export default function Home() {

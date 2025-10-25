@@ -32,7 +32,7 @@ if (!fs.existsSync(assetsRoot)) {
 console.log("Scanning public/assets...");
 const assets = scanDir(assetsRoot);
 
-// Tạo thư mục đích nếu chưa có
+// Create output directory if it doesn't exist
 fs.mkdirSync(path.dirname(outputFile), { recursive: true });
 
 const content =
