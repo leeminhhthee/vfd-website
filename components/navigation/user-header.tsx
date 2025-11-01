@@ -18,7 +18,7 @@ export default function UserHeader() {
     { label: trans.news, href: "/news" },
     { label: trans.resources, href: "/documents" },
     { label: trans.scheduleAndResults, href: "/schedule" },
-    { label: trans.photo, href: "#" },
+    { label: trans.photo, href: "/gallery" },
     { label: trans.project, href: "/projects" },
     { label: trans.introduction, href: "/about" },
   ];
