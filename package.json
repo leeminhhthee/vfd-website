@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "generate:i18n": "node scripts/generate-locales.js",
-    "gen:assets": "node scripts/genAssets.js"
+    "gen:assets": "node scripts/genAssets.js",
+    "gen:datasource": "node scripts/genDatasource.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
