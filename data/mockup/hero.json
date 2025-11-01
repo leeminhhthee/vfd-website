@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761996319/hero1_wdzew9.jpg",
+    "title": "Liên đoàn bóng chuyền Đà Nẵng",
+    "subtitle":
+      "Nơi phát triển tài năng, tổ chức các giải đấu chuyên nghiệp và nâng cao trình độ bóng chuyền tại Đà Nẵng.",
+    "buttonText": "Đăng ký thành viên",
+    "buttonHref": "/membership",
+    "buttonText2": "Giới thiệu",
+    "buttonHref2": "/about"
+  },
+  {
+    "id": 2,
+    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero3_h8kkox.jpg",
+    "title": "Kết nối – Rèn luyện – Vươn tầm",
+    "subtitle":
+      "Cùng nhau xây dựng cộng đồng bóng chuyền Đà Nẵng vững mạnh và chuyên nghiệp. Tham gia ngay!",
+    "buttonText": "Xem lịch thi đấu",
+    "buttonHref": "/schedule"
+  },
+  {
+    "id": 3,
+    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero2_rychsd.jpg",
+    "title": "Tham gia cộng đồng thành viên",
+    "subtitle":
+      "Đăng ký thành viên để nhận tin tức, tham gia sự kiện và phát triển cùng chúng tôi!",
+    "buttonText": "Đăng ký ngay",
+    "buttonHref": "/membership"
+  },
+  {
+    "id": 4,
+    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero4_nbb3fx.jpg",
+    "title": "Giải bóng chuyền sinh viên đại học, cao đẳng",
+    "subtitle":
+      "Trải nghiệm không khí thi đấu sôi động và gắn kết cộng đồng! Đừng bỏ lỡ!",
+    "buttonText": "Đăng ký giải đấu",
+    "buttonHref": "/register"
+  }
+]

@@ -2,16 +2,10 @@
 
 import Image from "next/image"
 import Link from "next/link"
-
-interface GalleryImage {
-  id: number
-  category: string
-  image: string
-  title: string
-}
+import { GalleryAlbum } from "@/data/model/gallery.model"
 
 interface GalleryGridProps {
-  images: GalleryImage[]
+  images: GalleryAlbum[]
 }
 
 export default function GalleryGrid({ images }: GalleryGridProps) {
@@ -36,7 +30,7 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
             <Link href={`/gallery/${image.id}`} className="block cursor-pointer">
               <div className="relative w-full h-64 bg-gray-200 overflow-hidden">
                 <Image
-                  src={image.image || "/placeholder.svg?height=256&width=256"}
+                  src={image.images[0] || "/placeholder.svg?height=256&width=256"}
                   alt={image.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

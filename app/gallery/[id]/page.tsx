@@ -4,15 +4,35 @@ import { useParams } from "next/navigation"
 import UserLayout from "@/components/layouts/user-layout"
 import GalleryDetailSlider from "@/components/pages/gallery/gallery-detail-slider"
 import GalleryRelatedAlbums from "@/components/pages/gallery/gallery-related-albums"
-import { getGalleryItem, getRelatedAlbums } from "@/lib/gallery-utils"
+import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor"
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 
 export default function GalleryDetailPage() {
   const params = useParams()
   const id = (params?.id as string) ?? ""
 
-  const album = id ? getGalleryItem(id) : undefined
-  const relatedAlbums = id ? getRelatedAlbums(Number.parseInt(id, 10), 4) : []
+  const { data: album, isLoading: isLoadingAlbum } = useQuery({
+    queryKey: ["gallery", id],
+    queryFn: () => galleryInteractor.getGalleryById(id),
+    enabled: !!id,
+  })
+
+  const { data: relatedAlbums = [] } = useQuery({
+    queryKey: ["relatedAlbums", id],
+    queryFn: () => galleryInteractor.getRelatedAlbums(Number.parseInt(id, 10), 4),
+    enabled: !!id && !!album,
+  })
+
+  if (isLoadingAlbum) {
+    return (
+      <UserLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-lg text-gray-500">Đang tải...</p>
+        </div>
+      </UserLayout>
+    )
+  }
 
   if (!album) {
     return (
@@ -44,7 +64,7 @@ export default function GalleryDetailPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-primary mb-12">{album.title}</h1>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <GalleryDetailSlider images={album.images || [album.image]} title={album.title} />
+              <GalleryDetailSlider images={album.images} title={album.title} />
             </div>
             <div>
               <GalleryRelatedAlbums albums={relatedAlbums} />

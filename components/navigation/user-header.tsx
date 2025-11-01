@@ -1,25 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Menu, X, Search } from "lucide-react"
-import { usePathname } from "next/navigation"
-import clsx from "clsx"
+import { trans } from "@/app/generated/AppLocalization";
+import { ASSETS } from "@/app/generated/assets";
+import clsx from "clsx";
+import { Menu, Search, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function UserHeader() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navItems = [
-    { label: "Trang chủ", href: "/" },
-    { label: "Tin tức", href: "/news" },
-    { label: "Tài liệu", href: "/documents" },
-    { label: "Lịch thi đấu - Kết quả", href: "/schedule" },
-    { label: "Photo", href: "/gallery" },
-    { label: "Dự án", href: "/projects" },
-    { label: "Giới thiệu", href: "/about" },
-  ]
+    { label: trans.home, href: "/" },
+    { label: trans.news, href: "/news" },
+    { label: trans.resources, href: "/documents" },
+    { label: trans.scheduleAndResults, href: "/schedule" },
+    { label: trans.photo, href: "/gallery" },
+    { label: trans.project, href: "/projects" },
+    { label: trans.introduction, href: "/about" },
+  ];
 
   return (
     <header className="bg-primary text-white sticky top-0 z-50 shadow-md transition-all">
@@ -27,8 +29,8 @@ export default function UserHeader() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-3 font-bold text-xl">
             <Image
-              src="/logo-vfd-full.png"
-              alt="Liên đoàn Bóng chuyền TP Đà Nẵng"
+              src={ASSETS.logo.vfd_logo_text}
+              alt={trans.volleyFederDN}
               width={120}
               height={60}
               className="h-12 w-auto"
@@ -42,8 +44,9 @@ export default function UserHeader() {
                 key={item.href}
                 href={item.href}
                 className={clsx(
-                  "px-2 py-1 transition-colors duration-200 hover:text-orange-600",
-                  pathname === item.href && "text-orange-600 border-b-2 border-orange-600"
+                  "px-2 py-1 transition-colors duration-200 hover:text-yellow-400",
+                  pathname === item.href &&
+                    "text-yellow-400 border-b-2 border-yellow-400"
                 )}
               >
                 {item.label}
@@ -53,7 +56,10 @@ export default function UserHeader() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-4">
-            <Link href="/search" className="p-2 hover:bg-primary-light rounded-lg transition-colors">
+            <Link
+              href="/search"
+              className="p-2 hover:bg-primary-light rounded-lg transition-colors"
+            >
               <Search size={20} />
             </Link>
 
@@ -75,8 +81,8 @@ export default function UserHeader() {
                 key={item.href}
                 href={item.href}
                 className={clsx(
-                  "block px-4 py-2 rounded-lg transition-colors hover:bg-gray-100",
-                  pathname === item.href && "text-orange-600 bg-gray-50"
+                  "block px-4 py-2 rounded-lg transition-colors hover:bg-gray-100 hover:text-yellow-400",
+                  pathname === item.href && "text-yellow-400 bg-gray-50"
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -87,5 +93,5 @@ export default function UserHeader() {
         )}
       </div>
     </header>
-  )
+  );
 }
