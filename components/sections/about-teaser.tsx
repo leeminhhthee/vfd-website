@@ -25,12 +25,10 @@ export default function AboutTeaser() {
           {trans.volleyballFederationDanang.toUpperCase()}
         </h2>
 
-        {/* Subtitle/Mission Statement */}
         <p className="text-lg md:text-xl text-gray-200 mb-10 leading-relaxed font-light">
           {trans.programDescription}
         </p>
 
-        {/* CTA Button */}
         <Link
           href="/about"
           className="inline-block px-10 py-3 bg-red-700 text-white font-bold rounded-lg shadow-xl hover:bg-red-800 transition-all duration-300 transform hover:scale-105"
