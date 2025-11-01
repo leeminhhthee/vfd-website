@@ -16,7 +16,7 @@ export default function UserHeader() {
     { label: "Tin tức", href: "/news" },
     { label: "Tài liệu", href: "/documents" },
     { label: "Lịch thi đấu - Kết quả", href: "/schedule" },
-    { label: "Photo", href: "#" },
+    { label: "Photo", href: "/gallery" },
     { label: "Dự án", href: "/projects" },
     { label: "Giới thiệu", href: "/about" },
   ]
