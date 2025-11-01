@@ -1,8 +1,31 @@
 key,vi,en
-home,Trang chủ,Home
-news,Tin tức,News
+home,Trang Chủ,Home
+news,Tin Tức,News
+resources,Tài Liệu,Resources
+scheduleAndResults,Lịch Thi Đấu - Kết Quả,Schedule & Results
 photo,Photo,Photo
-project,Dự án,Project
-introduction,Giới thiệu,Introduction
-volleyballFederationDanang,Liên đoàn Bóng chuyền TP Đà Nẵng,Volleyball Federation of Da Nang City
+project,Dự Án,Project
+introduction,Giới Thiệu,Introduction
+aboutUs,Về chúng tôi,About Us
+textAboutUs,"Liên đoàn Bóng chuyền Đà Nẵng là tổ chức chuyên nghiệp quản lý và phát triển bóng chuyền tại Đà Nẵng. Với sứ mệnh thúc đẩy phong trào bóng chuyền địa phương, liên đoàn tổ chức các giải đấu, chương trình huấn luyện, và tuyển chọn tài năng trẻ, góp phần đưa bóng chuyền Đà Nẵng vươn tầm quốc gia và quốc tế","The Volleyball Federation of Da Nang is a professional organization dedicated to managing and developing volleyball in Da Nang. With a mission to promote local volleyball activities, the federation organizes tournaments, training programs, and talent scouting, contributing to elevating Da Nang volleyball to national and international levels."
+quickLinks,Liên Kết Nhanh,Quick Links
+schedule,Lịch Thi Đấu,Schedule
+register,Đăng Ký,Register
+contact,Liên Hệ,Contact
+contactPhone,0914 279 073,0914 279 073
+contactEmail,ldbongchuyendn@gmail.com,ldbongchuyendn@gmail.com
+contactAddress,"212 Văn Tiến Dũng, Phường Hòa Xuân, TP. Đà Nẵng","212 Van Tien Dung, Hoa Xuan Ward, Da Nang City"
+followUs,Theo Dõi Chúng Tôi,Follow Us
+copyRight,Copyright ,Copyright 
+copyRightAuthor, 2025 Liên đoàn Bóng chuyền TP Đà Nẵng, 2025 Volleyball Federation of Da Nang City
+volleyFederDN,Liên đoàn Bóng chuyền TP Đà Nẵng,Volleyball Federation of Da Nang City
+volleyballFederationDanang,Liên đoàn Bóng chuyền Thành Phố Đà Nẵng,Volleyball Federation of Da Nang City
 welcome,Chào mừng đến với website của chúng tôi,Welcome to our website
+loading,Đang tải...,Loading...
+newsLoadingError,Không thể tải tin tức,Unable to load news
+latestNews,Tin tức mới nhất,Latest News
+updateNewFromFederation,Cập nhật những thông tin mới nhất từ Liên đoàn,Stay updated with the latest news from the Federation
+readMore,Đọc thêm →,Read more →
+viewAll,Xem tất cả,View all
+programDescription,"Chúng tôi xây dựng các chương trình trình với nhiều hình thức khác nhau và tập trung vào việc thúc đẩy hoạt động bóng chuyền, thể chất, xây dựng phát triển thể thao cộng đồng và kết nối xã hội và tạo cơ hội phát triển thể chất vì thành phố Đà Nẵng khỏe mạnh.","We develop programs in various formats focusing on promoting volleyball activities, physical fitness, community sports development, social connection, and creating opportunities for a healthier Da Nang city."
+unableToLoadData,Không thể tải dữ liệu,Unable to load data

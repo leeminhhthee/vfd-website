@@ -34,7 +34,7 @@ export default function PhotoGalleryTeaser() {
   const filteredImages = mockImages.filter(img => img.tag === activeTab).slice(0, 8)
 
   return (
-    <section className="w-full md:py-18 bg-white font-body">
+    <section className="w-full md:py-8 bg-white font-body">
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         {/* Header Section: Tiêu đề, Tabs và Nút Xem thêm */}
         <div className="relative flex flex-col md:flex-row justify-between items-start md:items-end px-4 pt-10">
