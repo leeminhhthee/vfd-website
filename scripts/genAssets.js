@@ -7,6 +7,7 @@ const outputFile = path.resolve("app/generated/assets.ts");
 function scanDir(dir, base = "") {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   const result = {};
+  const seenNames = new Set();
 
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
@@ -17,6 +18,15 @@ function scanDir(dir, base = "") {
     } else {
       const ext = path.extname(entry.name);
       const baseName = path.basename(entry.name, ext);
+
+      // Check for duplicate
+      if (seenNames.has(baseName)) {
+        console.warn(`Duplicate: ${baseName}`);
+      } else {
+        seenNames.add(baseName);
+      }
+
+      // Later files will overwrite earlier ones
       result[baseName] = `/assets/${relPath}`;
     }
   }
