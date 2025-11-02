@@ -1,5 +1,5 @@
 // This file is auto-generated. Do not edit manually.
-// Generated at 2025-11-01T10:17:27.090Z
+// Generated at 2025-11-02T03:54:28.052Z
 
 export const ASSETS = {
   "icons": {},
@@ -14,9 +14,12 @@ export const ASSETS = {
   },
   "logo": {
     "danangcity_logo": "/assets/logo/danangcity_logo.png",
+    "facebook": "/assets/logo/facebook.png",
+    "tiktok": "/assets/logo/tiktok.png",
     "vfd_logo": "/assets/logo/vfd_logo.png",
     "vfd_logo_text": "/assets/logo/vfd_logo_text.png",
-    "vfv_logo": "/assets/logo/vfv_logo.png"
+    "vfv_logo": "/assets/logo/vfv_logo.png",
+    "youtube": "/assets/logo/youtube.png"
   },
   "svg": {}
 } as const;

@@ -103,18 +103,65 @@ export default function UserFooter() {
           {/* Social */}
           <div>
             <h3 className="font-bold text-lg mb-4">{trans.followUs}</h3>
+
+            {/* Facebook Page Plugin */}
+            <div className="mb-4">
+              <iframe
+                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D61568730625362&tabs&width=280&height=100&small_header=false&adapt_container_width=false&hide_cover=false&show_facepile=false&appId"
+                width="280"
+                height="130"
+                style={{ border: "none", overflow: "hidden" }}
+                scrolling="no"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              ></iframe>
+            </div>
+
+            {/* Social Icons */}
             <div className="flex gap-4">
               <a
-                href="#"
-                className="w-10 h-10 bg-accent text-primary rounded-full flex items-center justify-center hover:bg-accent-light transition-colors"
+                href="https://www.facebook.com/profile.php?id=61568730625362"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white text-primary rounded-full flex items-center justify-center transition-colors"
+                aria-label="Facebook"
               >
-                f
+                <Image
+                  src={ASSETS.logo.facebook}
+                  alt="Facebook"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
               </a>
               <a
-                href="#"
-                className="w-10 h-10 bg-accent text-primary rounded-full flex items-center justify-center hover:bg-accent-light transition-colors"
+                href="https://www.tiktok.com/@your-tiktok"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"
+                aria-label="TikTok"
               >
-                ig
+                <Image
+                  src={ASSETS.logo.tiktok}
+                  alt="TikTok"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
+              </a>
+              <a
+                href="https://www.youtube.com/@your-channel"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"
+                aria-label="YouTube"
+              >
+                <Image
+                  src={ASSETS.logo.youtube}
+                  alt="YouTube"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
               </a>
             </div>
           </div>

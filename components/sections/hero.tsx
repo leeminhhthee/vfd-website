@@ -85,7 +85,7 @@ export default function Hero() {
                 {hero.title}
               </h1>
               <p className="text-lg md:text-xl mb-10 max-w-3xl font-medium text-gray-100 animate-in fade-in-up delay-200 duration-1000 ease-out [text-shadow:_0_2px_4px_rgb(0_0_0_/_60%)]">
-                {hero.subtitle}
+                {hero.subTitle}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

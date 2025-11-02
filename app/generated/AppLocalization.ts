@@ -81,4 +81,42 @@ export const trans = new Proxy(
   programDescription: string;
   /** Không thể tải dữ liệu | Unable to load data */
   unableToLoadData: string;
+  /** Thư viện ảnh | Photo Gallery */
+  photoGallery: string;
+  /** Không tìm thấy Album | Album not found */
+  albumNotFound: string;
+  /** Quay lại thư viện ảnh | Back to photo gallery */
+  backToGallery: string;
+  /** Xem thêm | See more */
+  seeMore: string;
+  /** Có lỗi xảy ra khi tải ảnh | An error occurred while loading images */
+  loadingImageError: string;
+  /** Hiện chưa có ảnh cho mục này. | No photos available for this section. */
+  noPhotosAvailable: string;
+  /** Xem thêm tất cả | See all */
+  seeAll: string;
+  /** Đội tuyển | Team */
+  team: string;
+  /** Giải đấu TP | City Tournament */
+  cityTournament: string;
+  /** Hoạt động khác | Other Activities */
+  otherActivities: string;
+  /** Chia sẻ | Share */
+  share: string;
+  /** Đối tác - Tài trợ | Partners - Sponsors */
+  partnersSponsors: string;
+  /** Cập nhật những thông tin mới nhất từ Liên đoàn Bóng chuyền TP Đà Nẵng | Stay updated with the latest news from the Volleyball Federation of Da Nang City */
+  contentNewsTab: string;
+  /** Không có tin tức liên quan | No related news */
+  noRelatedNews: string;
+  /** Nguồn | Source */
+  source: string;
+  /** ✓ Đã lưu | ✓ Bookmarked */
+  bookMarked: string;
+  /** Lưu bài viết | Save Article */
+  saveArticle: string;
+  /** Nổi bật | Featured */
+  featured: string;
+  /** Tin liên quan | Related News */
+  relatedNews: string;
 };

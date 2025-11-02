@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import type React from "react";
+import "reflect-metadata";
 import { QueryProvider } from "@/providers/query-provider";
+import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
+import type React from "react";
 import "./globals.css";
 
 const headingFont = Montserrat({

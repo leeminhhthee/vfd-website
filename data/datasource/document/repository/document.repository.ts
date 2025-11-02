@@ -1,3 +1,4 @@
+import { plainToInstance } from 'class-transformer';
 import documentMock from "../../../mockup/document.json";
 import { DocumentItem } from "../../../model/document.model";
 import { api } from "../../../remote/api";
@@ -8,18 +9,10 @@ export const documentRepository = {
   async getDocumentList(): Promise<DocumentItem[]> {
     if (USE_MOCK) {
       await new Promise((r) => setTimeout(r, 300));
-      return documentMock.map(item => ({
-        ...item,
-        createdAt: new Date(item.createdAt),
-        updatedAt: new Date(item.updatedAt),
-      }));
+      return plainToInstance(DocumentItem, documentMock);
     }
 
     const response = await api.get<DocumentItem[]>("/document");
-    return response.data.map(item => ({
-      ...item,
-      createdAt: new Date(item.createdAt),
-      updatedAt: new Date(item.updatedAt),
-    }));
+    return plainToInstance(DocumentItem, response.data);
   },
 };

@@ -1,3 +1,4 @@
+import { plainToInstance } from "class-transformer";
 import newsMock from "../../../mockup/news.json";
 import { NewsItem } from "../../../model/news.model";
 import { api } from "../../../remote/api";
@@ -8,10 +9,21 @@ export const newsRepository = {
   async getNews(): Promise<NewsItem[]> {
     if (USE_MOCK) {
       await new Promise((r) => setTimeout(r, 300));
-      return newsMock;
+      return plainToInstance(NewsItem, newsMock);
     }
 
     const response = await api.get<NewsItem[]>("/home/news");
-    return response.data;
+    return plainToInstance(NewsItem, response.data);
+  },
+
+  async getNewsById(id: number): Promise<NewsItem | null> {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 300));
+      const newsItems = plainToInstance(NewsItem, newsMock);
+      return newsItems.find(item => item.id === id) || null;
+    }
+
+    const response = await api.get<NewsItem>(`/news/${id}`);
+    return plainToInstance(NewsItem, response.data);
   },
 };

@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "category": "tre",
+    "category": "team",
     "title": "Bundesliga Dream Vietnam 2.0 hướng tới Vòng loại Cúp châu Á 2026",
     "images": [
       "/gallery/volleyball-team-photo.jpg",
@@ -12,7 +12,7 @@
   },
   {
     "id": 2,
-    "category": "doi-tuyen",
+    "category": "inside",
     "title": "Một số hình ảnh đội tuyển Nữ Việt Nam thi đấu tại VCK FIFA World Cup",
     "images": [
       "/gallery/volleyball-world-cup.jpg"
@@ -20,7 +20,7 @@
   },
   {
     "id": 3,
-    "category": "tre",
+    "category": "team",
     "title": "ĐT nữ Việt Nam qua ống kính FIFA",
     "images": [
       "/gallery/volleyball-female-team.jpg"
@@ -28,7 +28,7 @@
   },
   {
     "id": 4,
-    "category": "quoc-gia",
+    "category": "inside",
     "title": "Thắng U22 Myanmar 3-1, ĐT U22 Việt Nam giành HCĐ bóng đá nam",
     "images": [
       "/gallery/volleyball-tournament.jpg"
@@ -36,7 +36,7 @@
   },
   {
     "id": 5,
-    "category": "tre",
+    "category": "team",
     "title": "Giải vô địch bóng chuyền quốc gia",
     "images": [
       "/gallery/volleyball-championship.jpg"
@@ -44,7 +44,7 @@
   },
   {
     "id": 6,
-    "category": "tre",
+    "category": "team",
     "title": "Sự kiện bóng chuyền VFF",
     "images": [
       "/gallery/volleyball-event.jpg"
@@ -52,7 +52,7 @@
   },
   {
     "id": 7,
-    "category": "tre",
+    "category": "team",
     "title": "Đội tuyển bóng chuyền tập luyện",
     "images": [
       "/gallery/volleyball-team-training.png"
@@ -60,7 +60,7 @@
   },
   {
     "id": 8,
-    "category": "tre",
+    "category": "team",
     "title": "Trận đấu bóng chuyền quốc tế",
     "images": [
       "/gallery/volleyball-international-match.jpg"
@@ -68,7 +68,7 @@
   },
   {
     "id": 9,
-    "category": "tre",
+    "category": "team",
     "title": "Giải bóng chuyền hạng nhất quốc gia",
     "images": [
       "/gallery/volleyball-league.jpg"
@@ -76,7 +76,7 @@
   },
   {
     "id": 10,
-    "category": "tre",
+    "category": "team",
     "title": "Buổi tập luyện đội tuyển bóng chuyền",
     "images": [
       "/gallery/volleyball-training.jpg"
@@ -84,7 +84,7 @@
   },
   {
     "id": 11,
-    "category": "tre",
+    "category": "team",
     "title": "Trận đấu bóng chuyền châu Á",
     "images": [
       "/gallery/volleyball-match.jpg"
@@ -92,7 +92,7 @@
   },
   {
     "id": 12,
-    "category": "tre",
+    "category": "team",
     "title": "Đội tuyển bóng chuyền nữ Việt Nam",
     "images": [
       "/gallery/diverse-volleyball-team.png"

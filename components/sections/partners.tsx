@@ -1,38 +1,51 @@
-"use client"
+"use client";
 
-import Image from 'next/image'
+import { trans } from "@/app/generated/AppLocalization";
+import { partnerInteractor } from "@/data/datasource/partner/interactor/partner.interactor";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 export default function Partners() {
-  // Lặp lại dữ liệu nhiều lần để tạo hiệu ứng cuộn vô tận
-  const partnerData = [
-    { id: 1, name: "Partner 1 (Logo 1)", logo: "/partner/hoi-lien-hiep-thanh-nien-1.png" },
-    { id: 2, name: "Partner 2 (Logo 2)", logo: "/partner/So-VH.png" },
-    { id: 3, name: "Partner 3 (Logo 3)", logo: "/partner/logo-vfv-1.png" },
-    { id: 4, name: "Partner 4 (Logo 4)", logo: "/partner/QUANGARMY-3-3.png" },
-    { id: 5, name: "Partner 5 (Logo 5)", logo: "/partner/bc-ccd.png" },
-    { id: 6, name: "Partner 6 (Logo 6)", logo: "/partner/thanh-doan.png" },
-    { id: 7, name: "Partner 7 (Logo 7)", logo: "/partner/hoi-sinh-vien.png" },
-  ]
+  const {
+    data: partnerData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["partners"],
+    queryFn: partnerInteractor.getPartnerList,
+  });
 
-  // Lặp lại danh sách logo 3 lần để đảm bảo animation mượt mà
-  const partners = [...partnerData, ...partnerData, ...partnerData]
+  if (isLoading) {
+    return (
+      <section className="pt-0 md:pt-10 pb-0 md:pb-0 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p>{trans.loading}</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || !partnerData) {
+    return null;
+  }
+
+  const partners = [...partnerData, ...partnerData, ...partnerData];
 
   return (
     <section className="pt-0 md:pt-10 pb-0 md:pb-0 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="flex justify-center mb-4">
           <div className="h-1 w-16 md:w-24 rounded-full bg-orange-600" />
         </div>
 
         <h2 className="text-3xl md:text-4xl font-black text-foreground text-center mb-8 uppercase">
-          Các đối tác
+          {trans.partnersSponsors}
         </h2>
 
         <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
           <div
             className="flex w-fit animate-marquee hover:[animation-play-state:paused] gap-0 md:gap-4"
-            style={{ animationDuration: '40s' }}
+            style={{ animationDuration: "40s" }}
           >
             {partners.map((partner, index) => (
               <div
@@ -41,7 +54,7 @@ export default function Partners() {
               >
                 <div className="relative h-full w-full">
                   <Image
-                    src={partner.logo}
+                    src={partner.image}
                     alt={partner.name}
                     title={partner.name}
                     fill
@@ -60,5 +73,5 @@ export default function Partners() {
         </div>
       </div>
     </section>
-  )
+  );
 }
