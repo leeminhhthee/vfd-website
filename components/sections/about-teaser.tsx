@@ -21,7 +21,7 @@ export default function AboutTeaser() {
 
       <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
         {/* Title */}
-        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white uppercase mb-6 drop-shadow-lg">
+        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white uppercase mb-6 drop-shadow-lg">
           {trans.volleyballFederationDanang.toUpperCase()}
         </h2>
 
