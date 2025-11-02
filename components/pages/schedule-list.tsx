@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Calendar, MapPin, Users, Trophy } from "lucide-react"
+import Link from "next/link"
 
 export default function ScheduleList() {
   const [selectedStatus, setSelectedStatus] = useState("all")
@@ -108,9 +109,12 @@ export default function ScheduleList() {
               </div>
             </div>
 
-            <button className="w-full px-4 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-colors">
+            {/* <button */}
+            <Link
+              href={`/schedule/${schedule.id}`} className="w-full px-4 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-colors">
               Xem chi tiết
-            </button>
+            </Link>
+            {/* </button> */}
           </div>
         ))}
       </div>
