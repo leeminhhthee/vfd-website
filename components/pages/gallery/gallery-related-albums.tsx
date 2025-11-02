@@ -1,5 +1,6 @@
 "use client";
 
+import { trans } from "@/app/generated/AppLocalization";
 import { GalleryAlbum } from "@/data/model/gallery.model";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,7 +42,7 @@ export default function GalleryRelatedAlbums({
         href="/gallery"
         className="block w-full text-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
       >
-        Xem tất cả ảnh
+        {trans.viewAll}
       </Link>
     </div>
   );

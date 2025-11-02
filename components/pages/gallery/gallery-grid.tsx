@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { GalleryAlbum } from "@/data/model/gallery.model"
+import { trans } from "@/app/generated/AppLocalization"
 
 interface GalleryGridProps {
   images: GalleryAlbum[]
@@ -13,7 +14,7 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
         <p className="text-gray-500 text-lg">
-          Danh mục này hiện tại chưa có ảnh.
+          {trans.noPhotosAvailable}
         </p>
       </div>
     )

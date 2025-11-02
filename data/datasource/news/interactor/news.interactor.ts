@@ -4,7 +4,16 @@ export const newsInteractor = {
   async getNewsListForHome() {
     const news = await newsRepository.getNews();
     return news
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 3);
+  },
+  
+  async getNewsList() {
+    const news = await newsRepository.getNews();
+    return news.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  },
+
+  async getNewsById(id: number) {
+    return await newsRepository.getNewsById(id);
   },
 };

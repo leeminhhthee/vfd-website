@@ -1,3 +1,4 @@
+import { plainToInstance } from "class-transformer";
 import galleryMock from "../../../mockup/gallery.json";
 import { GalleryAlbum } from "../../../model/gallery.model";
 import { api } from "../../../remote/api";
@@ -8,23 +9,23 @@ export const galleryRepository = {
   async getGalleryList(): Promise<GalleryAlbum[]> {
     if (USE_MOCK) {
       await new Promise((r) => setTimeout(r, 300));
-      return galleryMock;
+      return plainToInstance(GalleryAlbum, galleryMock);
     }
 
     const response = await api.get<GalleryAlbum[]>("/gallery");
-    return response.data;
+    return plainToInstance(GalleryAlbum, response.data);
   },
 
   async getGalleryById(id: number): Promise<GalleryAlbum | undefined> {
     if (USE_MOCK) {
       await new Promise((r) => setTimeout(r, 300));
-      const item = galleryMock.find((item) => item.id === id);
+      const item = plainToInstance(GalleryAlbum, galleryMock.find((item) => item.id === id));
       return item;
     }
 
     try {
       const response = await api.get<GalleryAlbum>(`/gallery/${id}`);
-      return response.data;
+      return plainToInstance(GalleryAlbum, response.data);
     } catch (error) {
       return undefined;
     }

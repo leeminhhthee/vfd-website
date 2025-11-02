@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, Share2 } from "lucide-react"
+import { trans } from "@/app/generated/AppLocalization"
 
 interface GalleryDetailSliderProps {
   images: string[]
@@ -84,7 +85,7 @@ export default function GalleryDetailSlider({ images, title }: GalleryDetailSlid
       <div className="flex gap-3 pt-4 border-t">
         <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
           <Share2 size={18} />
-          Chia sẻ Facebook
+          {trans.share}
         </button>
       </div>
     </div>

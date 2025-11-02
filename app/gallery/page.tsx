@@ -8,18 +8,20 @@ import GalleryTabs from "@/components/pages/gallery/gallery-tabs";
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { trans } from "../generated/AppLocalization";
 
 const GALLERY_CATEGORIES = [
-  { id: "doi-tuyen", label: "Các đội tuyển" },
-  { id: "quoc-gia", label: "Giải quốc gia" },
-  { id: "tre", label: "Đội tuyển trẻ" },
-  { id: "cong-dong", label: "Hoạt động cộng đồng" },
+  { id: "team", label: trans.team },
+  { id: "inside", label: trans.cityTournament },
+  { id: "other", label: trans.otherActivities },
 ];
 
 const ITEMS_PER_PAGE = 8;
 
 export default function GalleryPage() {
-  const [activeCategory, setActiveCategory] = useState("doi-tuyen");
+  const [activeCategory, setActiveCategory] = useState(
+    GALLERY_CATEGORIES[0]?.id
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -51,7 +53,7 @@ export default function GalleryPage() {
     return (
       <UserLayout>
         <div className="min-h-screen bg-white flex items-center justify-center">
-          <p className="text-lg text-gray-500">Đang tải...</p>
+          <p className="text-lg text-gray-500">{trans.loading}</p>
         </div>
       </UserLayout>
     );
@@ -61,7 +63,7 @@ export default function GalleryPage() {
     return (
       <UserLayout>
         <div className="min-h-screen bg-white flex items-center justify-center">
-          <p className="text-lg text-red-500">Có lỗi xảy ra khi tải dữ liệu</p>
+          <p className="text-lg text-red-500">{trans.loadingImageError}</p>
         </div>
       </UserLayout>
     );
@@ -70,7 +72,7 @@ export default function GalleryPage() {
   return (
     <UserLayout>
       <div className="min-h-screen bg-white">
-        <GalleryHeader title="THƯ VIỆN ẢNH" categories={GALLERY_CATEGORIES} />
+        <GalleryHeader title={trans.photoGallery.toUpperCase()} categories={GALLERY_CATEGORIES} />
         <GalleryTabs
           categories={GALLERY_CATEGORIES}
           activeCategory={activeCategory}

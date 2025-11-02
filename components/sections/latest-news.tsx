@@ -63,7 +63,7 @@ export default function LatestNews() {
               className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
             >
               <Image
-                src={item.image_url || "/placeholder.svg"}
+                src={item.imageUrl || "/placeholder.svg"}
                 alt={item.title}
                 className="w-full h-48 object-cover"
                 priority={true}
@@ -73,7 +73,7 @@ export default function LatestNews() {
               />
               <div className="p-6">
                 <p className="text-sm text-muted-foreground mb-2">
-                  {new Date(item.created_at).toLocaleDateString("vi-VN")}
+                  {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                 </p>
                 <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                   {item.title}

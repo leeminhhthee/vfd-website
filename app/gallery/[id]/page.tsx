@@ -7,6 +7,7 @@ import GalleryRelatedAlbums from "@/components/pages/gallery/gallery-related-alb
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
+import { trans } from "@/app/generated/AppLocalization"
 
 export default function GalleryDetailPage() {
   const params = useParams()
@@ -28,7 +29,7 @@ export default function GalleryDetailPage() {
     return (
       <UserLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <p className="text-lg text-gray-500">Đang tải...</p>
+          <p className="text-lg text-gray-500">{trans.loading}</p>
         </div>
       </UserLayout>
     )
@@ -39,9 +40,9 @@ export default function GalleryDetailPage() {
       <UserLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-primary mb-4">Album không tìm thấy</h1>
+            <h1 className="text-3xl font-bold text-primary mb-4">{trans.albumNotFound}</h1>
             <Link href="/gallery" className="text-accent hover:underline">
-              Quay lại thư viện ảnh
+              {trans.backToGallery}
             </Link>
           </div>
         </div>
@@ -54,7 +55,7 @@ export default function GalleryDetailPage() {
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
           <Link href="/gallery" className="text-accent hover:text-primary transition-colors">
-            Thư viện ảnh
+            {trans.photoGallery}
           </Link>
           <span className="mx-2 text-gray-400">/</span>
           <span className="text-gray-700 font-medium">{album.title}</span>
