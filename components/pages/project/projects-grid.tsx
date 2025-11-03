@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
-import type { Project } from "@/lib/projects-data"
+import Image from "next/image"
+import { ProjectItem } from "@/data/model/project.model"
 
 interface ProjectsGridProps {
-  projects: Project[]
+  projects: ProjectItem[]
 }
 
 export default function ProjectsGrid({ projects }: ProjectsGridProps) {
@@ -16,8 +17,9 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
         >
           {/* Image */}
           <div className="relative h-48 overflow-hidden">
-            <img
+            <Image
               src={project.image || "/placeholder.svg?height=200&width=400"}
+              fill
               alt={project.title}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />
