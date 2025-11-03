@@ -1,44 +1,58 @@
 "use client"
-import { Target, Users, Trophy } from "lucide-react"
 
-export default function Introductions() {
+type Props = {
+  backgroundUrl?: string
+}
+
+export default function Introductions({ backgroundUrl = "/assets/images/bg.jpg" }: Props) {
   const sections = [
     {
-      icon: Target,
+      title: "Mục tiêu",
+      description:
+        "Phát triển phong trào bóng chuyền trong cộng đồng, đào tạo và bồi dưỡng tài năng trẻ, nâng cao chất lượng chuyên môn, tổ chức các giải đấu cấp thành phố và khu vực, đồng thời đóng góp vào sự phát triển của thể thao chuyên nghiệp và xây dựng cộng đồng yêu thích bóng chuyền mạnh mẽ.",
+    },
+    {
       title: "Sứ mệnh",
       description:
-        "Phát triển bóng chuyền tại Đà Nẵng, nâng cao trình độ và tạo cơ hội cho các vận động viên tài năng.",
+        "Liên đoàn bóng chuyền Tp.Đà Nẵng thúc đẩy sự phát triển của bóng chuyền trong cộng đồng, tạo cơ hội cho mọi người tham gia và rèn luyện sức khỏe, đồng thời phát hiện và nuôi dưỡng những tài năng thể thao để nâng cao vị thế của bóng chuyền Đà Nẵng trên cả nước.",
     },
     {
-      icon: Users,
       title: "Tầm nhìn",
-      description: "Trở thành liên đoàn bóng chuyền hàng đầu khu vực, góp phần nâng cao vị thế bóng chuyền Việt Nam.",
-    },
-    {
-      icon: Trophy,
-      title: "Giá trị",
-      description: "Chuyên nghiệp, công bằng, minh bạch và cam kết phát triển bóng chuyền bền vững.",
+      description:
+        "Liên đoàn bóng chuyền Tp.Đà Nẵng phải trở thành một trung tâm phát triển bóng chuyền hàng đầu của Việt Nam, với phong trào thể thao mạnh mẽ, các vận động viên xuất sắc và đóng góp tích cực cho nền thể thao quốc gia, đồng thời xây dựng cộng đồng bóng chuyền sôi động và bền vững.",
     },
   ]
 
   return (
-    <section className="py-16 md:py-24 bg-muted">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {sections.map((section) => {
-            const Icon = section.icon
-            return (
-              <div key={section.title} className="bg-white rounded-lg p-8 border border-border text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                    <Icon size={32} className="text-white" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-3">{section.title}</h3>
-                <p className="text-muted-foreground">{section.description}</p>
-              </div>
-            )
-          })}
+    <section
+      className="relative py-20 md:py-22 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${backgroundUrl})` }}
+    >
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="text-4xl md:text-5xl font-extrabold italic tracking-wider text-white">
+            OUR VALUE
+          </h2>
+          <p className="mt-2 text-base md:text-xl text-white/80">
+            GIÁ TRỊ CHÚNG TÔI HƯỚNG ĐẾN
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {sections.map((section) => (
+            <div
+              key={section.title}
+              className="bg-[#0B3B88]/95 text-white rounded-[28px] md:rounded-[40px] p-6 md:p-10 shadow-2xl backdrop-blur-[1px] h-full"
+            >
+              <h3 className="text-2xl md:text-4xl font-extrabold italic text-center mb-4 md:mb-6">
+                {section.title}
+              </h3>
+              <p className="text-white/90 text-base md:text-sm leading-relaxed text-center text-justify">
+                {section.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
