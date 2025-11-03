@@ -57,7 +57,7 @@ const objectData: AffectedObject[] = [
 
 export default function AffectedObjects() {
   return (
-    <section className="py-12 md:py-16 bg-white font-body">
+    <section className="py-4 md:py-4 bg-white font-body">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Tiêu đề chính */}
         <h2 className="text-3xl md:text-4xl font-extrabold text-primary text-center mb-12 uppercase font-heading">

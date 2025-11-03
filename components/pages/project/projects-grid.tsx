@@ -49,7 +49,7 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
 
             {/* Button */}
             <Link
-              href={`/projects/${project.id}`}
+              href={`/projects`}
               className="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent text-accent font-bold rounded-lg hover:bg-accent hover:text-white transition-colors duration-200"
             >
               Xem chi tiết
