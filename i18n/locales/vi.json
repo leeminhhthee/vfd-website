@@ -47,5 +47,13 @@
   "bookMarked": "✓ Đã lưu",
   "saveArticle": "Lưu bài viết",
   "featured": "Nổi bật",
-  "relatedNews": "Tin liên quan"
+  "relatedNews": "Tin liên quan",
+  "aboutVFD": "Về Liên đoàn Bóng chuyền TP Đà Nẵng",
+  "textAboutVFD": "Liên đoàn Bóng chuyền TP Đà Nẵng là tổ chức chuyên quản lý, phát triển và nâng cao trình độ bóng chuyền tại thành phố Đà Nẵng. Chúng tôi cam kết tổ chức các giải đấu chuyên nghiệp, phát triển tài năng trẻ và nâng cao chất lượng bóng chuyền Việt Nam.",
+  "boardDirectorsVFD": "Ban lãnh đạo Liên đoàn Bóng chuyền thành phố Đà Nẵng",
+  "mrMs": "Ông/Bà",
+  "ourValue": "Our Value",
+  "valueWeAimFor": "GIÁ TRỊ CHÚNG TÔI HƯỚNG ĐẾN",
+  "affectedObjects": "Đối tượng tác động",
+  "loadingError": "Đã xảy ra lỗi khi tải dữ liệu"
 }

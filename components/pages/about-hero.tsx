@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { trans } from "@/app/generated/AppLocalization"
-import { ASSETS } from "@/app/generated/assets"
-import Image from "next/image"
+import { trans } from "@/app/generated/AppLocalization";
+import { ASSETS } from "@/app/generated/assets";
+import Image from "next/image";
 
 export default function AboutHero() {
   return (
@@ -18,13 +18,13 @@ export default function AboutHero() {
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
       <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white uppercase mb-6 drop-shadow-lg">Về Liên đoàn Bóng chuyền TP Đà Nẵng</h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white uppercase mb-6 drop-shadow-lg">
+          {trans.aboutVFD}
+        </h1>
         <p className="text-lg text-white max-w-3xl text-balance leading-relaxed font-light">
-          Liên đoàn Bóng chuyền TP Đà Nẵng là tổ chức chuyên quản lý, phát triển và nâng cao trình độ bóng chuyền tại
-          thành phố Đà Nẵng. Chúng tôi cam kết tổ chức các giải đấu chuyên nghiệp, phát triển tài năng trẻ và nâng cao
-          chất lượng bóng chuyền Việt Nam.
+          {trans.textAboutVFD}
         </p>
       </div>
     </section>
-  )
+  );
 }
