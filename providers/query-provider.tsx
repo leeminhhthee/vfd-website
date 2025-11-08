@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
+import "@ant-design/v5-patch-for-react-19"
 
 export function QueryProvider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(

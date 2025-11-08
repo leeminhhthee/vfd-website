@@ -4,6 +4,7 @@ import { trans } from "@/app/generated/AppLocalization";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -91,7 +92,7 @@ export default function NewsGrid() {
         <div className="mb-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Featured Article - Left */}
           <article className="lg:col-span-2 bg-white rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-            <img
+            <Image
               src={featuredNews.imageUrl || "/placeholder.svg"}
               alt={featuredNews.title}
               className="w-full h-96 object-cover"
@@ -128,7 +129,7 @@ export default function NewsGrid() {
                   href={`/news/${item.id}`}
                   className="flex gap-3 group cursor-pointer"
                 >
-                  <img
+                  <Image
                     src={item.imageUrl || "/placeholder.svg"}
                     alt={item.title}
                     className="w-24 h-24 object-cover rounded-lg flex-shrink-0 group-hover:opacity-80 transition-opacity"
@@ -161,7 +162,7 @@ export default function NewsGrid() {
                 key={item.id}
                 className="bg-white rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow"
               >
-                <img
+                <Image
                   src={item.imageUrl || "/placeholder.svg"}
                   alt={item.title}
                   className="w-full h-48 object-cover"

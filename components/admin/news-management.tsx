@@ -1,232 +1,251 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
-import { Plus, Edit2, Trash2, Eye, Sparkles, Loader } from "lucide-react"
+import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { Alert, Button, Input, Modal, notification, Space, Table, Tag } from "antd"
+import type { ColumnsType } from "antd/es/table"
+import { Edit2, Plus, Trash2 } from "lucide-react"
+import { useMemo, useState } from "react"
+import NewsFormModal from "./news-form-modal"
+
+interface NewsItem {
+  id: number
+  title: string
+  type: string
+  content: string
+  status: string
+  createdAt: string
+  excerpt?: string
+  aiSummary?: string
+}
+
+type CreateNewsPayload = {
+  title: string
+  type: string
+  content: string
+  status?: string
+  excerpt?: string
+  aiSummary?: string
+  createdAt?: string
+}
+
+type UpdateNewsPayload = Partial<Omit<NewsItem, "id">>
 
 export default function NewsManagement() {
-  const [showForm, setShowForm] = useState(false)
-  const [editingId, setEditingId] = useState<number | null>(null)
-  const [loadingSummary, setLoadingSummary] = useState(false)
-  const [formData, setFormData] = useState({
-    title: "",
-    excerpt: "",
-    content: "",
-    category: "Giải đấu",
-    aiSummary: "",
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingNews, setEditingNews] = useState<Partial<NewsItem> | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const queryClient = useQueryClient()
+
+  const {
+    data: allNews = [],
+    isLoading,
+    error,
+  } = useQuery<NewsItem[]>({
+    queryKey: ["adminNews"],
+    queryFn: newsInteractor.getNewsList,
   })
 
-  const [newsList] = useState([
-    {
-      id: 1,
-      title: "Giải vô địch bóng chuyền TP Đà Nẵng 2024",
-      category: "Giải đấu",
-      date: "2024-10-25",
-      status: "Đã xuất bản",
+  // Mutation types: <TData, TError, TVariables>
+  const createNewsMutation = useMutation<NewsItem, Error, CreateNewsPayload>({
+    mutationFn: (newNews) => newsInteractor.createNews(newNews),
+    onSuccess: () => {
+      notification.success({ message: "Tạo tin tức mới thành công!" })
+      queryClient.invalidateQueries({ queryKey: ["adminNews"] })
+      handleCloseModal()
     },
-    {
-      id: 2,
-      title: "Đội tuyển Đà Nẵng vô địch giải quốc gia",
-      category: "Thành tích",
-      date: "2024-10-20",
-      status: "Đã xuất bản",
+    onError: () => {
+      notification.error({ message: "Tạo tin tức thất bại." })
     },
-  ])
+  })
 
-  const handleGenerateSummary = async () => {
-    if (!formData.content) {
-      alert("Vui lòng nhập nội dung trước")
-      return
-    }
+  const updateNewsMutation = useMutation<NewsItem, Error, { id: number; data: UpdateNewsPayload }>({
+    mutationFn: ({ id, data }) => newsInteractor.updateNews(id, data),
+    onSuccess: () => {
+      notification.success({ message: "Cập nhật tin tức thành công!" })
+      queryClient.invalidateQueries({ queryKey: ["adminNews"] })
+      handleCloseModal()
+    },
+    onError: () => {
+      notification.error({ message: "Cập nhật thất bại." })
+    },
+  })
 
-    setLoadingSummary(true)
+  const deleteNewsMutation = useMutation<{ success: boolean }, Error, number>({
+    mutationFn: (id) => newsInteractor.deleteNews(id),
+    onSuccess: () => {
+      notification.success({ message: "Đã xóa tin tức!" })
+      queryClient.invalidateQueries({ queryKey: ["adminNews"] })
+    },
+    onError: () => {
+      notification.error({ message: "Xóa thất bại." })
+    },
+  })
 
-    // Simulate AI summary generation
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+  const filteredNews = useMemo(() => {
+    const term = searchTerm.toLowerCase()
+    return allNews.filter(
+      (item) =>
+        (item.title || "").toLowerCase().includes(term) ||
+        (item.content || "").toLowerCase().includes(term)
+    )
+  }, [allNews, searchTerm])
 
-    const mockSummary = `${formData.content.substring(0, 100)}...`
-    setFormData((prev) => ({ ...prev, aiSummary: mockSummary }))
-
-    setLoadingSummary(false)
+  const handleShowCreateModal = () => {
+    setEditingNews(null)
+    setIsModalOpen(true)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setShowForm(false)
-    setFormData({ title: "", excerpt: "", content: "", category: "Giải đấu", aiSummary: "" })
+  const handleShowEditModal = (record: NewsItem) => {
+    setEditingNews(record)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setEditingNews(null)
+  }
+
+  const handleDelete = (id: number) => {
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xóa tin này?",
+      content: "Hành động này không thể hoàn tác.",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk: () => deleteNewsMutation.mutate(id),
+    })
+  }
+
+  // Không dùng any: dùng union kiểu form values
+  const handleFormSubmit = (values: CreateNewsPayload | UpdateNewsPayload) => {
+    if (editingNews?.id) {
+      updateNewsMutation.mutate({ id: editingNews.id, data: values })
+    } else {
+      // Ép kiểu về CreateNewsPayload (các field bắt buộc đã được form đảm bảo)
+      createNewsMutation.mutate(values as CreateNewsPayload)
+    }
+  }
+
+  const columns: ColumnsType<NewsItem> = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tiêu đề",
+      dataIndex: "title",
+      key: "title",
+      render: (text: string) => <strong className="text-foreground">{text}</strong>,
+    },
+    {
+      title: "Danh mục",
+      dataIndex: "type",
+      key: "type",
+      filters: [
+        { text: "Thành phố", value: "Thành phố" },
+        { text: "Trong nước", value: "Trong nước" },
+        { text: "Quốc tế", value: "Quốc tế" },
+      ],
+      onFilter: (value, record) => (record.type || "").startsWith(String(value)),
+      render: (type: string) => <Tag color="blue">{type}</Tag>,
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (date: string) =>
+        date ? new Date(date).toLocaleDateString("vi-VN") : "",
+      sorter: (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      defaultSortOrder: "descend",
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => {
+        const s = status || "draft"
+        const color = s === "published" ? "green" : "default"
+        return <Tag color={color}>{s.toUpperCase()}</Tag>
+      },
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      align: "center",
+      render: (_: unknown, record) => (
+        <Space size="middle">
+          <Button
+            type="text"
+            icon={<Edit2 size={18} className="text-yellow-600" />}
+            onClick={() => handleShowEditModal(record)}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<Trash2 size={18} />}
+            onClick={() => handleDelete(record.id)}
+            loading={
+              deleteNewsMutation.isPending &&
+              deleteNewsMutation.variables === record.id
+            }
+          />
+        </Space>
+      ),
+    },
+  ]
+
+  if (error) {
+    return (
+      <Alert
+        message="Lỗi tải dữ liệu"
+        description={(error as Error).message}
+        type="error"
+        showIcon
+      />
+    )
   }
 
   return (
     <div className="space-y-6">
-      {/* Add Button */}
-      <button
-        onClick={() => setShowForm(!showForm)}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-colors"
-      >
-        <Plus size={20} />
-        Thêm tin tức
-      </button>
+      <div className="flex justify-between items-center">
+        {/* Thay Search bằng Space.Compact để tránh addonAfter deprecated */}
+        <Space.Compact style={{ width: 420 }}>
+          <Input
+            placeholder="Tìm kiếm tiêu đề, nội dung..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+          />
+          <Button type="primary" onClick={() => setSearchTerm(searchTerm)}>
+            Tìm
+          </Button>
+        </Space.Compact>
 
-      {/* Form */}
-      {showForm && (
-        <div className="bg-white rounded-lg border border-border p-6">
-          <h2 className="text-xl font-bold text-foreground mb-6">
-            {editingId ? "Chỉnh sửa tin tức" : "Tạo tin tức mới"}
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold text-foreground mb-2">Tiêu đề *</label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-                placeholder="Nhập tiêu đề"
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-foreground mb-2">Danh mục *</label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option>Giải đấu</option>
-                <option>Thành tích</option>
-                <option>Sự kiện</option>
-                <option>Tuyển dụng</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-foreground mb-2">Nội dung *</label>
-              <textarea
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                required
-                placeholder="Nhập nội dung"
-                rows={6}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            {/* AI Summary Section */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-3">
-                <label className="flex items-center gap-2 text-sm font-bold text-foreground">
-                  <Sparkles size={18} className="text-accent" />
-                  Tóm tắt AI (Tự động)
-                </label>
-                <button
-                  type="button"
-                  onClick={handleGenerateSummary}
-                  disabled={loadingSummary}
-                  className="flex items-center gap-2 px-3 py-1 bg-accent text-primary rounded font-bold hover:bg-accent-light transition-colors disabled:opacity-50"
-                >
-                  {loadingSummary ? (
-                    <>
-                      <Loader size={16} className="animate-spin" />
-                      Đang tạo...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles size={16} />
-                      Tạo tóm tắt
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <textarea
-                value={formData.aiSummary}
-                onChange={(e) => setFormData({ ...formData, aiSummary: e.target.value })}
-                placeholder="Tóm tắt sẽ được tạo tự động bằng AI"
-                rows={2}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold text-foreground mb-2">Tóm tắt thủ công</label>
-              <textarea
-                value={formData.excerpt}
-                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                placeholder="Hoặc nhập tóm tắt thủ công"
-                rows={2}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                className="px-6 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-colors"
-              >
-                {editingId ? "Cập nhật" : "Tạo"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="px-6 py-2 bg-muted text-foreground rounded-lg font-bold hover:bg-border transition-colors"
-              >
-                Hủy
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* News Table */}
-      <div className="bg-white rounded-lg border border-border overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-muted border-b border-border">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-bold text-foreground">Tiêu đề</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-foreground">Danh mục</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-foreground">Ngày tạo</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-foreground">Trạng thái</th>
-                <th className="px-6 py-4 text-center text-sm font-bold text-foreground">Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {newsList.map((news) => (
-                <tr key={news.id} className="border-b border-border hover:bg-muted transition-colors">
-                  <td className="px-6 py-4 font-medium text-foreground">{news.title}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{news.category}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">
-                    {new Date(news.date).toLocaleDateString("vi-VN")}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-xs font-bold text-white bg-green-600 px-3 py-1 rounded-full">
-                      {news.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-                        <Eye size={18} className="text-primary" />
-                      </button>
-                      <button
-                        onClick={() => setEditingId(news.id)}
-                        className="p-2 hover:bg-muted rounded-lg transition-colors"
-                      >
-                        <Edit2 size={18} className="text-accent" />
-                      </button>
-                      <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-                        <Trash2 size={18} className="text-red-600" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Button type="primary" icon={<Plus size={20} />} onClick={handleShowCreateModal}>
+          Thêm tin tức
+        </Button>
       </div>
+
+      <div className="bg-white rounded-lg border border-border overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={filteredNews}
+          rowKey="id"
+          loading={isLoading}
+          pagination={{ pageSize: 10 }}
+        />
+      </div>
+
+      <NewsFormModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleFormSubmit}
+        initialData={editingNews}
+        isSubmitting={createNewsMutation.isPending || updateNewsMutation.isPending}
+      />
     </div>
   )
 }
