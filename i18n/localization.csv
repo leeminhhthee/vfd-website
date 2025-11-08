@@ -56,3 +56,23 @@ ourValue,Our Value,Our Value
 valueWeAimFor,GIÁ TRỊ CHÚNG TÔI HƯỚNG ĐẾN,THE VALUES WE AIM FOR
 affectedObjects,Đối tượng tác động,Affected Objects
 loadingError,Đã xảy ra lỗi khi tải dữ liệu,An error occurred while loading data
+tournament,Giải đấu,Tournament
+scheduleResultsOfTournament,Lịch thi đấu và kết quả các giải đấu,Schedule and results of tournaments
+upcomingTournaments,Giải đấu sắp tới,Upcoming Tournaments
+noUpcomingTournaments,Chưa có giải đấu nào sắp diễn ra,No upcoming tournaments available
+viewDetails,Xem chi tiết,View Details
+viewAllSchedules,Xem tất cả lịch thi đấu,View all schedules
+noSchedulesFound,Không có lịch thi đấu nào,No schedules found
+startDate,Ngày bắt đầu,Start Date
+endDate,Ngày kết thúc,End Date
+location,Địa điểm,Location
+relatedDocuments,Tài liệu liên quan,Related Documents
+registerTournament,Đăng ký giải đấu,Register for Tournament
+tournamentStartedEnded,Giải đấu đã bắt đầu/kết thúc,Tournament has started/ended
+registrationNotOpen,Đăng ký chưa mở,Registration not yet open
+scheduleImageAvailable,Lịch thi đấu đã có (Ngừng đăng ký),Tournament schedule is available (Registration closed)
+tournamentResults,Kết quả giải đấu,Tournament Results
+index,STT,No.
+dateTime,Ngày - Giờ,Date - Time
+score,Tỉ số,Score
+team,Đội,Team

@@ -1,3 +1,4 @@
+import { ScheduleStatus } from "@/data/constants/constants";
 import { tournamentRepository } from "../repository/tournament.repository";
 
 export const tournamentInteractor = {
@@ -10,6 +11,10 @@ export const tournamentInteractor = {
     return await tournamentRepository.getTournamentById(id);
   },
 
+  async getRelatedTournaments(id: number) {
+    return await tournamentRepository.getRelatedTournaments(id);
+  },
+
   async getUpcomingTournaments() {
     const tournaments = await tournamentRepository.getTournamentList();
     const now = new Date();
@@ -17,7 +22,7 @@ export const tournamentInteractor = {
     return tournaments
       .filter(tournament => {
         const endDate = new Date(tournament.endDate);
-        return endDate >= now && tournament.status === "coming";
+        return endDate >= now && tournament.status === ScheduleStatus.COMING;
       })
       .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
       .slice(0, 3);

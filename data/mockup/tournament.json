@@ -8,7 +8,10 @@
     "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
     "status": "coming",
     "form_id": "F001",
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/btvttth2/2025/10/11/nh-tt247-4-68e9d77532b43.jpg",
+    "registration_open": true,
+    "schedule_img": null,
+    "related_files": [],
+    "match_schedules": [],
     "created_at": "2025-10-30",
     "updated_at": null,
     "created_by": 1
@@ -22,7 +25,10 @@
     "location": "Nhà thi đấu Quân khu 5, Đà Nẵng",
     "status": "coming",
     "form_id": "F002",
+    "registration_open": true,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/12/27/bong-chuyen-viet-nam-2024-1-20241227115302.jpg",
+    "related_files": [],
+    "match_schedules": [],
     "created_at": "2025-10-28",
     "updated_at": null,
     "created_by": 1
@@ -34,9 +40,42 @@
     "start_date": "2025-11-01",
     "end_date": "2025-11-06",
     "location": "Đại học Thể dục Thể thao Đà Nẵng",
-    "status": "happening",
+    "status": "ongoing",
     "form_id": "F003",
+    "registration_open": false,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/11/18/bong-chuyen-nu-2024-1-20241118123411.jpg",
+    "related_files": [
+      {
+        "name": "Thể lệ giải Sinh viên 2025",
+        "doc_url": "/documents/the-le-sinhvien-2025.pdf"
+      },
+      {
+        "name": "Danh sách đội tham dự",
+        "doc_url": "/documents/ds-doi-tham-du-sv2025.xlsx"
+      }
+    ],
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "group_stage",
+        "table": "A",
+        "match_date": "2025-11-02T14:00:00",
+        "team_A": "ĐH Kinh tế Đà Nẵng",
+        "team_B": "ĐH Bách khoa Đà Nẵng",
+        "score_A": 2,
+        "score_B": 1
+      },
+      {
+        "id": 2,
+        "round": "group_stage",
+        "table": "B",
+        "match_date": "2025-11-03T16:00:00",
+        "team_A": "ĐH Ngoại ngữ Đà Nẵng",
+        "team_B": "Cao đẳng Thương mại",
+        "score_A": 0,
+        "score_B": 3
+      }
+    ],
     "created_at": "2025-10-20",
     "updated_at": "2025-11-02",
     "created_by": 1
@@ -48,9 +87,42 @@
     "start_date": "2025-10-25",
     "end_date": "2025-11-02",
     "location": "Tỉnh Hà Tĩnh",
-    "status": "happening",
+    "status": "ongoing",
     "form_id": "F004",
+    "registration_open": false,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/phamtrang/2025/05/09/bong-chuyen-nam-2025-1715248647.jpg",
+    "related_files": [
+      {
+        "name": "Thể lệ Giải Hạng A 2025",
+        "doc_url": "/documents/the-le-hang-a-2025.pdf"
+      },
+      {
+        "name": "Lịch thi đấu chi tiết",
+        "doc_url": "/documents/lich-thi-dau-hang-a.pdf"
+      }
+    ],
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2025-11-01T18:00:00",
+        "team_A": "Hà Tĩnh",
+        "team_B": "TP Hồ Chí Minh",
+        "score_A": 1,
+        "score_B": 3
+      },
+      {
+        "id": 2,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2025-11-01T20:00:00",
+        "team_A": "Đà Nẵng",
+        "team_B": "Hải Dương",
+        "score_A": 2,
+        "score_B": 3
+      }
+    ],
     "created_at": "2025-10-15",
     "updated_at": null,
     "created_by": 1
@@ -64,7 +136,30 @@
     "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
     "status": "ended",
     "form_id": "F005",
+    "registration_open": false,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/10/15/bong-chuyen-vn-2024-1-20241015111542.jpg",
+    "related_files": [
+      {
+        "name": "Kết quả tổng hợp",
+        "doc_url": "/documents/ket-qua-vodich-2025.pdf"
+      },
+      {
+        "name": "Ảnh tổng kết giải",
+        "doc_url": "/documents/anh-tong-ket-vodich.zip"
+      }
+    ],
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "final",
+        "table": null,
+        "match_date": "2025-09-30T19:00:00",
+        "team_A": "Liên Chiểu FC",
+        "team_B": "Thanh Khê United",
+        "score_A": 3,
+        "score_B": 2
+      }
+    ],
     "created_at": "2025-09-10",
     "updated_at": "2025-10-01",
     "created_by": 1
@@ -78,7 +173,26 @@
     "location": "Nhà thi đấu quận Liên Chiểu, Đà Nẵng",
     "status": "ended",
     "form_id": "F006",
+    "registration_open": false,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/07/21/bong-chuyen-nu-2024-2-20240721123121.jpg",
+    "related_files": [
+      {
+        "name": "Điều lệ",
+        "doc_url": "/documents/anh-giai-nu-2025.zip"
+      }
+    ],
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "final",
+        "table": null,
+        "match_date": "2025-08-25T15:00:00",
+        "team_A": "Liên Chiểu Women",
+        "team_B": "Sơn Trà Women",
+        "score_A": 1,
+        "score_B": 3
+      }
+    ],
     "created_at": "2025-07-30",
     "updated_at": "2025-08-26",
     "created_by": 1
@@ -90,9 +204,28 @@
     "start_date": "2025-11-03",
     "end_date": "2025-11-07",
     "location": "Bãi biển Mỹ Khê, Đà Nẵng",
-    "status": "happening",
+    "status": "ongoing",
     "form_id": "F007",
+    "registration_open": false,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/09/12/bong-chuyen-bien-2024-1-20240912110322.jpg",
+    "related_files": [
+      {
+        "name": "Lịch thi đấu bãi biển",
+        "doc_url": "/documents/lich-bong-chuyen-bien.pdf"
+      }
+    ],
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "group_stage",
+        "table": "A",
+        "match_date": "2025-11-04T09:00:00",
+        "team_A": "CLB Biển Sơn Trà",
+        "team_B": "CLB Biển Hội An",
+        "score_A": 2,
+        "score_B": 0
+      }
+    ],
     "created_at": "2025-10-10",
     "updated_at": null,
     "created_by": 1
@@ -106,7 +239,10 @@
     "location": "Nhà thi đấu Quảng Nam",
     "status": "coming",
     "form_id": "F008",
+    "registration_open": true,
     "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/08/18/bong-chuyen-vn-2024-2-20240818111345.jpg",
+    "related_files": [],
+    "match_schedules": [],
     "created_at": "2025-11-01",
     "updated_at": null,
     "created_by": 1

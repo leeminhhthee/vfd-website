@@ -1,4 +1,5 @@
 "use client";
+import { trans } from "@/app/generated/AppLocalization";
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, MapPin } from "lucide-react";
@@ -19,9 +20,11 @@ export default function UpcomingTournaments() {
       <section className="py-8 md:py-12 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-3xl font-black text-foreground mb-8 uppercase">
-            Giải đấu sắp tới
+            {trans.upcomingTournaments}
           </h2>
-          <div className="text-center text-muted-foreground">Đang tải...</div>
+          <div className="text-center text-muted-foreground">
+            {trans.loading}
+          </div>
         </div>
       </section>
     );
@@ -32,11 +35,9 @@ export default function UpcomingTournaments() {
       <section className="py-8 md:py-12 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-3xl font-black text-foreground mb-8 uppercase">
-            Giải đấu sắp tới
+            {trans.upcomingTournaments}
           </h2>
-          <div className="text-center text-red-500">
-            Có lỗi xảy ra khi tải dữ liệu
-          </div>
+          <div className="text-center text-red-500">{trans.loadingError}</div>
         </div>
       </section>
     );
@@ -47,10 +48,10 @@ export default function UpcomingTournaments() {
       <section className="py-8 md:py-12 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-3xl font-black text-foreground mb-8 uppercase">
-            Giải đấu sắp tới
+            {trans.upcomingTournaments}
           </h2>
           <div className="text-center text-muted-foreground">
-            Chưa có giải đấu nào sắp diễn ra
+            {trans.noUpcomingTournaments}
           </div>
         </div>
       </section>
@@ -61,7 +62,7 @@ export default function UpcomingTournaments() {
     <section className="py-8 md:py-12 bg-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-3xl font-black text-foreground mb-8 uppercase">
-          Giải đấu sắp tới
+          {trans.upcomingTournaments}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -97,7 +98,7 @@ export default function UpcomingTournaments() {
                 href={`/schedule/${tournament.id}`}
                 className="w-full block text-center px-4 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-colors"
               >
-                Xem chi tiết
+                {trans.viewDetails}
               </Link>
             </div>
           ))}
@@ -108,7 +109,7 @@ export default function UpcomingTournaments() {
             href="/schedule"
             className="inline-block px-8 py-3 bg-primary text-white rounded-lg font-bold hover:bg-primary-dark transition-colors"
           >
-            Xem tất cả lịch thi đấu
+            {trans.viewAllSchedules}
           </Link>
         </div>
       </div>

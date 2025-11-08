@@ -3,8 +3,7 @@
     "id": 1,
     "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761996319/hero1_wdzew9.jpg",
     "title": "Liên đoàn bóng chuyền Đà Nẵng",
-    "sub_title":
-      "Nơi phát triển tài năng, tổ chức các giải đấu chuyên nghiệp và nâng cao trình độ bóng chuyền tại Đà Nẵng.",
+    "sub_title": "Nơi phát triển tài năng, tổ chức các giải đấu chuyên nghiệp và nâng cao trình độ bóng chuyền tại Đà Nẵng.",
     "button_text": "Đăng ký thành viên",
     "button_href": "/membership",
     "button_text_2": "Giới thiệu",
@@ -12,29 +11,18 @@
   },
   {
     "id": 2,
-    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero3_h8kkox.jpg",
-    "title": "Kết nối – Rèn luyện – Vươn tầm",
-    "sub_title":
-      "Cùng nhau xây dựng cộng đồng bóng chuyền Đà Nẵng vững mạnh và chuyên nghiệp. Tham gia ngay!",
+    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero4_nbb3fx.jpg",
+    "title": "Giải Bóng Chuyền Cup CLB TP Đà Nẵng 2025",
+    "sub_title": "Trải nghiệm không khí thi đấu sôi động và gắn kết cộng đồng! Đừng bỏ lỡ!",
     "button_text": "Xem lịch thi đấu",
-    "button_href": "/schedule"
+    "button_href": "/schedule/3"
   },
   {
     "id": 3,
     "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero2_rychsd.jpg",
-    "title": "Tham gia cộng đồng thành viên",
-    "sub_title":
-      "Đăng ký thành viên để nhận tin tức, tham gia sự kiện và phát triển cùng chúng tôi!",
-    "button_text": "Đăng ký ngay",
-    "button_href": "/membership"
-  },
-  {
-    "id": 4,
-    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero4_nbb3fx.jpg",
-    "title": "Giải bóng chuyền sinh viên đại học, cao đẳng",
-    "sub_title":
-      "Trải nghiệm không khí thi đấu sôi động và gắn kết cộng đồng! Đừng bỏ lỡ!",
-    "button_text": "Đăng ký giải đấu",
-    "button_href": "/register"
+    "title": null,
+    "sub_title": null,
+    "button_text": null,
+    "button_href": null
   }
 ]

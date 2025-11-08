@@ -65,7 +65,7 @@ export default function Hero() {
             <div className="relative w-full h-full">
               <Image
                 src={hero.image}
-                alt={hero.title}
+                alt={hero.title ?? ""}
                 fill
                 sizes="100vw"
                 className="object-cover object-center"
@@ -89,12 +89,14 @@ export default function Hero() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href={hero.buttonHref}
-                  className="px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-accent-light transition-all duration-300 shadow-xl hover:scale-[1.03]"
-                >
-                  {hero.buttonText}
-                </Link>
+                {hero.buttonText != null && hero.buttonHref != null && (
+                  <Link
+                    href={hero.buttonHref ?? "/"}
+                    className="px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-accent-light transition-all duration-300 shadow-xl hover:scale-[1.03]"
+                  >
+                    {hero.buttonText}
+                  </Link>
+                )}
                 {hero.buttonText2 != null && hero.buttonHref2 != null && (
                   <Link
                     href={hero.buttonHref2 ?? "/"}

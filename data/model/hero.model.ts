@@ -6,13 +6,13 @@ export class HeroItem {
   @Expose({ name: "image" })
   image!: string;
   @Expose({ name: "title" })
-  title!: string;
+  title!: string | null;
   @Expose({ name: "sub_title" })
-  subTitle!: string;
+  subTitle!: string | null;
   @Expose({ name: "button_text" })
-  buttonText!: string;
+  buttonText!: string | null;
   @Expose({ name: "button_href" })
-  buttonHref!: string;
+  buttonHref!: string | null;
   @Expose({ name: "button_text_2" })
   buttonText2?: string | null;
   @Expose({ name: "button_href_2" })
