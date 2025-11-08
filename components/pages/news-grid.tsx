@@ -115,7 +115,7 @@ export default function NewsGrid() {
                 href={`/news/${featuredNews.id}`}
                 className="text-accent font-bold hover:text-accent-light transition-colors inline-flex items-center gap-2"
               >
-                {trans.readMore} <span>→</span>
+                {trans.readMore}
               </Link>
             </div>
           </article>
