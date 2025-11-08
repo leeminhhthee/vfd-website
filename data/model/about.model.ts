@@ -1,11 +1,14 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 
 export class AboutModel {
     @Expose({ name: 'introduction' })
+    @Type(() => IntroductionItem)
     introduction!: IntroductionItem[];
     @Expose({ name: 'affected_object' })
+    @Type(() => AffectedObjectItem)
     affectedObject!: AffectedObjectItem[];
     @Expose({ name: 'board_directors' })
+    @Type(() => BoardDirectorItem)
     boardDirectors!: BoardDirectorItem[];
 }
 

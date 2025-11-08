@@ -1,28 +1,51 @@
-import UserLayout from "@/components/layouts/user-layout"
-import RegistrationButton from "@/components/pages/tournament/registration-button"
-import RelatedTournaments from "@/components/pages/tournament/related-tournaments"
-import TournamentDescription from "@/components/pages/tournament/tournament-description"
-import TournamentHeader from "@/components/pages/tournament/tournament-header"
-import TournamentResults from "@/components/pages/tournament/tournament-results"
-import TournamentScheduleImage from "@/components/pages/tournament/tournament-schedule-image"
-import { getTournamentById, getRelatedTournaments } from "@/lib/schedule-data"
-import { notFound } from "next/navigation"
+"use client";
 
-interface Props {
-  params: Promise<{ id: string }>
-}
+import { trans } from "@/app/generated/AppLocalization";
+import UserLayout from "@/components/layouts/user-layout";
+import RegistrationButton from "@/components/pages/tournament/registration-button";
+import RelatedTournaments from "@/components/pages/tournament/related-tournaments";
+import TournamentDescription from "@/components/pages/tournament/tournament-description";
+import TournamentHeader from "@/components/pages/tournament/tournament-header";
+import TournamentResults from "@/components/pages/tournament/tournament-results";
+import TournamentScheduleImage from "@/components/pages/tournament/tournament-schedule-image";
+import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
+import { useQuery } from "@tanstack/react-query";
+import { notFound, useParams } from "next/navigation";
 
-export default async function TournamentDetailPage({ params }: Props) {
-  const { id } = await params
-  const tournament = getTournamentById(id)
+export default function TournamentDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
 
-  if (!tournament) {
-    notFound()
+  const {
+    data: tournament,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["tournament-details", id],
+    queryFn: () => tournamentInteractor.getTournamentById(Number(id)),
+  });
+
+  const { data: relatedTournaments = [] } = useQuery({
+    queryKey: ["related-tournaments", id],
+    queryFn: () => tournamentInteractor.getRelatedTournaments(Number(id)),
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return (
+      <UserLayout>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">{trans.loading}</div>
+        </div>
+      </UserLayout>
+    );
   }
 
-  const relatedTournaments = getRelatedTournaments(tournament.id)
+  if (error || !tournament) {
+    notFound();
+  }
 
-  const hasScheduleImage = !!tournament.scheduleImage
+  const hasScheduleImage = !!tournament.scheduleImg;
 
   return (
     <UserLayout>
@@ -33,15 +56,18 @@ export default async function TournamentDetailPage({ params }: Props) {
           {/* Bên trái: 3/5 width */}
           <div className="lg:col-span-3">
             <TournamentDescription
-              description={tournament.description}
-              startDate={tournament.startDate}
-              endDate={tournament.endDate}
-              location={tournament.location}
-              status={tournament.status}
-              relatedFiles={tournament.relatedFiles}
+              description={tournament.description ?? ""}
+              startDate={tournament.startDate.toString() ?? ""}
+              endDate={tournament.endDate.toString() ?? ""}
+              location={tournament.location ?? ""}
+              status={tournament.status ?? ""}
+              relatedFiles={tournament.relatedFiles ?? []}
             />
 
-            <TournamentScheduleImage imageUrl={tournament.scheduleImage} tournamentName={tournament.name} />
+            <TournamentScheduleImage
+              imageUrl={tournament.scheduleImg ?? ""}
+              tournamentName={tournament.name}
+            />
           </div>
 
           {/* Bên phải: 2/5 width */}
@@ -55,7 +81,10 @@ export default async function TournamentDetailPage({ params }: Props) {
                 hasScheduleImage={hasScheduleImage}
               />
 
-              <TournamentResults results={tournament.results} hasScheduleImage={!!tournament.scheduleImage} />
+              <TournamentResults
+                results={tournament.matchSchedules ?? []}
+                hasScheduleImage={!!tournament.scheduleImg}
+              />
             </div>
           </div>
         </div>
@@ -64,5 +93,5 @@ export default async function TournamentDetailPage({ params }: Props) {
         <RelatedTournaments tournaments={relatedTournaments} />
       </div>
     </UserLayout>
-  )
+  );
 }

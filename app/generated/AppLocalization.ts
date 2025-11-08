@@ -95,7 +95,7 @@ export const trans = new Proxy(
   noPhotosAvailable: string;
   /** Xem thêm tất cả | See all */
   seeAll: string;
-  /** Đội tuyển | Team */
+  /** Đội | Team */
   team: string;
   /** Giải đấu TP | City Tournament */
   cityTournament: string;
@@ -135,4 +135,42 @@ export const trans = new Proxy(
   affectedObjects: string;
   /** Đã xảy ra lỗi khi tải dữ liệu | An error occurred while loading data */
   loadingError: string;
+  /** Giải đấu | Tournament */
+  tournament: string;
+  /** Lịch thi đấu và kết quả các giải đấu | Schedule and results of tournaments */
+  scheduleResultsOfTournament: string;
+  /** Giải đấu sắp tới | Upcoming Tournaments */
+  upcomingTournaments: string;
+  /** Chưa có giải đấu nào sắp diễn ra | No upcoming tournaments available */
+  noUpcomingTournaments: string;
+  /** Xem chi tiết | View Details */
+  viewDetails: string;
+  /** Xem tất cả lịch thi đấu | View all schedules */
+  viewAllSchedules: string;
+  /** Không có lịch thi đấu nào | No schedules found */
+  noSchedulesFound: string;
+  /** Ngày bắt đầu | Start Date */
+  startDate: string;
+  /** Ngày kết thúc | End Date */
+  endDate: string;
+  /** Địa điểm | Location */
+  location: string;
+  /** Tài liệu liên quan | Related Documents */
+  relatedDocuments: string;
+  /** Đăng ký giải đấu | Register for Tournament */
+  registerTournament: string;
+  /** Giải đấu đã bắt đầu/kết thúc | Tournament has started/ended */
+  tournamentStartedEnded: string;
+  /** Đăng ký chưa mở | Registration not yet open */
+  registrationNotOpen: string;
+  /** Lịch thi đấu đã có (Ngừng đăng ký) | Tournament schedule is available (Registration closed) */
+  scheduleImageAvailable: string;
+  /** Kết quả giải đấu | Tournament Results */
+  tournamentResults: string;
+  /** STT | No. */
+  index: string;
+  /** Ngày - Giờ | Date - Time */
+  dateTime: string;
+  /** Tỉ số | Score */
+  score: string;
 };

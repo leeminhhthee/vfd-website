@@ -25,4 +25,16 @@ export const tournamentRepository = {
     const response = await api.get<TournamentItem>(`/tournament/${id}`);
     return plainToInstance(TournamentItem, response.data);
   },
+
+  async getRelatedTournaments(currentId: number, limit = 3): Promise<TournamentItem[]> {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 300));
+      return plainToInstance(TournamentItem, tournamentMock)
+        .filter(item => item.id !== currentId)
+        .slice(0, limit);
+    }
+
+    const response = await api.get<TournamentItem[]>(`/tournament/${currentId}/related?limit=${limit}`);
+    return plainToInstance(TournamentItem, response.data);
+  },
 };
