@@ -119,4 +119,20 @@ export const trans = new Proxy(
   featured: string;
   /** Tin liên quan | Related News */
   relatedNews: string;
+  /** Về Liên đoàn Bóng chuyền TP Đà Nẵng | About the Volleyball Federation of Da Nang City */
+  aboutVFD: string;
+  /** Liên đoàn Bóng chuyền TP Đà Nẵng là tổ chức chuyên quản lý, phát triển và nâng cao trình độ bóng chuyền tại thành phố Đà Nẵng. Chúng tôi cam kết tổ chức các giải đấu chuyên nghiệp, phát triển tài năng trẻ và nâng cao chất lượng bóng chuyền Việt Nam. | The Volleyball Federation of Da Nang City is a professional organization dedicated to managing, developing, and enhancing the level of volleyball in Da Nang City. We are committed to organizing professional tournaments, nurturing young talent, and improving the quality of Vietnamese volleyball. */
+  textAboutVFD: string;
+  /** Ban lãnh đạo Liên đoàn Bóng chuyền thành phố Đà Nẵng | Board of Directors of the Volleyball Federation of Da Nang City */
+  boardDirectorsVFD: string;
+  /** Ông/Bà | Mr./Ms. */
+  mrMs: string;
+  /** Our Value | Our Value */
+  ourValue: string;
+  /** GIÁ TRỊ CHÚNG TÔI HƯỚNG ĐẾN | THE VALUES WE AIM FOR */
+  valueWeAimFor: string;
+  /** Đối tượng tác động | Affected Objects */
+  affectedObjects: string;
+  /** Đã xảy ra lỗi khi tải dữ liệu | An error occurred while loading data */
+  loadingError: string;
 };

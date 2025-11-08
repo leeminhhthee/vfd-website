@@ -1,72 +1,40 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-
-interface AffectedObject {
-  id: number
-  title: string
-  description: string
-  image: string
-}
-
-const objectData: AffectedObject[] = [
-  {
-    id: 1,
-    title: "Hệ thống giáo dục các cấp",
-    description:
-      "Tạo điều kiện để các em làm quen và phát triển kỹ năng bóng chuyền từ sớm thông qua các chương trình đào tạo, trại hè, và giải đấu học sinh.",
-    image: "/assets/images/intro/hocsinh.png",
-  },
-  {
-    id: 2,
-    title: "Học sinh, sinh viên",
-    description:
-      "Xây dựng phong trào bóng chuyền trong trường học, tổ chức các giải đấu và hoạt động ngoại khóa, từ đó phát triển thói quen tập thể thao và nâng cao tinh thần đồng đội.",
-    image: "/assets/images/intro/cd3-2.jpg",
-  },
-  {
-    id: 3,
-    title: "Mọi lứa tuổi đang sinh sống, làm việc tại Đà Nẵng",
-    description:
-      "Khuyến khích những người yêu thích bóng chuyền tham gia các hoạt động tập luyện và thi đấu phong trào nhằm rèn luyện sức khỏe, nâng cao tinh thần thể thao.",
-    image: "/assets/images/intro/cd3-3.png",
-  },
-  {
-    id: 4,
-    title: "Vận động viên",
-    description:
-      "Cá nhân người chơi chuyên nghiệp và nghiệp dư, từ trẻ em đến người lớn, nhằm phát triển kỹ năng và nâng cao thành tích thi đấu.",
-    image: "/assets/images/intro/bc-db.png",
-  },
-  {
-    id: 5,
-    title: "Các câu lạc bộ và tổ chức thể thao",
-    description:
-      "Hỗ trợ và hợp tác trong việc tổ chức các giải đấu và sự kiện bóng chuyền.",
-    image: "/assets/images/intro/cd5.png",
-  },
-  {
-    id: 6,
-    title: "Huấn luyện viên và trọng tài",
-    description:
-      "Tổ chức các khóa học nâng cao kiến thức và kỹ năng huấn luyện, cập nhật các phương pháp huấn luyện hiện đại.",
-    image: "/assets/images/intro/trong-tai.png",
-  },
-]
+import { trans } from "@/app/generated/AppLocalization";
+import { ASSETS } from "@/app/generated/assets";
+import { aboutInteractor } from "@/data/datasource/about/interactor/about.interactor";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 export default function AffectedObjects() {
+  const {
+    data: allAffectedObjects = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["affectedObjects"],
+    queryFn: aboutInteractor.getAffectedObject,
+  });
+
+  if (isLoading) {
+    return <div className="text-center py-12">{trans.loading}</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-12">{trans.loadingError}</div>;
+  }
+
   return (
     <section className="py-4 md:py-4 bg-white font-body">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Tiêu đề chính */}
-        <h2 className="text-3xl md:text-4xl font-extrabold text-primary text-center mb-12 uppercase font-heading">
-          Đối tượng tác động
+        <h2 className="text-3xl md:text-4xl font-extrabold text-primary text-center mt-12 mb-8 uppercase font-heading">
+          {trans.affectedObjects}
         </h2>
 
         {/* Lưới 3 cột trên desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {objectData.map((obj) => (
+          {allAffectedObjects.map((obj) => (
             <div
               key={obj.id}
               className="bg-white rounded-xl shadow-xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl border border-border/50"
@@ -74,7 +42,7 @@ export default function AffectedObjects() {
               {/* Hình ảnh (Sử dụng tỷ lệ 4:3) */}
               <div className="relative w-full aspect-[4/3] overflow-hidden">
                 <Image
-                  src={obj.image}
+                  src={obj.imageUrl || ASSETS.svg.placeholder}
                   alt={obj.title}
                   fill
                   sizes="(max-width: 1024px) 100vw, 33vw"
@@ -87,7 +55,7 @@ export default function AffectedObjects() {
                 <h3 className="text-lg font-bold text-foreground mb-3 uppercase font-heading">
                   {obj.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-6 flex-grow">
+                <p className="text-muted-foreground text-sm mb-6 flex-grow text-justify">
                   {obj.description}
                 </p>
               </div>
@@ -96,5 +64,5 @@ export default function AffectedObjects() {
         </div>
       </div>
     </section>
-  )
+  );
 }

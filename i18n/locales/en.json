@@ -47,5 +47,13 @@
   "bookMarked": "✓ Bookmarked",
   "saveArticle": "Save Article",
   "featured": "Featured",
-  "relatedNews": "Related News"
+  "relatedNews": "Related News",
+  "aboutVFD": "About the Volleyball Federation of Da Nang City",
+  "textAboutVFD": "The Volleyball Federation of Da Nang City is a professional organization dedicated to managing, developing, and enhancing the level of volleyball in Da Nang City. We are committed to organizing professional tournaments, nurturing young talent, and improving the quality of Vietnamese volleyball.",
+  "boardDirectorsVFD": "Board of Directors of the Volleyball Federation of Da Nang City",
+  "mrMs": "Mr./Ms.",
+  "ourValue": "Our Value",
+  "valueWeAimFor": "THE VALUES WE AIM FOR",
+  "affectedObjects": "Affected Objects",
+  "loadingError": "An error occurred while loading data"
 }
