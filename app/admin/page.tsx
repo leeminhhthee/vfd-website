@@ -1,6 +1,9 @@
 import AdminLayout from "@/components/layouts/admin-layout"
 import DashboardStats from "@/components/admin/dashboard-stats"
 import RecentActivity from "@/components/admin/recent-activity"
+import QuickActions from "@/components/admin/quick-actions"
+import MemberGrowthChart from "@/components/admin/member-growth-chart"
+import TournamentStatusChart from "@/components/admin/tournament-status-chart"
 
 export default function AdminDashboard() {
   return (
@@ -12,6 +15,19 @@ export default function AdminDashboard() {
         </div>
 
         <DashboardStats />
+
+        <QuickActions />
+
+        {/* chart, chia làm 2 cột, mỗi cột 1 biểu đồ */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="w-full">
+            <MemberGrowthChart />
+          </div>
+          <div className="w-full">
+            <TournamentStatusChart />
+          </div>
+        </div>
+
         <RecentActivity />
       </div>
     </AdminLayout>
