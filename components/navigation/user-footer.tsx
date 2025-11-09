@@ -9,14 +9,14 @@ export default function UserFooter() {
   return (
     <footer className="bg-primary text-white mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8 pb-8 border-b border-primary-light flex justify-center">
-          {/* <Image
+        <div className="mb-8 pb-8 border-b border-primary-light flex flex-wrap justify-center items-center gap-4">
+          <Image
             src={ASSETS.logo.vfv_logo}
             alt={trans.volleyFederDN}
             width={300}
             height={100}
             className="h-16 w-auto"
-          /> */}
+          />
           <Image
             src={ASSETS.logo.vfd_logo_text}
             alt={trans.volleyFederDN}
@@ -24,13 +24,13 @@ export default function UserFooter() {
             height={100}
             className="h-16 w-auto"
           />
-          {/* <Image
+          <Image
             src={ASSETS.logo.danangcity_logo}
             alt={trans.volleyFederDN}
             width={300}
             height={100}
             className="h-16 w-auto"
-          /> */}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
