@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "Hội Liên Hiệp Thanh Niên",
+    "email": null,
+    "image_url": "/partner/hoi-lien-hiep-thanh-nien-1.png",
+    "since": "2020"
+  },
+  {
+    "id": 2,
+    "name": "Sở Văn Hóa và Thể Thao TP Đà Nẵng",
+    "email": null,
+    "image_url": "/partner/So-VH.png",
+    "since": "2021"
+  },
+  {
+    "id": 3,
+    "name": "Liên Đoàn Bóng Chuyền Việt Nam",
+    "email": null,
+    "image_url": "/partner/vfv_logo.png",
+    "since": "2022"
+  },
+  {
+    "id": 4,
+    "name": "QUANG ARMY Nhà Thầu Xây Dựng Chuyên Nghiệp Đà Nẵng",
+    "email": null,
+    "image_url": "/partner/QUANGARMY-3-3.png",
+    "since": "2023"
+  },
+  {
+    "id": 5,
+    "name": "Community Volleyball Club - CLB Bóng Chuyền Cộng Đồng",
+    "image_url": "/partner/bc-ccd.png",
+    "email": null,
+    "since": "2024"
+  },
+  {
+    "id": 6,
+    "name": "Thanh Đoàn Đà Nẵng",
+    "email": null,
+    "image_url": "/partner/thanh-doan.png",
+    "since": "2025"
+  },
+  {
+    "id": 7,
+    "name": "Hội Sinh Viên",
+    "email": null,
+    "image_url": "/partner/hoi-sinh-vien.png",
+    "since": "2026"
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "introduction": [
+    {
+      "title": "Mục tiêu",
+      "description": "Phát triển phong trào bóng chuyền trong cộng đồng, đào tạo và bồi dưỡng tài năng trẻ, nâng cao chất lượng chuyên môn, tổ chức các giải đấu cấp thành phố và khu vực, đồng thời đóng góp vào sự phát triển của thể thao chuyên nghiệp và xây dựng cộng đồng yêu thích bóng chuyền mạnh mẽ."
+    },
+    {
+      "title": "Sứ mệnh",
+      "description": "Liên đoàn bóng chuyền Tp.Đà Nẵng thúc đẩy sự phát triển của bóng chuyền trong cộng đồng, tạo cơ hội cho mọi người tham gia và rèn luyện sức khỏe, đồng thời phát hiện và nuôi dưỡng những tài năng thể thao để nâng cao vị thế của bóng chuyền Đà Nẵng trên cả nước."
+    },
+    {
+      "title": "Tầm nhìn",
+      "description": "Liên đoàn bóng chuyền Tp.Đà Nẵng phải trở thành một trung tâm phát triển bóng chuyền hàng đầu của Việt Nam, với phong trào thể thao mạnh mẽ, các vận động viên xuất sắc và đóng góp tích cực cho nền thể thao quốc gia, đồng thời xây dựng cộng đồng bóng chuyền sôi động và bền vững."
+    }
+  ],
+  "affected_object": [
+    {
+      "id": 1,
+      "title": "Hệ thống giáo dục các cấp",
+      "description": "Tạo điều kiện để các em làm quen và phát triển kỹ năng bóng chuyền từ sớm thông qua các chương trình đào tạo, trại hè, và giải đấu học sinh.",
+      "image_url": "https://res.cloudinary.com/dikzmjuff/image/upload/v1762593888/hocsinh_ffd5es.png"
+    },
+    {
+      "id": 2,
+      "title": "Học sinh, sinh viên",
+      "description": "Xây dựng phong trào bóng chuyền trong trường học, tổ chức các giải đấu và hoạt động ngoại khóa, từ đó phát triển thói quen tập thể thao và nâng cao tinh thần đồng đội.",
+      "image_url": "/assets/images/intro/cd3-2.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Mọi lứa tuổi đang sinh sống, làm việc tại Đà Nẵng",
+      "description": "Khuyến khích những người yêu thích bóng chuyền tham gia các hoạt động tập luyện và thi đấu phong trào nhằm rèn luyện sức khỏe, nâng cao tinh thần thể thao.",
+      "image_url": "/assets/images/intro/cd3-3.png"
+    },
+    {
+      "id": 4,
+      "title": "Vận động viên",
+      "description": "Cá nhân người chơi chuyên nghiệp và nghiệp dư, từ trẻ em đến người lớn, nhằm phát triển kỹ năng và nâng cao thành tích thi đấu.",
+      "image_url": "/assets/images/intro/bc-db.png"
+    },
+    {
+      "id": 5,
+      "title": "Các câu lạc bộ và tổ chức thể thao",
+      "description": "Hỗ trợ và hợp tác trong việc tổ chức các giải đấu và sự kiện bóng chuyền.",
+      "image_url": "/assets/images/intro/cd5.png"
+    },
+    {
+      "id": 6,
+      "title": "Huấn luyện viên và trọng tài",
+      "description": "Tổ chức các khóa học nâng cao kiến thức và kỹ năng huấn luyện, cập nhật các phương pháp huấn luyện hiện đại.",
+      "image_url": "/assets/images/intro/trong-tai.png"
+    }
+  ],
+  "board_directors": [
+    {
+      "id": 1,
+      "name": "Huỳnh Thanh Quang",
+      "role": "Chủ tịch Liên đoàn Bóng chuyền TP. Đà Nẵng",
+      "term": "Nhiệm kỳ 20xx – 20xx",
+      "image": "/assets/logo/vfd_logo.png",
+      "bio": []
+    },
+    {
+      "id": 2,
+      "name": "Hồ Đình Trí",
+      "role": "Phó Chủ tịch Liên đoàn Bóng chuyền TP. Đà Nẵng",
+      "term": "Nhiệm kỳ 20xx – 20xx",
+      "image": "/assets/logo/vfd_logo.png",
+      "bio": []
+    },
+    {
+      "id": 3,
+      "name": "Nguyễn Hải Trường",
+      "role": "Phó Chủ tịch Thường trực - Tổng Thư kí Liên đoàn Bóng chuyền TP. Đà Nẵng",
+      "term": "Nhiệm kỳ 20xx – 20xx",
+      "image": "/assets/logo/vfd_logo.png",
+      "bio": []
+    }
+  ]
+}

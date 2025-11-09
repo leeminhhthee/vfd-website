@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Check and Install Dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "problemMatcher": [],
+    },
+    {
+      "label": "Run Next.js Dev Server",
+      "type": "shell",
+      "command": "npm run dev",
+      "dependsOn": ["Check and Install Dependencies"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "dev generate: generate_localizations",
+      "type": "shell",
+      "command": "npm run generate:i18n",
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev generate: generate_assets",
+      "type": "shell",
+      "command": "npm run gen:assets",
+      "problemMatcher": [],
+    },
+    {
+      "label": "dev generate: generate_datasource_structure",
+      "type": "shell",
+      "command": "npm run gen:datasource",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}

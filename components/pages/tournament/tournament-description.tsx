@@ -1,0 +1,111 @@
+"use client";
+
+import { trans } from "@/app/generated/AppLocalization";
+import { ScheduleStatus } from "@/data/constants/constants";
+import { RelatedFile } from "@/data/model/tournament.model";
+import { format, parseISO } from "date-fns";
+import { vi } from "date-fns/locale";
+import { FileText } from "lucide-react";
+import Link from "next/link";
+
+interface TournamentDescriptionProps {
+  description: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  status: ScheduleStatus;
+  relatedFiles?: RelatedFile[];
+}
+
+export default function TournamentDescription({
+  description,
+  startDate,
+  endDate,
+  location,
+  status,
+  relatedFiles,
+}: TournamentDescriptionProps) {
+  const statusMap = {
+    [ScheduleStatus.COMING]: {
+      label: "Sắp diễn ra",
+      color: "bg-blue-100 text-blue-800",
+    },
+    [ScheduleStatus.ONGOING]: {
+      label: "Đang diễn ra",
+      color: "bg-green-100 text-green-800",
+    },
+    [ScheduleStatus.ENDED]: {
+      label: "Đã kết thúc",
+      color: "bg-gray-100 text-gray-800",
+    },
+  };
+
+  const { label, color } = statusMap[status];
+
+  return (
+    <div className="bg-white rounded-lg border border-border p-6 mb-6">
+      <div className="mb-4">
+        <span
+          className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${color}`}
+        >
+          {label}
+        </span>
+      </div>
+
+      <div className="mb-6">
+        <p className="text-foreground text-base leading-relaxed text-justify">
+          {description}
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-start">
+          <span className="font-semibold text-foreground w-32">
+            {trans.startDate}:
+          </span>
+          <span className="text-muted-foreground">
+            {format(parseISO(startDate), "dd/MM/yyyy", { locale: vi })}
+          </span>
+        </div>
+
+        <div className="flex items-start">
+          <span className="font-semibold text-foreground w-32">
+            {trans.endDate}:
+          </span>
+          <span className="text-muted-foreground">
+            {format(parseISO(endDate), "dd/MM/yyyy", { locale: vi })}
+          </span>
+        </div>
+
+        <div className="flex items-start">
+          <span className="font-semibold text-foreground w-32">
+            {trans.location}:
+          </span>
+          <span className="text-muted-foreground">{location}</span>
+        </div>
+      </div>
+
+      {relatedFiles && relatedFiles.length > 0 && (
+        <div className="mt-8 pt-6 border-t border-border">
+          <h3 className="text-lg font-bold text-foreground mb-4">
+            {trans.relatedDocuments}
+          </h3>
+          <div className="space-y-3">
+            {relatedFiles.map((file, index) => (
+              <Link
+                key={index}
+                href={file.docUrl ?? ""}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 bg-muted rounded-lg hover:bg-muted-foreground/10 transition-colors text-primary font-medium"
+              >
+                <FileText size={20} className="text-primary" />
+                <span>{file.name}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

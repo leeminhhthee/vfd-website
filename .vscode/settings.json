@@ -1,0 +1,47 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "files.associations": {
+    "*.tsx": "typescriptreact",
+    "*.ts": "typescript",
+    "*.json": "json",
+    "*.csv": "csv"
+  },
+  "cSpell.enabledFileTypes": {
+    "csv": false
+  },
+  "cSpell.ignorePaths": [
+    "**/node_modules/**",
+    "**/i18n/locales/**",
+    "**/public/assets/**"
+  ],
+  "triggerTaskOnSave.tasks": {
+    "generate:i18n": [
+      "i18n/localization.csv"
+    ],
+    "generate:assets": [
+      "public/assets/"
+    ]
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json, pnpm-lock.yaml, yarn.lock",
+    "tsconfig.json": "tsconfig.*.json",
+    "next.config.js": ".env*, postcss.config.js, tailwind.config.js"
+  },
+  "explorer.fileNesting.expand": false,
+  "editor.stickyScroll.enabled": true,
+  "eslint.validate": ["typescript", "typescriptreact", "javascript", "javascriptreact"],
+  "search.exclude": {
+    "**/.next": true,
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  "files.watcherExclude": {
+    "**/.next": true,
+    "**/node_modules": true
+  }
+}
