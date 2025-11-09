@@ -77,5 +77,6 @@
   "index": "No.",
   "dateTime": "Date - Time",
   "score": "Score",
-  "noNewsFound": "No news found"
+  "noNewsFound": "No news found",
+  "relatedTournaments": "Related Tournaments"
 }

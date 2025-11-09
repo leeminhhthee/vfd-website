@@ -77,5 +77,6 @@
   "index": "STT",
   "dateTime": "Ngày - Giờ",
   "score": "Tỉ số",
-  "noNewsFound": "Không tìm thấy tin tức nào"
+  "noNewsFound": "Không tìm thấy tin tức nào",
+  "relatedTournaments": "Giải đấu liên quan"
 }

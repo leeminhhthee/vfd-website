@@ -179,4 +179,6 @@ export const trans = new Proxy(
   score: string;
   /** Không tìm thấy tin tức nào | No news found */
   noNewsFound: string;
+  /** Giải đấu liên quan | Related Tournaments */
+  relatedTournaments: string;
 };
