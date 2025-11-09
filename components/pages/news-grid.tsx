@@ -7,13 +7,21 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 6;
+const SESSION_KEY = "news_current_page";
 
 export default function NewsGrid() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    // Load từ sessionStorage khi component mount
+    if (typeof window !== "undefined") {
+      const savedPage = sessionStorage.getItem(SESSION_KEY);
+      return savedPage ? parseInt(savedPage) : 1;
+    }
+    return 1;
+  });
 
   const {
     data: allNews = [],
@@ -53,6 +61,13 @@ export default function NewsGrid() {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const paginatedNews = remainingNews.slice(startIndex, endIndex);
+
+  // Lưu vào sessionStorage mỗi khi currentPage thay đổi
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(SESSION_KEY, currentPage.toString());
+    }
+  }, [currentPage]);
 
   if (isLoading) {
     return <div className="text-center py-12">{trans.loading}</div>;
@@ -243,9 +258,7 @@ export default function NewsGrid() {
 
       {filteredNews.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground text-lg">
-            {trans.noNewsFound}
-          </p>
+          <p className="text-muted-foreground text-lg">{trans.noNewsFound}</p>
         </div>
       )}
     </div>

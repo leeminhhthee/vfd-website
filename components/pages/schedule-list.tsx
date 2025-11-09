@@ -5,15 +5,24 @@ import { tournamentInteractor } from "@/data/datasource/tournament/interactor/to
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, MapPin, Trophy, Users } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ScheduleStatus,
   getScheduleStatusLabel,
 } from "../../data/constants/constants";
 
+const SESSION_STATUS_KEY = "schedule_current_status";
+
 export default function ScheduleList() {
   const [selectedStatus, setSelectedStatus] = useState<ScheduleStatus | "all">(
-    "all"
+    () => {
+      // Load từ sessionStorage khi component mount
+      if (typeof window !== "undefined") {
+        const savedStatus = sessionStorage.getItem(SESSION_STATUS_KEY);
+        return savedStatus ? (savedStatus as ScheduleStatus | "all") : "all";
+      }
+      return "all";
+    }
   );
 
   const {
@@ -36,6 +45,13 @@ export default function ScheduleList() {
     selectedStatus === "all"
       ? schedules
       : schedules.filter((s) => s.status === (selectedStatus as string));
+
+  // Lưu vào sessionStorage mỗi khi selectedStatus thay đổi
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(SESSION_STATUS_KEY, selectedStatus);
+    }
+  }, [selectedStatus]);
 
   if (isLoading) {
     return (
