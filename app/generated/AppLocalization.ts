@@ -47,6 +47,10 @@ export const trans = new Proxy(
   register: string;
   /** Liên Hệ | Contact */
   contact: string;
+  /** Các tài liệu, quy định và hướng dẫn từ Liên đoàn | Documents, regulations, and guidelines from the Federation */
+  resourceText: string;
+  /** Liên Hệ Với Chúng Tôi | Contact Us */
+   contactUs: string;
   /** 0914 279 073 | 0914 279 073 */
   contactPhone: string;
   /** ldbongchuyendn@gmail.com | ldbongchuyendn@gmail.com */
@@ -173,4 +177,6 @@ export const trans = new Proxy(
   dateTime: string;
   /** Tỉ số | Score */
   score: string;
+  /** Không tìm thấy tin tức nào | No news found */
+  noNewsFound: string;
 };

@@ -5,23 +5,26 @@ import GalleryGrid from "@/components/pages/gallery/gallery-grid";
 import GalleryHeader from "@/components/pages/gallery/gallery-header";
 import GalleryPagination from "@/components/pages/gallery/gallery-pagination";
 import GalleryTabs from "@/components/pages/gallery/gallery-tabs";
+import {
+  GalleryCategory,
+  GalleryCategoryLabels,
+} from "@/data/constants/constants";
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { trans } from "../generated/AppLocalization";
 
-const GALLERY_CATEGORIES = [
-  { id: "team", label: trans.team },
-  { id: "inside", label: trans.cityTournament },
-  { id: "other", label: trans.otherActivities },
-];
-
 const ITEMS_PER_PAGE = 8;
 
+const GALLERY_CATEGORIES = Object.entries(GalleryCategoryLabels).map(
+  ([id, label]) => ({
+    id,
+    label,
+  })
+);
+
 export default function GalleryPage() {
-  const [activeCategory, setActiveCategory] = useState(
-    GALLERY_CATEGORIES[0]?.id
-  );
+  const [activeCategory, setActiveCategory] = useState(GalleryCategory.INSIDE);
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -45,7 +48,7 @@ export default function GalleryPage() {
   );
 
   const handleCategoryChange = (categoryId: string) => {
-    setActiveCategory(categoryId);
+    setActiveCategory(categoryId as GalleryCategory);
     setCurrentPage(1);
   };
 
@@ -72,7 +75,10 @@ export default function GalleryPage() {
   return (
     <UserLayout>
       <div className="min-h-screen bg-white">
-        <GalleryHeader title={trans.photoGallery.toUpperCase()} categories={GALLERY_CATEGORIES} />
+        <GalleryHeader
+          title={trans.photoGallery.toUpperCase()}
+          categories={GALLERY_CATEGORIES}
+        />
         <GalleryTabs
           categories={GALLERY_CATEGORIES}
           activeCategory={activeCategory}

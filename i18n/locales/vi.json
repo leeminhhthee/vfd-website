@@ -12,6 +12,8 @@
   "schedule": "Lịch Thi Đấu",
   "register": "Đăng Ký",
   "contact": "Liên Hệ",
+  "resourceText": "Các tài liệu, quy định và hướng dẫn từ Liên đoàn",
+  " contactUs": "Liên Hệ Với Chúng Tôi",
   "contactPhone": "0914 279 073",
   "contactEmail": "ldbongchuyendn@gmail.com",
   "contactAddress": "212 Văn Tiến Dũng, Phường Hòa Xuân, TP. Đà Nẵng",
@@ -74,5 +76,6 @@
   "tournamentResults": "Kết quả giải đấu",
   "index": "STT",
   "dateTime": "Ngày - Giờ",
-  "score": "Tỉ số"
+  "score": "Tỉ số",
+  "noNewsFound": "Không tìm thấy tin tức nào"
 }

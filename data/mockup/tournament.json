@@ -1,249 +1,1202 @@
 [
   {
     "id": 1,
-    "name": "Giải Bóng chuyền Cúp CLB TP Đà Nẵng 2025",
-    "description": "Giải đấu thường niên quy tụ các câu lạc bộ mạnh nhất thành phố Đà Nẵng.",
-    "start_date": "2025-11-15",
-    "end_date": "2025-11-20",
-    "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
-    "status": "coming",
+    "name": "Giải Bóng chuyền Cúp BC_Đà Nẵng mở rộng năm 2020",
+    "description": "“Giải Bóng chuyền Cúp BC_Đà Nẵng mở rộng năm 2020” là sân chơi thể thao uy tín do Câu lạc bộ Bóng chuyền Đà Nẵng tổ chức, quy tụ nhiều đội bóng mạnh đến từ các địa phương, cơ quan và doanh nghiệp trong khu vực miền Trung – Tây Nguyên. Giải đấu nhằm thúc đẩy phong trào rèn luyện thể thao, tăng cường giao lưu, học hỏi giữa các vận động viên, đồng thời góp phần quảng bá hình ảnh thành phố Đà Nẵng năng động và yêu thể thao.",
+    "start_date": "2020-02-29",
+    "end_date": "2020-03-02",
+    "location": "Trung tâm Huấn luyện VĐV TP. Đà Nẵng",
+    "status": "ended",
     "form_id": "F001",
-    "registration_open": true,
+    "registration_open": false,
     "schedule_img": null,
     "related_files": [],
     "match_schedules": [],
-    "created_at": "2025-10-30",
+    "created_at": "2020-02-29",
     "updated_at": null,
     "created_by": 1
   },
   {
     "id": 2,
-    "name": "Giải Trẻ Bóng chuyền Đà Nẵng Mở Rộng 2025",
-    "description": "Sân chơi dành cho các vận động viên trẻ từ 16 đến 20 tuổi trên toàn quốc.",
-    "start_date": "2025-12-05",
-    "end_date": "2025-12-10",
-    "location": "Nhà thi đấu Quân khu 5, Đà Nẵng",
-    "status": "coming",
+    "name": "Giải Vô Địch Bóng Chuyền Các Câu Lạc Bộ Thành Phố Đà Nẵng 2020",
+    "description": "“Giải Vô Địch Bóng Chuyền Các Câu Lạc Bộ Thành Phố Đà Nẵng 2020” là giải đấu thường niên quy tụ các câu lạc bộ bóng chuyền hàng đầu trên địa bàn thành phố. Sự kiện nhằm tạo sân chơi lành mạnh, nâng cao trình độ chuyên môn cho các vận động viên, đồng thời thúc đẩy phong trào thể dục thể thao và tinh thần đoàn kết trong cộng đồng yêu bóng chuyền Đà Nẵng.",
+    "start_date": "2020-12-12",
+    "end_date": "2025-12-22",
+    "location": "Nhà thi đấu Khu GDTC Đại học Đà Nẵng",
+    "status": "ended",
     "form_id": "F002",
-    "registration_open": true,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/12/27/bong-chuyen-viet-nam-2024-1-20241227115302.jpg",
+    "registration_open": false,
+    "schedule_img": null,
     "related_files": [],
     "match_schedules": [],
-    "created_at": "2025-10-28",
+    "created_at": "2020-12-12",
     "updated_at": null,
     "created_by": 1
   },
   {
     "id": 3,
-    "name": "Giải Bóng chuyền Sinh viên TP Đà Nẵng 2025",
-    "description": "Giải đấu sinh viên truyền thống với sự tham gia của 12 trường đại học, cao đẳng trên địa bàn.",
-    "start_date": "2025-11-01",
-    "end_date": "2025-11-06",
-    "location": "Đại học Thể dục Thể thao Đà Nẵng",
-    "status": "ongoing",
+    "name": "Giải Vô Địch Bóng Chuyền Các Câu Lạc Bộ Thành Phố Đà Nẵng 2021",
+    "description": "“Giải Vô Địch Bóng Chuyền Các Câu Lạc Bộ Thành Phố Đà Nẵng 2021” là giải đấu thường niên quy tụ các câu lạc bộ bóng chuyền hàng đầu trên địa bàn thành phố. Sự kiện nhằm tạo sân chơi lành mạnh, nâng cao trình độ chuyên môn cho các vận động viên, đồng thời thúc đẩy phong trào thể dục thể thao và tinh thần đoàn kết trong cộng đồng yêu bóng chuyền Đà Nẵng.",
+    "start_date": "2021-12-15",
+    "end_date": "2022-12-21",
+    "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
+    "status": "ended",
     "form_id": "F003",
     "registration_open": false,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/11/18/bong-chuyen-nu-2024-1-20241118123411.jpg",
-    "related_files": [
-      {
-        "name": "Thể lệ giải Sinh viên 2025",
-        "doc_url": "/documents/the-le-sinhvien-2025.pdf"
-      },
-      {
-        "name": "Danh sách đội tham dự",
-        "doc_url": "/documents/ds-doi-tham-du-sv2025.xlsx"
-      }
-    ],
-    "match_schedules": [
-      {
-        "id": 1,
-        "round": "group_stage",
-        "table": "A",
-        "match_date": "2025-11-02T14:00:00",
-        "team_A": "ĐH Kinh tế Đà Nẵng",
-        "team_B": "ĐH Bách khoa Đà Nẵng",
-        "score_A": 2,
-        "score_B": 1
-      },
-      {
-        "id": 2,
-        "round": "group_stage",
-        "table": "B",
-        "match_date": "2025-11-03T16:00:00",
-        "team_A": "ĐH Ngoại ngữ Đà Nẵng",
-        "team_B": "Cao đẳng Thương mại",
-        "score_A": 0,
-        "score_B": 3
-      }
-    ],
-    "created_at": "2025-10-20",
-    "updated_at": "2025-11-02",
+    "schedule_img": null,
+    "related_files": [],
+    "match_schedules": [],
+    "created_at": "2021-12-15",
+    "updated_at": "2021-12-21",
     "created_by": 1
   },
   {
     "id": 4,
-    "name": "Giải Bóng chuyền Hạng A Quốc gia 2025",
-    "description": "Giải đấu cấp quốc gia nhằm tuyển chọn các đội mạnh lên hạng chuyên nghiệp.",
-    "start_date": "2025-10-25",
-    "end_date": "2025-11-02",
-    "location": "Tỉnh Hà Tĩnh",
-    "status": "ongoing",
+    "name": "Giải Bóng chuyền Sinh viên Đại học, Cao đẳng và Khối Lực lượng vũ trang liên kết - kết nghĩa năm 2022",
+    "description": "“Giải Bóng chuyền Sinh viên Đại học, Cao đẳng và Khối Lực lượng vũ trang liên kết - kết nghĩa năm 2022” là hoạt động thể thao ý nghĩa nhằm tăng cường mối quan hệ giao lưu, đoàn kết giữa sinh viên và các đơn vị lực lượng vũ trang trên địa bàn. Giải đấu không chỉ tạo sân chơi lành mạnh, rèn luyện sức khỏe, mà còn góp phần phát huy tinh thần trẻ trung, năng động và gắn kết cộng đồng trong phong trào thể thao toàn thành phố.",
+    "start_date": "2022-10-27",
+    "end_date": "2022-11-02",
+    "location": "Trường THCS Sơn Trà, TP. Đà Nẵng",
+    "status": "ended",
     "form_id": "F004",
     "registration_open": false,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/phamtrang/2025/05/09/bong-chuyen-nam-2025-1715248647.jpg",
-    "related_files": [
-      {
-        "name": "Thể lệ Giải Hạng A 2025",
-        "doc_url": "/documents/the-le-hang-a-2025.pdf"
-      },
-      {
-        "name": "Lịch thi đấu chi tiết",
-        "doc_url": "/documents/lich-thi-dau-hang-a.pdf"
-      }
+    "schedule_img": [
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762621892/p6_qy05xg.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762621885/p5_mipsju.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762621883/p4_j6wbj5.jpg"
     ],
-    "match_schedules": [
-      {
-        "id": 1,
-        "round": "semi-final",
-        "table": null,
-        "match_date": "2025-11-01T18:00:00",
-        "team_A": "Hà Tĩnh",
-        "team_B": "TP Hồ Chí Minh",
-        "score_A": 1,
-        "score_B": 3
-      },
-      {
-        "id": 2,
-        "round": "semi-final",
-        "table": null,
-        "match_date": "2025-11-01T20:00:00",
-        "team_A": "Đà Nẵng",
-        "team_B": "Hải Dương",
-        "score_A": 2,
-        "score_B": 3
-      }
-    ],
-    "created_at": "2025-10-15",
+    "related_files": [],
+    "match_schedules": [],
+    "created_at": "2022-10-27",
     "updated_at": null,
     "created_by": 1
   },
   {
     "id": 5,
-    "name": "Giải Bóng chuyền Vô địch Thành phố Đà Nẵng 2025",
-    "description": "Các đội mạnh nhất thành phố cùng tranh tài giành chức vô địch năm 2025.",
-    "start_date": "2025-09-25",
-    "end_date": "2025-09-30",
-    "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
+    "name": "Giải Thể thao Học sinh Thành phố Đà Nẵng năm học 2022-2023",
+    "description": "“Giải Thể thao Học sinh Thành phố Đà Nẵng năm học 2022–2023” là sự kiện thường niên nhằm thúc đẩy phong trào rèn luyện thể dục thể thao trong các trường học, góp phần nâng cao thể chất, tinh thần và kỹ năng hợp tác của học sinh. Giải đấu còn là dịp để phát hiện, bồi dưỡng những tài năng thể thao trẻ, đóng góp vào sự phát triển của thể thao học đường thành phố Đà Nẵng.",
+    "start_date": "2022-12-18",
+    "end_date": "2023-01-20",
+    "location": "Trường THCS Sơn Trà, TP. Đà Nẵng",
     "status": "ended",
     "form_id": "F005",
     "registration_open": false,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/10/15/bong-chuyen-vn-2024-1-20241015111542.jpg",
-    "related_files": [
-      {
-        "name": "Kết quả tổng hợp",
-        "doc_url": "/documents/ket-qua-vodich-2025.pdf"
-      },
-      {
-        "name": "Ảnh tổng kết giải",
-        "doc_url": "/documents/anh-tong-ket-vodich.zip"
-      }
-    ],
-    "match_schedules": [
-      {
-        "id": 1,
-        "round": "final",
-        "table": null,
-        "match_date": "2025-09-30T19:00:00",
-        "team_A": "Liên Chiểu FC",
-        "team_B": "Thanh Khê United",
-        "score_A": 3,
-        "score_B": 2
-      }
-    ],
-    "created_at": "2025-09-10",
-    "updated_at": "2025-10-01",
+    "schedule_img": null,
+    "related_files": [],
+    "match_schedules": [],
+    "created_at": "2022-12-18",
+    "updated_at": null,
     "created_by": 1
   },
   {
     "id": 6,
-    "name": "Giải Bóng chuyền Nữ Truyền thống Đà Nẵng 2025",
-    "description": "Giải đấu nhằm khuyến khích phong trào thể thao nữ trong thành phố.",
-    "start_date": "2025-08-20",
-    "end_date": "2025-08-25",
-    "location": "Nhà thi đấu quận Liên Chiểu, Đà Nẵng",
+    "name": "Giải Bóng chuyền Thanh Niên Đà Nẵng Lần 2 Năm 2023",
+    "description": "“Giải Bóng chuyền Thanh Niên Đà Nẵng lần 2 năm 2023” là hoạt động thể thao ý nghĩa nhằm tăng cường mối quan hệ giao lưu, đoàn kết giữa sinh viên và các đơn vị lực lượng vũ trang trên địa bàn. Giải đấu không chỉ tạo sân chơi lành mạnh, rèn luyện sức khỏe, mà còn góp phần phát huy tinh thần trẻ trung, năng động và gắn kết cộng đồng trong phong trào thể thao toàn thành phố.",
+    "start_date": "2023-11-11",
+    "end_date": "2023-11-18",
+    "location": "Trường THCS Trần Đại Nghĩa, Q. Ngũ Hành Sơn, TP. Đà Nẵng",
     "status": "ended",
     "form_id": "F006",
     "registration_open": false,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/07/21/bong-chuyen-nu-2024-2-20240721123121.jpg",
-    "related_files": [
-      {
-        "name": "Điều lệ",
-        "doc_url": "/documents/anh-giai-nu-2025.zip"
-      }
+    "schedule_img": [
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762622647/w5_worjqz.jpg"
     ],
+    "related_files": [],
     "match_schedules": [
       {
         "id": 1,
+        "round": "group",
+        "table": "A",
+        "match_date": "2023-11-11T07:30:00",
+        "team_A": "Khoa Y dược, ĐH Đà Nẵng",
+        "team_B": "Đại học Sư phạm Đà Nẵng",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 2,
+        "round": "group",
+        "table": "B",
+        "match_date": "2023-11-11T08:30:00",
+        "team_A": "Vùng 3 Hải Quân",
+        "team_B": "BCH quân sự thành phố",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 3,
+        "round": "group",
+        "table": "C",
+        "match_date": "2023-11-11T09:30:00",
+        "team_A": "Đại học Duy Tân",
+        "team_B": "Đại học Greenwich",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 4,
+        "round": "group",
+        "table": "E",
+        "match_date": "2023-11-11T13:30:00",
+        "team_A": "Trường THCS Trần Đại Nghĩa",
+        "team_B": "Cao đẳng du lịch Đà Nẵng",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 5,
+        "round": "group",
+        "table": "D",
+        "match_date": "2023-11-12T15:00:00",
+        "team_A": "ĐH Kiến Trúc ĐN",
+        "team_B": "Đoàn TN Công an Thành phố",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 6,
+        "round": "group",
+        "table": "B",
+        "match_date": "2023-11-12T16:00:00",
+        "team_A": "Đại học Sư phạm Kỹ thuật",
+        "team_B": "Tiểu đoàn CSDN số 3, BCA",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 7,
+        "round": "group",
+        "table": "F",
+        "match_date": "2023-11-12T07:30:00",
+        "team_A": "Đại học CNTT Việt - Hàn",
+        "team_B": "Đại học Đông Á",
+        "score_A": 1,
+        "score_B": 2
+      },
+      {
+        "id": 8,
+        "round": "group",
+        "table": "A",
+        "match_date": "2023-11-12T08:30:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Khoa Y dược, ĐH Đà Nẵng",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 9,
+        "round": "group",
+        "table": "A",
+        "match_date": "2023-11-12T09:30:00",
+        "team_A": "Đại học CNTT Việt - Hàn",
+        "team_B": "Đại học Sư phạm Đà Nẵng",
+        "score_A": 2,
+        "score_B": 1
+      },
+      {
+        "id": 10,
+        "round": "group",
+        "table": "B",
+        "match_date": "2023-11-12T10:30:00",
+        "team_A": "Vùng 3 Hải Quân",
+        "team_B": "Đại học Sư phạm Kỹ thuật",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 11,
+        "round": "group",
+        "table": "B",
+        "match_date": "2023-11-12T14:00:00",
+        "team_A": "BCH quân sự thành phố",
+        "team_B": "Tiểu đoàn CSDN số 3, BCA",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 12,
+        "round": "group",
+        "table": "C",
+        "match_date": "2023-11-12T15:00:00",
+        "team_A": "Đại học FPT",
+        "team_B": "Đại học Greenwich",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 13,
+        "round": "group",
+        "table": "D",
+        "match_date": "2023-11-12T16:00:00",
+        "team_A": "Cao đẳng du lịch Đà Nẵng",
+        "team_B": "Đoàn TN Công an Thành phố",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 14,
+        "round": "group",
+        "table": "E",
+        "match_date": "2023-11-13T07:30:00",
+        "team_A": "Khoa Y dược, Đại học Đà Nẵng",
+        "team_B": "Cao đẳng du lịch Đà Nẵng",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 15,
+        "round": "group",
+        "table": "A",
+        "match_date": "2023-11-13T08:30:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Đại học Sư phạm Đà Nẵng",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 16,
+        "round": "group",
+        "table": "A",
+        "match_date": "2023-11-13T09:30:00",
+        "team_A": "Đại học CNTT Việt - Hàn",
+        "team_B": "Khoa Y dược, ĐH Đà Nẵng",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 17,
+        "round": "group",
+        "table": "F",
+        "match_date": "2023-11-13T10:30:00",
+        "team_A": "Đại học Duy Tân",
+        "team_B": "Đại học CNTT Việt - Hàn",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 18,
+        "round": "group",
+        "table": "B",
+        "match_date": "2023-11-13T14:00:00",
+        "team_A": "Vùng 3 Hải Quân",
+        "team_B": "Tiểu đoàn CSDN số 3, BCA",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 19,
+        "round": "group",
+        "table": "B",
+        "match_date": "2023-11-13T15:00:00",
+        "team_A": "BCH quân sự thành phố",
+        "team_B": "Đại học Sư phạm Kỹ thuật",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 20,
+        "round": "group",
+        "table": "C",
+        "match_date": "2023-11-13T16:00:00",
+        "team_A": "Đại học FPT",
+        "team_B": "ĐH Duy Tân",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 21,
+        "round": "group",
+        "table": "E",
+        "match_date": "2023-11-14T07:30:00",
+        "team_A": "Khoa Y dược, Đại học Đà Nẵng",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 22,
+        "round": "group",
+        "table": "F",
+        "match_date": "2023-11-14T08:30:00",
+        "team_A": "Đại học Duy Tân",
+        "team_B": "Đại học Đông Á",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 23,
+        "round": "group",
+        "table": "D",
+        "match_date": "2023-11-14T09:30:00",
+        "team_A": "Cao đẳng du lịch Đà Nẵng",
+        "team_B": "ĐH Kiến trúc Đà Nẵng",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 24,
+        "round": "group",
+        "table": "A",
+        "match_date": "2023-11-14T10:30:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Đại học CNTT Việt - Hàn",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 27,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2023-11-15T07:30:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Vùng 3 Hải Quân",
+        "score_A": 2,
+        "score_B": 1
+      },
+      {
+        "id": 28,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2023-11-15T08:30:00",
+        "team_A": "Đại học Sư phạm Kỹ thuật",
+        "team_B": "Đại học CNTT Việt - Hàn",
+        "score_A": 1,
+        "score_B": 2
+      },
+      {
+        "id": 29,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2023-11-15T09:30:00",
+        "team_A": "ĐH Kiến Trúc ĐN",
+        "team_B": "ĐH Duy Tân",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 30,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2023-11-15T10:30:00",
+        "team_A": "Đoàn TN Công an Thành phố",
+        "team_B": "Đại học FPT",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 31,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2023-11-15T14:00:00",
+        "team_A": "Khoa Y dược, ĐH Đà Nẵng",
+        "team_B": "ĐH Duy Tân",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 32,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2023-11-15T15:00:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 33,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2023-11-16T13:30:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Đoàn TN Công an Thành phố",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 34,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2023-11-16T14:30:00",
+        "team_A": "Đại học Kiến Trúc Đà Nẵng",
+        "team_B": "Đại học Sư phạm Kỹ thuật",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 35,
+        "round": "third-place",
+        "table": null,
+        "match_date": "2023-11-16T14:30:00",
+        "team_A": "Đại học Duy Tân",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 36,
+        "round": "third-place",
+        "table": null,
+        "match_date": "2023-11-16T15:30:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Đại học Sư phạm Kỹ thuật",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 37,
         "round": "final",
         "table": null,
-        "match_date": "2025-08-25T15:00:00",
-        "team_A": "Liên Chiểu Women",
-        "team_B": "Sơn Trà Women",
-        "score_A": 1,
-        "score_B": 3
+        "match_date": "2023-11-18T15:00:00",
+        "team_A": "Đại học Đông Á",
+        "team_B": "Khoa Y dược, ĐH Đà Nẵng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 38,
+        "round": "final",
+        "table": null,
+        "match_date": "2023-11-18T16:00:00",
+        "team_A": "ĐH Kiến Trúc ĐN",
+        "team_B": "Đoàn TN Công an Thành phố",
+        "score_A": null,
+        "score_B": null
       }
     ],
-    "created_at": "2025-07-30",
-    "updated_at": "2025-08-26",
+    "created_at": "2023-11-11",
+    "updated_at": "2023-11-18",
     "created_by": 1
   },
   {
     "id": 7,
-    "name": "Cúp Bóng chuyền Các Câu lạc bộ Biển Đà Nẵng 2025",
-    "description": "Giải bóng chuyền bãi biển quy tụ nhiều đội mạnh đến từ miền Trung.",
-    "start_date": "2025-11-03",
-    "end_date": "2025-11-07",
-    "location": "Bãi biển Mỹ Khê, Đà Nẵng",
-    "status": "ongoing",
+    "name": "Giải Bóng chuyền Nam Công An TP Đà Nẵng năm 2024",
+    "description": "“Giải Bóng chuyền Nam Công An TP Đà Nẵng năm 2024” là hoạt động thể thao thường niên do Công an Thành phố Đà Nẵng tổ chức, nhằm rèn luyện sức khỏe, nâng cao tinh thần đoàn kết và giao lưu giữa các đơn vị trong lực lượng. Giải đấu góp phần thúc đẩy phong trào thể dục thể thao, xây dựng hình ảnh người chiến sĩ Công an nhân dân khỏe mạnh, bản lĩnh và giàu tinh thần đồng đội.",
+    "start_date": "2024-04-05",
+    "end_date": "2024-04-09",
+    "location": "Trường THCS Trần Đại Nghĩa, Q. Ngũ Hành Sơn, TP. Đà Nẵng",
+    "status": "ended",
     "form_id": "F007",
     "registration_open": false,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/09/12/bong-chuyen-bien-2024-1-20240912110322.jpg",
-    "related_files": [
-      {
-        "name": "Lịch thi đấu bãi biển",
-        "doc_url": "/documents/lich-bong-chuyen-bien.pdf"
-      }
-    ],
-    "match_schedules": [
-      {
-        "id": 1,
-        "round": "group_stage",
-        "table": "A",
-        "match_date": "2025-11-04T09:00:00",
-        "team_A": "CLB Biển Sơn Trà",
-        "team_B": "CLB Biển Hội An",
-        "score_A": 2,
-        "score_B": 0
-      }
-    ],
-    "created_at": "2025-10-10",
+    "schedule_img": [],
+    "related_files": [],
+    "match_schedules": [],
+    "created_at": "2024-04-05",
     "updated_at": null,
     "created_by": 1
   },
   {
     "id": 8,
-    "name": "Giải Giao hữu Bóng chuyền Đà Nẵng - Huế - Quảng Nam 2025",
-    "description": "Giải giao hữu ba địa phương miền Trung nhằm tăng cường giao lưu thể thao.",
-    "start_date": "2025-12-20",
-    "end_date": "2025-12-22",
-    "location": "Nhà thi đấu Quảng Nam",
-    "status": "coming",
+    "name": "Giải Bóng chuyền Truyền thống Thanh niên Đà Nẵng lần thứ III năm 2024",
+    "description": "“Giải Bóng chuyền Thanh Niên Đà Nẵng lần III năm 2024” là hoạt động thể thao ý nghĩa nhằm tăng cường mối quan hệ giao lưu, đoàn kết giữa sinh viên và các đơn vị lực lượng vũ trang trên địa bàn. Giải đấu không chỉ tạo sân chơi lành mạnh, rèn luyện sức khỏe, mà còn góp phần phát huy tinh thần trẻ trung, năng động và gắn kết cộng đồng trong phong trào thể thao toàn thành phố.",
+    "start_date": "2024-12-01",
+    "end_date": "2024-12-05",
+    "location": "Trường THCS Trần Đại Nghĩa, Q. Ngũ Hành Sơn, TP. Đà Nẵng",
+    "status": "ended",
     "form_id": "F008",
-    "registration_open": true,
-    "schedule_img": "https://cdn-img.thethao247.vn/storage/files/hoanglong/2024/08/18/bong-chuyen-vn-2024-2-20240818111345.jpg",
+    "registration_open": false,
+    "schedule_img": [
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762623078/e6_wxgx5i.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762623078/e5_j9wbhb.jpg"
+    ],
     "related_files": [],
-    "match_schedules": [],
-    "created_at": "2025-11-01",
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T09:00:00",
+        "team_A": "Trường Y Dược ĐHĐN",
+        "team_B": "ĐH Duy Tân",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 2,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T10:00:00",
+        "team_A": "ĐH Sư Phạm",
+        "team_B": "ĐH CNTT&TT Việt Hàn",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 3,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T15:30:00",
+        "team_A": "ĐH Đông Á",
+        "team_B": "ĐH Ngoại ngữ",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 4,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T09:00:00",
+        "team_A": "Trường Y Dược ĐHĐN",
+        "team_B": "ĐH Sư Phạm",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 5,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T10:00:00",
+        "team_A": "ĐH Duy Tân",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 6,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T13:30:00",
+        "team_A": "ĐH Kiến trúc",
+        "team_B": "ĐH Kinh tế",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 7,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T09:00:00",
+        "team_A": "Trường Y Dược ĐHĐN",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 8,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T10:00:00",
+        "team_A": "ĐH Duy Tân",
+        "team_B": "ĐH CNTT&TT Việt Hàn",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 9,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T15:30:00",
+        "team_A": "ĐH Đông Á",
+        "team_B": "ĐH Kiến trúc",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 10,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T16:30:00",
+        "team_A": "ĐH Ngoại ngữ",
+        "team_B": "ĐH Kinh tế",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 11,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T07:00:00",
+        "team_A": "Trường Y Dược ĐHĐN",
+        "team_B": "ĐH CNTT&TT Việt Hàn",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 12,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T08:00:00",
+        "team_A": "ĐH Sư Phạm",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 13,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T09:00:00",
+        "team_A": "ĐH Duy Tân",
+        "team_B": "ĐH Sư Phạm",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 14,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T10:00:00",
+        "team_A": "ĐH CNTT&TT Việt Hàn",
+        "team_B": "THCS Trần Đại Nghĩa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 15,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T13:30:00",
+        "team_A": "ĐH Đông Á",
+        "team_B": "ĐH Kinh tế",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 16,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T14:30:00",
+        "team_A": "ĐH Ngoại ngữ",
+        "team_B": "ĐH Kiến trúc",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 17,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2024-12-07T14:30:00",
+        "team_A": "Nhất bảng E",
+        "team_B": "Nhì bảng F",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 18,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2024-12-07T15:30:00",
+        "team_A": "Nhất bảng F",
+        "team_B": "Nhì bảng E",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 19,
+        "round": "third-place",
+        "table": null,
+        "match_date": "2024-12-08T08:00:00",
+        "team_A": "Thua BK1",
+        "team_B": "Thua BK2",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 20,
+        "round": "final",
+        "table": null,
+        "match_date": "2024-12-08T13:30:00",
+        "team_A": "Thắng BK1",
+        "team_B": "Thắng BK2",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 21,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T08:00:00",
+        "team_A": "ĐH Duy Tân",
+        "team_B": "ĐH SPKT",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 22,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T10:00:00",
+        "team_A": "ĐH Greenwich",
+        "team_B": "ĐH Sư phạm",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 23,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T13:00:00",
+        "team_A": "ĐH Kinh tế",
+        "team_B": "ĐH Y Dược",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 24,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T14:00:00",
+        "team_A": "ĐH Kiến trúc",
+        "team_B": "ĐH Đông Á",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 25,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-01T16:30:00",
+        "team_A": "ĐH FPT",
+        "team_B": "ĐH CNTT&TT Việt Hàn",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 26,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T07:00:00",
+        "team_A": "Trường Y Dược ĐHĐN",
+        "team_B": "BCH Biên phòng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 27,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T08:00:00",
+        "team_A": "Vùng 3 Hải quân",
+        "team_B": "ĐH Bách khoa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 28,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T14:30:00",
+        "team_A": "ĐH Kiến trúc",
+        "team_B": "ĐH Duy Tân",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 29,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T15:30:00",
+        "team_A": "ĐH Đông Á",
+        "team_B": "ĐH SPKT",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 30,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-02T16:30:00",
+        "team_A": "ĐH Greenwich",
+        "team_B": "ĐH Kinh tế",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 31,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T07:00:00",
+        "team_A": "ĐH Sư phạm",
+        "team_B": "ĐH Y Dược",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 32,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T08:00:00",
+        "team_A": "Đoàn CSDN số 3",
+        "team_B": "ĐH Bách khoa",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 33,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T13:30:00",
+        "team_A": "ĐH FPT",
+        "team_B": "Trường Y Dược ĐHĐN",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 34,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-03T14:30:00",
+        "team_A": "ĐH CNTT&TT Việt Hàn",
+        "team_B": "BCH Biên phòng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 35,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T09:00:00",
+        "team_A": "ĐH Kiến trúc",
+        "team_B": "ĐH SPKT",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 36,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T10:00:00",
+        "team_A": "ĐH Đông Á",
+        "team_B": "ĐH Duy Tân",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 37,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T13:30:00",
+        "team_A": "Đoàn CSDN số 3",
+        "team_B": "Công an TP Đà Nẵng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 38,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T14:30:00",
+        "team_A": "ĐH Greenwich",
+        "team_B": "ĐH Y Dược",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 39,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T15:30:00",
+        "team_A": "ĐH Sư phạm",
+        "team_B": "ĐH Kinh tế",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 40,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-04T16:30:00",
+        "team_A": "ĐH FPT",
+        "team_B": "BCH Biên phòng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 41,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T07:00:00",
+        "team_A": "ĐH CNTT&TT Việt Hàn",
+        "team_B": "Trường Y Dược ĐHĐN",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 42,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T08:00:00",
+        "team_A": "Vùng 3 Hải quân",
+        "team_B": "Công an TP Đà Nẵng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 43,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T15:30:00",
+        "team_A": "Vùng 3 Hải quân",
+        "team_B": "Đoàn CSDN số 3",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 44,
+        "round": "group",
+        "table": null,
+        "match_date": "2024-12-05T16:30:00",
+        "team_A": "ĐH Bách khoa",
+        "team_B": "Công an TP Đà Nẵng",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 45,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2024-12-06T13:30:00",
+        "team_A": "Nhất bảng A",
+        "team_B": "Nhì bảng B",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 46,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2024-12-06T14:30:00",
+        "team_A": "Nhất bảng B",
+        "team_B": "Nhì bảng A",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 47,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2024-12-06T15:30:00",
+        "team_A": "Nhất bảng C",
+        "team_B": "Nhì bảng D",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 48,
+        "round": "quarter-final",
+        "table": null,
+        "match_date": "2024-12-06T16:30:00",
+        "team_A": "Nhất bảng D",
+        "team_B": "Nhì bảng C",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 49,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2024-12-07T13:30:00",
+        "team_A": "Thắng TK1",
+        "team_B": "Thắng TK3",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 50,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2024-12-07T16:30:00",
+        "team_A": "Thắng TK2",
+        "team_B": "Thắng TK4",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 51,
+        "round": "third-place",
+        "table": null,
+        "match_date": "2024-12-08T09:00:00",
+        "team_A": "Thua BK1",
+        "team_B": "Thua BK2",
+        "score_A": null,
+        "score_B": null
+      },
+      {
+        "id": 52,
+        "round": "final",
+        "table": null,
+        "match_date": "2024-12-08T15:30:00",
+        "team_A": "Thắng BK1",
+        "team_B": "Thắng BK2",
+        "score_A": null,
+        "score_B": null
+      }
+    ],
+    "created_at": "2024-12-01",
+    "updated_at": null,
+    "created_by": 1
+  },
+  {
+    "id": 9,
+    "name": "Giải Bóng Chuyền Sinh Viên Toàn Quốc SV6 VietSport Cup năm 2025",
+    "description": "Giải Bóng Chuyền Sinh Viên Toàn Quốc SV6 năm 2025 là giải đấu quy mô quốc gia dành cho sinh viên các trường đại học, cao đẳng trên toàn Việt Nam, tạo sân chơi chuyên nghiệp để giao lưu, thi đấu và nâng cao trình độ chuyên môn. Sự kiện nhằm khuyến khích phong trào thể thao học đường, phát hiện và bồi dưỡng tài năng trẻ, đồng thời tăng cường tinh thần đoàn kết, hợp tác giữa các cơ sở giáo dục trong cả nước.",
+    "start_date": "2025-05-19",
+    "end_date": "2025-05-23",
+    "location": "Nhà thi đấu Đại học Đà Nẵng, 62 Ngô Sĩ Liên, Quận Liên Chiểu, TP. Đà Nẵng",
+    "status": "ended",
+    "form_id": "F009",
+    "registration_open": false,
+    "schedule_img": [
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762657997/sv6_1_wmlk4c.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762657942/sv6_2_oh4aih.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762657929/sv6_3_mnehyf.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762657924/sv6_4_tdqocy.jpg",
+      "https://res.cloudinary.com/dikzmjuff/image/upload/v1762657921/sv6_5_firoip.jpg"
+    ],
+    "related_files": [],
+    "match_schedules": [
+      {
+        "id": 1,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-19T14:00:00",
+        "team_A": "Trường ĐH Tôn Đức Thắng",
+        "team_B": "Trường ĐH Quảng Nam",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 2,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-19T15:30:00",
+        "team_A": "Đại học Đà Nẵng",
+        "team_B": "Trường ĐH Văn Hiến",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 3,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-19T16:30:00",
+        "team_A": "Trường ĐH Kiến trúc Đà Nẵng",
+        "team_B": "Trường ĐH Sư phạm TDTT TP.HCM",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 4,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-19T17:30:00",
+        "team_A": "Trường ĐH Phan Châu Trinh",
+        "team_B": "Trường ĐH FPT Đà Nẵng",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 5,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-20T14:00:00",
+        "team_A": "Trường ĐH Văn Hiến",
+        "team_B": "Trường ĐH Quảng Nam",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 6,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-20T15:00:00",
+        "team_A": "Đại học Đà Nẵng",
+        "team_B": "Trường ĐH Tôn Đức Thắng",
+        "score_A": 2,
+        "score_B": 1
+      },
+      {
+        "id": 7,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-20T16:00:00",
+        "team_A": "Trường ĐH Phan Châu Trinh",
+        "team_B": "Trường ĐH Kiến trúc Đà Nẵng",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 8,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-20T17:00:00",
+        "team_A": "Trường ĐH FPT Đà Nẵng",
+        "team_B": "Trường ĐH Sư phạm TDTT TP.HCM",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 9,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-21T14:00:00",
+        "team_A": "Trường ĐH Sư phạm TDTT TP.HCM",
+        "team_B": "Trường ĐH Phan Châu Trinh",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 10,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-21T15:00:00",
+        "team_A": "Trường ĐH Kiến trúc Đà Nẵng",
+        "team_B": "Trường ĐH FPT Đà Nẵng",
+        "score_A": 2,
+        "score_B": 1
+      },
+      {
+        "id": 11,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-21T16:00:00",
+        "team_A": "Trường ĐH Tôn Đức Thắng",
+        "team_B": "Trường ĐH Văn Hiến",
+        "score_A": 1,
+        "score_B": 2
+      },
+      {
+        "id": 12,
+        "round": "group",
+        "table": null,
+        "match_date": "2025-05-21T17:00:00",
+        "team_A": "Trường ĐH Quảng Nam",
+        "team_B": "Đại học Đà Nẵng",
+        "score_A": 0,
+        "score_B": 2
+      },
+      {
+        "id": 13,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2025-05-23T09:00:00",
+        "team_A": "Đại học Đà Nẵng",
+        "team_B": "Trường ĐH Sư phạm TDTT TP.HCM",
+        "score_A": 2,
+        "score_B": 1
+      },
+      {
+        "id": 14,
+        "round": "semi-final",
+        "table": null,
+        "match_date": "2025-05-23T10:00:00",
+        "team_A": "Trường ĐH Kiến trúc Đà Nẵng",
+        "team_B": "Trường ĐH Văn Hiến",
+        "score_A": 2,
+        "score_B": 0
+      },
+      {
+        "id": 15,
+        "round": "final",
+        "table": null,
+        "match_date": "2025-05-23T15:30:00",
+        "team_A": "Đại học Đà Nẵng",
+        "team_B": "Trường ĐH Kiến trúc Đà Nẵng",
+        "score_A": 1,
+        "score_B": 2
+      }
+    ],
+    "created_at": "2025-05-19",
     "updated_at": null,
     "created_by": 1
   }

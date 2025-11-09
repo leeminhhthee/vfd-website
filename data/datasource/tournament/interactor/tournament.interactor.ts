@@ -4,7 +4,7 @@ import { tournamentRepository } from "../repository/tournament.repository";
 export const tournamentInteractor = {
   async getTournamentList() {
     const list = await tournamentRepository.getTournamentList();
-    return list;
+    return list.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
   },
 
   async getTournamentById(id: number) {
@@ -12,7 +12,8 @@ export const tournamentInteractor = {
   },
 
   async getRelatedTournaments(id: number) {
-    return await tournamentRepository.getRelatedTournaments(id);
+    const tournaments = await tournamentRepository.getRelatedTournaments(id);
+    return tournaments.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
   },
 
   async getUpcomingTournaments() {
@@ -24,7 +25,7 @@ export const tournamentInteractor = {
         const endDate = new Date(tournament.endDate);
         return endDate >= now && tournament.status === ScheduleStatus.COMING;
       })
-      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+      .sort((a, b) => new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime())
       .slice(0, 3);
   },
 };

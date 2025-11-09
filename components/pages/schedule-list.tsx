@@ -94,7 +94,7 @@ export default function ScheduleList() {
                       : "bg-gray-100 text-gray-700"
                   }`}
                 >
-                  {getScheduleStatusLabel(schedule.status as ScheduleStatus)}
+                  {getScheduleStatusLabel(schedule.status)}
                 </span>
               </div>
             </div>

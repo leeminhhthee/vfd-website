@@ -134,7 +134,7 @@ export default function UserFooter() {
                 />
               </a>
               <a
-                href="https://www.tiktok.com/@your-tiktok"
+                href="https://www.tiktok.com/@ldbongchuyendanang"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"
@@ -149,7 +149,7 @@ export default function UserFooter() {
                 />
               </a>
               <a
-                href="https://www.youtube.com/@your-channel"
+                href="https://www.youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"

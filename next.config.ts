@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "bqn.1cdn.vn",
+        port: "",
+        pathname: "/**",
+      }
     ],
     qualities: [75, 100],
   },

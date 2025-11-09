@@ -1,6 +1,7 @@
 "use client";
 
 import { trans } from "@/app/generated/AppLocalization";
+import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
@@ -95,12 +96,14 @@ export default function NewsGrid() {
             <Image
               src={featuredNews.imageUrl || "/placeholder.svg"}
               alt={featuredNews.title}
+              width={800}
+              height={384}
               className="w-full h-96 object-cover"
             />
             <div className="p-6">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold text-white bg-primary px-3 py-1 rounded-full">
-                  {featuredNews.type}
+                  {getNewsTypeLabel(featuredNews.type)}
                 </span>
                 <span className="text-sm text-muted-foreground">
                   {new Date(featuredNews.createdAt).toLocaleDateString("vi-VN")}
@@ -132,6 +135,8 @@ export default function NewsGrid() {
                   <Image
                     src={item.imageUrl || "/placeholder.svg"}
                     alt={item.title}
+                    width={96}
+                    height={96}
                     className="w-24 h-24 object-cover rounded-lg flex-shrink-0 group-hover:opacity-80 transition-opacity"
                   />
                   <div className="flex-1 min-w-0">
@@ -165,12 +170,14 @@ export default function NewsGrid() {
                 <Image
                   src={item.imageUrl || "/placeholder.svg"}
                   alt={item.title}
+                  width={400}
+                  height={192}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-bold text-white bg-primary px-3 py-1 rounded-full">
-                      {item.type}
+                      {getNewsTypeLabel(item.type)}
                     </span>
                     <span className="text-sm text-muted-foreground">
                       {new Date(item.createdAt).toLocaleDateString("vi-VN")}
@@ -186,7 +193,7 @@ export default function NewsGrid() {
                     href={`/news/${item.id}`}
                     className="text-accent font-bold hover:text-accent-light transition-colors"
                   >
-                    Đọc thêm →
+                    {trans.readMore}
                   </Link>
                 </div>
               </article>
@@ -237,7 +244,7 @@ export default function NewsGrid() {
       {filteredNews.length === 0 && (
         <div className="text-center py-12">
           <p className="text-muted-foreground text-lg">
-            Không tìm thấy tin tức nào
+            {trans.noNewsFound}
           </p>
         </div>
       )}
