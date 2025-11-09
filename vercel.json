@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "VITE_ESLINT_DISABLE": "TRUE"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
