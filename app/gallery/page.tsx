@@ -11,10 +11,12 @@ import {
 } from "@/data/constants/constants";
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trans } from "../generated/AppLocalization";
 
 const ITEMS_PER_PAGE = 8;
+const SESSION_TAB_KEY = "gallery_current_tab";
+const SESSION_PAGE_KEY = "gallery_current_page";
 
 const GALLERY_CATEGORIES = Object.entries(GalleryCategoryLabels).map(
   ([id, label]) => ({
@@ -24,8 +26,22 @@ const GALLERY_CATEGORIES = Object.entries(GalleryCategoryLabels).map(
 );
 
 export default function GalleryPage() {
-  const [activeCategory, setActiveCategory] = useState(GalleryCategory.INSIDE);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activeCategory, setActiveCategory] = useState(() => {
+    // Load từ sessionStorage khi component mount
+    if (typeof window !== "undefined") {
+      const savedTab = sessionStorage.getItem(SESSION_TAB_KEY);
+      return savedTab ? (savedTab as GalleryCategory) : GalleryCategory.INSIDE;
+    }
+    return GalleryCategory.INSIDE;
+  });
+  const [currentPage, setCurrentPage] = useState(() => {
+    // Load từ sessionStorage khi component mount
+    if (typeof window !== "undefined") {
+      const savedPage = sessionStorage.getItem(SESSION_PAGE_KEY);
+      return savedPage ? parseInt(savedPage) : 1;
+    }
+    return 1;
+  });
 
   const {
     data: galleryData,
@@ -46,6 +62,20 @@ export default function GalleryPage() {
     startIndex,
     startIndex + ITEMS_PER_PAGE
   );
+
+  // Lưu vào sessionStorage mỗi khi currentPage thay đổi
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(SESSION_PAGE_KEY, currentPage.toString());
+    }
+  }, [currentPage]);
+
+  // Lưu vào sessionStorage mỗi khi activeCategory thay đổi
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(SESSION_TAB_KEY, activeCategory);
+    }
+  }, [activeCategory]);
 
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId as GalleryCategory);
