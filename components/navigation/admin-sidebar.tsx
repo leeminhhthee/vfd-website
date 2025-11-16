@@ -1,31 +1,59 @@
-"use client"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { LayoutDashboard, FileText, Calendar, Users, Trophy, ImageIcon, Settings, ChevronRight } from "lucide-react"
-import Image from "next/image"
+"use client";
+import {
+  Calendar,
+  ChevronRight,
+  FileText,
+  Handshake,
+  ImageIcon,
+  LayoutDashboard,
+  Notebook,
+  Settings,
+  Trophy,
+  UserCheck,
+  Users,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface AdminSidebarProps {
-  open: boolean
+  open: boolean;
 }
 
 export default function AdminSidebar({ open }: AdminSidebarProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const menuItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { label: "Tin tức", href: "/admin/news", icon: FileText },
     { label: "Tài liệu", href: "/admin/documents", icon: FileText },
-    { label: "Lịch thi đấu", href: "/admin/schedule", icon: Calendar },
-    { label: "Giải đấu", href: "/admin/tournaments", icon: Trophy },
+    {
+      label: "Giải đấu - Kết quả",
+      icon: Trophy,
+      subItems: [
+        { label: "Giải đấu", href: "/admin/tournaments", icon: Trophy },
+        { label: "Lịch thi đấu", href: "/admin/schedule", icon: Calendar },
+        { label: "Duyệt đơn", href: "/admin/registrations", icon: UserCheck },
+      ],
+    },
+    { label: "Dự án", href: "/admin/projects", icon: Notebook },
+    { label: "Đối tác", href: "/admin/partners", icon: Handshake },
     { label: "Người dùng", href: "/admin/users", icon: Users },
     { label: "Hình ảnh", href: "/admin/photos", icon: ImageIcon },
     { label: "Cài đặt", href: "/admin/settings", icon: Settings },
-  ]
+  ];
 
   return (
-    <aside className={`${open ? "w-64" : "w-20"} bg-primary text-white transition-all duration-300 overflow-y-auto`}>
+    <aside
+      className={`${
+        open ? "w-64" : "w-20"
+      } bg-primary text-white transition-all duration-300 overflow-y-auto`}
+    >
       <div className="p-4 border-b border-primary-light">
-        <Link href="/admin" className="flex items-center gap-3 font-bold text-lg">
+        <Link
+          href="/admin"
+          className="flex items-center gap-3 font-bold text-lg"
+        >
           <Image
             src="/logo-vfd-full.png"
             alt="Liên đoàn Bóng chuyền TP Đà Nẵng"
@@ -39,23 +67,83 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
 
       <nav className="p-4 space-y-2">
         {menuItems.map((item) => {
-          const Icon = item.icon
-          const isActive = pathname === item.href
+          const Icon = item.icon;
+          const hasSub = !!item.subItems;
+          const isActive =
+            pathname === item.href ||
+            item.subItems?.some((sub) => pathname === sub.href);
 
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive ? "bg-accent text-primary font-medium" : "hover:bg-primary-light text-white"
-                }`}
-            >
-              <Icon size={20} className="shrink-0" />
-              {open && <span className="text-sm">{item.label}</span>}
-              {open && isActive && <ChevronRight size={16} className="ml-auto" />}
-            </Link>
-          )
+            <div key={item.label} className="relative group">
+              {/* Main menu item */}
+              {hasSub ? (
+                // ❌ Mục có submenu → KHÔNG redirect
+                <div
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${
+                    isActive
+                      ? "bg-accent text-primary font-medium"
+                      : "hover:bg-primary-light text-white"
+                  }`}
+                >
+                  <Icon size={20} className="shrink-0" />
+                  {open && <span className="text-sm">{item.label}</span>}
+                  {open && <ChevronRight size={16} className="ml-auto" />}
+                </div>
+              ) : (
+                // ✅ Mục không có submenu → redirect bình thường
+                <Link
+                  href={item.href!}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                    isActive
+                      ? "bg-accent text-primary font-medium"
+                      : "hover:bg-primary-light text-white"
+                  }`}
+                >
+                  <Icon size={20} className="shrink-0" />
+                  {open && <span className="text-sm">{item.label}</span>}
+                </Link>
+              )}
+
+              {/* Sub menu (hover only) */}
+              {/* Sub menu (hover only) */}
+              {hasSub && open && (
+                <div className="absolute left-0 top-full mt-0 w-full bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-opacity z-50">
+                  {item.subItems!.map((sub, index) => {
+                    const SubIcon = sub.icon;
+                    const isSubActive = pathname === sub.href;
+
+                    // Xác định item đầu & cuối
+                    const isFirst = index === 0;
+                    const isLast = index === item.subItems!.length - 1;
+
+                    return (
+                      <Link
+                        key={sub.href}
+                        href={sub.href}
+                        className={`
+            flex items-center gap-2 px-4 py-2 text-sm transition-colors text-primary
+
+            ${
+              isSubActive
+                ? "bg-accent text-primary font-medium"
+                : "hover:bg-accent-light"
+            }
+
+            ${isFirst ? "rounded-t-lg" : ""}
+            ${isLast ? "rounded-b-lg" : ""}
+          `}
+                      >
+                        <SubIcon size={16} className="text-primary" />
+                        <span>{sub.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
         })}
       </nav>
     </aside>
-  )
+  );
 }

@@ -36,7 +36,6 @@ seeMore,Xem thêm,See more
 loadingImageError,Có lỗi xảy ra khi tải ảnh,An error occurred while loading images
 noPhotosAvailable,Hiện chưa có ảnh cho mục này.,No photos available for this section.
 seeAll,Xem thêm tất cả,See all
-team,Đội tuyển,Team
 cityTournament,Giải đấu TP,City Tournament
 otherActivities,Hoạt động khác,Other Activities
 share,Chia sẻ,Share
@@ -76,3 +75,34 @@ index,STT,No.
 dateTime,Ngày - Giờ,Date - Time
 score,Tỉ số,Score
 team,Đội,Team
+volleyballFederation,Liên Đoàn Bóng Chuyền,Volleyball Federation
+danangCity,Thành Phố Đà Nẵng,Da Nang City
+systemAdminVfd,Hệ thống quản lý chuyên nghiệp cho Liên đoàn Bóng chuyền TP Đà Nẵng,Professional management system for Da Nang Volleyball Federation
+tournamentManagement,Quản lý giải đấu,Tournament Management
+newsManagement,Quản lý tin tức,News Management
+dataStatistics,Thống kê dữ liệu,Data Statistics
+activityReports,Báo cáo hoạt động,Activity Reports
+login,Đăng nhập,Login
+pleaseEnterValidEmailAndPassword,Vui lòng nhập email và mật khẩu hợp lệ,Please enter a valid email and password
+forgotPassword,Quên mật khẩu?,Forgot Password?
+errorOccurred,Đã xảy ra lỗi. Vui lòng thử lại.,An error occurred. Please try again.
+accessAdminDashboard,Truy cập bảng điều khiển Admin,Access Admin Dashboard
+email,Email,Email
+password,Mật khẩu,Password
+rememberMe,Ghi nhớ đăng nhập,Remember Me
+processing,Đang xử lý...,Processing...
+pleaseEnterValidEmail,Vui lòng nhập email hợp lệ,Please enter a valid email
+emailConfirmationSent,Email Xác Nhận Đã Gửi,Email Confirmation Sent
+emailConfirmationSentDescription,Chúng tôi đã gửi email xác nhận đặt lại mật khẩu đến,We have sent a password reset confirmation email to
+pleaseCheckYourInbox,Vui lòng kiểm tra hộp thư của bạn.,Please check your inbox.
+redirectToConfirmationScreen,Chuyển hướng đến màn hình xác nhận...,Redirecting to confirmation screen...
+enterEmailToReset,Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu,Enter your email to receive password reset instructions
+sendConfirmationEmail,Gửi Email Xác Nhận,Send Confirmation Email
+passwordConfirmationMismatch,Mật khẩu xác nhận không khớp,Password confirmation does not match
+passwordMinLength,Mật khẩu phải có ít nhất 8 ký tự,Password must be at least 8 characters long
+passwordResetSuccess,Đặt Lại Mật Khẩu Thành Công,Password Reset Successful
+passwordResetSuccessDescription,Mật khẩu của bạn đã được cập nhật. Đang đăng nhập...,Your password has been updated. Logging in...
+enterNewPassword,Nhập mật khẩu mới của bạn,Enter your new password
+newPassword,Mật khẩu mới,New Password
+confirmPassword,Xác Nhận Mật Khẩu,Confirm Password
+resetPassword,Đặt Lại Mật Khẩu,Reset Password

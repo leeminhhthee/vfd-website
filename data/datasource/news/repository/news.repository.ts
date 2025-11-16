@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
+import { api } from "../../../../app/api/api";
 import newsMock from "../../../mockup/news.json";
 import { NewsItem } from "../../../model/news.model";
-import { api } from "../../../remote/api";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 

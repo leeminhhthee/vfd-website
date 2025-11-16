@@ -11,6 +11,21 @@
       "preLaunchTask": "Check and Install Dependencies",
       "outputCapture": "std", 
       "console": "internalConsole", 
+    },
+    
+    {
+      "name": "Production Debug",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "skipFiles": ["<node_internals>/**"],
+      "preLaunchTask": "Build Project",
+      "outputCapture": "std",
+      "console": "internalConsole"
     }
   ]
 }

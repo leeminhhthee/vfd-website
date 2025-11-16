@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
+import { api } from "../../../../app/api/api";
 import heroMock from "../../../mockup/hero.json";
 import { HeroItem } from "../../../model/hero.model";
-import { api } from "../../../remote/api";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 

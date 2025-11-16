@@ -1,0 +1,8 @@
+{
+  "id": "1",
+  "email": "admin@gmail.com",
+  "name": "Admin",
+  "access_token": "mock_access_token_123",
+  "refresh_token": "mock_refresh_token_456",
+  "is_admin": true
+}

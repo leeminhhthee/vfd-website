@@ -1,7 +1,10 @@
 // This file is auto-generated. Do not edit manually.
-// Generated at 2025-11-08T08:54:40.724Z
+// Generated at 2025-11-15T03:43:26.452Z
 
 export const ASSETS = {
+  "background": {
+    "admin_login": "/assets/background/admin_login.jpg"
+  },
   "icons": {},
   "images": {
     "bannner": "/assets/images/bannner.jpg",
@@ -30,7 +33,11 @@ export const ASSETS = {
     "vfv_logo": "/assets/logo/vfv_logo.png",
     "youtube": "/assets/logo/youtube.png"
   },
+  "lottie": {
+    "volleyball": "/assets/lottie/volleyball.json"
+  },
   "svg": {
+    "bg_admin": "/assets/svg/bg_admin.svg",
     "placeholder": "/assets/svg/placeholder.svg"
   }
 } as const;
