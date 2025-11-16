@@ -95,8 +95,6 @@ export const trans = new Proxy(
   noPhotosAvailable: string;
   /** Xem thêm tất cả | See all */
   seeAll: string;
-  /** Đội | Team */
-  team: string;
   /** Giải đấu TP | City Tournament */
   cityTournament: string;
   /** Hoạt động khác | Other Activities */
@@ -173,4 +171,68 @@ export const trans = new Proxy(
   dateTime: string;
   /** Tỉ số | Score */
   score: string;
+  /** Đội | Team */
+  team: string;
+  /** Liên Đoàn Bóng Chuyền | Volleyball Federation */
+  volleyballFederation: string;
+  /** Thành Phố Đà Nẵng | Da Nang City */
+  danangCity: string;
+  /** Hệ thống quản lý chuyên nghiệp cho Liên đoàn Bóng chuyền TP Đà Nẵng | Professional management system for Da Nang Volleyball Federation */
+  systemAdminVfd: string;
+  /** Quản lý giải đấu | Tournament Management */
+  tournamentManagement: string;
+  /** Quản lý tin tức | News Management */
+  newsManagement: string;
+  /** Thống kê dữ liệu | Data Statistics */
+  dataStatistics: string;
+  /** Báo cáo hoạt động | Activity Reports */
+  activityReports: string;
+  /** Đăng nhập | Login */
+  login: string;
+  /** Vui lòng nhập email và mật khẩu hợp lệ | Please enter a valid email and password */
+  pleaseEnterValidEmailAndPassword: string;
+  /** Quên mật khẩu? | Forgot Password? */
+  forgotPassword: string;
+  /** Đã xảy ra lỗi. Vui lòng thử lại. | An error occurred. Please try again. */
+  errorOccurred: string;
+  /** Truy cập bảng điều khiển Admin | Access Admin Dashboard */
+  accessAdminDashboard: string;
+  /** Email | Email */
+  email: string;
+  /** Mật khẩu | Password */
+  password: string;
+  /** Ghi nhớ đăng nhập | Remember Me */
+  rememberMe: string;
+  /** Đang xử lý... | Processing... */
+  processing: string;
+  /** Vui lòng nhập email hợp lệ | Please enter a valid email */
+  pleaseEnterValidEmail: string;
+  /** Email Xác Nhận Đã Gửi | Email Confirmation Sent */
+  emailConfirmationSent: string;
+  /** Chúng tôi đã gửi email xác nhận đặt lại mật khẩu đến | We have sent a password reset confirmation email to */
+  emailConfirmationSentDescription: string;
+  /** Vui lòng kiểm tra hộp thư của bạn. | Please check your inbox. */
+  pleaseCheckYourInbox: string;
+  /** Chuyển hướng đến màn hình xác nhận... | Redirecting to confirmation screen... */
+  redirectToConfirmationScreen: string;
+  /** Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu | Enter your email to receive password reset instructions */
+  enterEmailToReset: string;
+  /** Gửi Email Xác Nhận | Send Confirmation Email */
+  sendConfirmationEmail: string;
+  /** Mật khẩu xác nhận không khớp | Password confirmation does not match */
+  passwordConfirmationMismatch: string;
+  /** Mật khẩu phải có ít nhất 8 ký tự | Password must be at least 8 characters long */
+  passwordMinLength: string;
+  /** Đặt Lại Mật Khẩu Thành Công | Password Reset Successful */
+  passwordResetSuccess: string;
+  /** Mật khẩu của bạn đã được cập nhật. Đang đăng nhập... | Your password has been updated. Logging in... */
+  passwordResetSuccessDescription: string;
+  /** Nhập mật khẩu mới của bạn | Enter your new password */
+  enterNewPassword: string;
+  /** Mật khẩu mới | New Password */
+  newPassword: string;
+  /** Xác Nhận Mật Khẩu | Confirm Password */
+  confirmPassword: string;
+  /** Đặt Lại Mật Khẩu | Reset Password */
+  resetPassword: string;
 };

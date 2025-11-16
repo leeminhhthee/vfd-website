@@ -1,6 +1,6 @@
+import { api } from "../../../../app/api/api";
 import projectMock from "../../../mockup/project.json";
 import { ProjectItem } from "../../../model/project.model";
-import { api } from "../../../remote/api";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 

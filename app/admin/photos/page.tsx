@@ -1,17 +1,23 @@
-import AdminLayout from "@/components/layouts/admin-layout"
-import PhotosManagement from "@/components/admin/photos-management"
+"use client";
+
+import PhotosManagement from "@/components/admin/photos-management";
+import AdminLayout from "@/components/layouts/admin-layout";
 
 export default function AdminPhotosPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Quản lý hình ảnh</h1>
-          <p className="text-muted-foreground mt-2">Tải lên, chỉnh sửa và xóa hình ảnh</p>
+          <h1 className="text-3xl font-bold text-foreground">
+            Quản lý hình ảnh
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Tải lên, chỉnh sửa và xóa hình ảnh
+          </p>
         </div>
 
         <PhotosManagement />
       </div>
     </AdminLayout>
-  )
+  );
 }
