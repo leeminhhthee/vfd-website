@@ -1,6 +1,6 @@
 "use client";
 
-import RegistrationsManagement from "@/components/admin/registrations-management";
+import RegistrationsManagement from "@/components/admin/registration/registrations-management";
 import AdminLayout from "@/components/layouts/admin-layout";
 
 export default function AdminRegistrationsPage() {

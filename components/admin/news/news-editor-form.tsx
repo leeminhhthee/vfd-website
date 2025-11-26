@@ -1,9 +1,8 @@
 "use client";
 
-import { Button, Input, Select, Tag, notification } from "antd";
+import { Button, Image, Input, Select, Tag, notification } from "antd";
 import { ArrowLeft, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import "froala-editor/css/froala_editor.pkgd.min.css";
@@ -252,36 +251,63 @@ export default function NewsEditorForm({
             <label className="block text-sm font-medium text-foreground">
               Ảnh bìa
             </label>
-            <div className="space-y-2">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleCoverImageChange}
-                className="w-full"
-              />
-              {coverPreview && (
-                <div className="relative">
-                  <Image
-                    src={coverPreview || "/placeholder.svg"}
-                    alt="Cover preview"
-                    className="w-full h-48 object-cover rounded-lg border border-border"
-                    width={400}
-                    height={192}
-                  />
-                  <Button
-                    type="text"
-                    danger
-                    size="small"
-                    icon={<X size={16} />}
-                    onClick={() => {
-                      setCoverPreview("");
-                      setFormData((prev) => ({ ...prev, coverImage: "" }));
-                    }}
-                    style={{ position: "absolute", top: 8, right: 8 }}
-                  />
+            {coverPreview ? (
+              <div className="relative">
+                <Image
+                  src={coverPreview || "/placeholder.svg"}
+                  alt="Cover preview"
+                  className="w-full h-full object-cover rounded-lg border border-border"
+                  preview={{
+                    mask: "Phóng to",
+                  }}
+                />
+                <Button
+                  type="text"
+                  danger
+                  size="large"
+                  icon={<X size={16} />}
+                  onClick={() => {
+                    setCoverPreview("");
+                    setFormData((prev) => ({ ...prev, coverImage: "" }));
+                  }}
+                  style={{ position: "absolute", top: 0, right: 10 }}
+                />
+              </div>
+            ) : (
+              <label
+                className="flex flex-col items-center justify-center w-full h-48 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      const url = event.target?.result as string;
+                      setCoverPreview(url);
+                      setFormData((prev) => ({ ...prev, coverImage: url }));
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                onDragOver={(e) => e.preventDefault()}
+              >
+                <div className="flex flex-col items-center justify-center">
+                  <Sparkles size={32} className="text-muted-foreground mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-bold">Nhấp để chọn</span> hoặc kéo thả
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG (tối đa 10MB)
+                  </p>
                 </div>
-              )}
-            </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleCoverImageChange}
+                />
+              </label>
+            )}
           </div>
         </div>
 

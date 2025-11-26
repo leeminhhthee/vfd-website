@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Calendar,
   ChevronRight,
@@ -15,6 +16,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 interface AdminSidebarProps {
   open: boolean;
@@ -22,6 +24,7 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({ open }: AdminSidebarProps) {
   const pathname = usePathname();
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const menuItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -74,11 +77,15 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
             item.subItems?.some((sub) => pathname === sub.href);
 
           return (
-            <div key={item.label} className="relative group">
+            <div key={item.label} className="relative">
               {/* Main menu item */}
               {hasSub ? (
-                // ❌ Mục có submenu → KHÔNG redirect
                 <div
+                  onClick={() =>
+                    setOpenSubmenu(
+                      openSubmenu === item.label ? null : item.label
+                    )
+                  }
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${
                     isActive
                       ? "bg-accent text-primary font-medium"
@@ -90,7 +97,6 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
                   {open && <ChevronRight size={16} className="ml-auto" />}
                 </div>
               ) : (
-                // ✅ Mục không có submenu → redirect bình thường
                 <Link
                   href={item.href!}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
@@ -104,15 +110,12 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
                 </Link>
               )}
 
-              {/* Sub menu (hover only) */}
-              {/* Sub menu (hover only) */}
-              {hasSub && open && (
-                <div className="absolute left-0 top-full mt-0 w-full bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-opacity z-50">
+              {/* Submenu (click only) */}
+              {hasSub && open && openSubmenu === item.label && (
+                <div className="absolute left-0 top-full mt-1 w-full bg-white rounded-lg shadow-lg z-50">
                   {item.subItems!.map((sub, index) => {
                     const SubIcon = sub.icon;
                     const isSubActive = pathname === sub.href;
-
-                    // Xác định item đầu & cuối
                     const isFirst = index === 0;
                     const isLast = index === item.subItems!.length - 1;
 
@@ -121,17 +124,15 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
                         key={sub.href}
                         href={sub.href}
                         className={`
-            flex items-center gap-2 px-4 py-2 text-sm transition-colors text-primary
-
-            ${
-              isSubActive
-                ? "bg-accent text-primary font-medium"
-                : "hover:bg-accent-light"
-            }
-
-            ${isFirst ? "rounded-t-lg" : ""}
-            ${isLast ? "rounded-b-lg" : ""}
-          `}
+                          flex items-center gap-2 px-4 py-2 text-sm transition-colors text-primary
+                          ${
+                            isSubActive
+                              ? "bg-accent text-primary font-medium"
+                              : "hover:bg-accent-light"
+                          }
+                          ${isFirst ? "rounded-t-lg" : ""}
+                          ${isLast ? "rounded-b-lg" : ""}
+                        `}
                       >
                         <SubIcon size={16} className="text-primary" />
                         <span>{sub.label}</span>

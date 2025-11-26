@@ -1,6 +1,6 @@
 "use client";
 
-import TournamentsManagement from "@/components/admin/tournaments-management";
+import TournamentsManagement from "@/components/admin/tournaments/tournaments-management";
 import AdminLayout from "@/components/layouts/admin-layout";
 
 export default function AdminTournamentsPage() {

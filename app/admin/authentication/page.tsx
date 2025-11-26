@@ -2,9 +2,9 @@
 
 import { trans } from "@/app/generated/AppLocalization";
 import { ASSETS } from "@/app/generated/assets";
-import { ForgotPasswordForm } from "@/components/admin/forgot-password-form";
-import { LoginForm } from "@/components/admin/login-form";
-import { ResetPassword } from "@/components/admin/reset-password";
+import { ForgotPasswordForm } from "@/components/admin/authentication/forgot-password-form";
+import { LoginForm } from "@/components/admin/authentication/login-form";
+import { ResetPassword } from "@/components/admin/authentication/reset-password";
 import volleyballAnim from "@/public/assets/lottie/volleyball.json";
 import Lottie from "lottie-react";
 import Image from "next/image";
