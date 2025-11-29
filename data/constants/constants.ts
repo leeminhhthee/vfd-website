@@ -29,7 +29,7 @@ export enum GalleryCategory {
 
 export enum NewsType {
   CITY = "city",
-  INSIDEVN = "inside_vn",
+  NATIONAL = "national",
   INTERNATIONAL = "international"
 }
 
@@ -69,9 +69,15 @@ export const GalleryCategoryLabels: Record<GalleryCategory, string> = {
 }
 
 export const NewsTypeLabels: Record<NewsType, string> = {
-  [NewsType.CITY]: "Tin thành phố",
-  [NewsType.INSIDEVN]: "Tin trong nước",
-  [NewsType.INTERNATIONAL]: "Tin quốc tế"
+  [NewsType.CITY]: "Thành phố",
+  [NewsType.NATIONAL]: "Trong nước",
+  [NewsType.INTERNATIONAL]: "Quốc tế"
+}
+
+export const NewsStatusLabels: Record<NewsStatus, string> = {
+  [NewsStatus.DRAFT]: "Bản nháp",
+  [NewsStatus.PUBLISHED]: "Đã xuất bản",
+  [NewsStatus.DELETE]: "Đã xóa"
 }
 
 export const getScheduleStatusLabel = (status: string): string => {
@@ -92,4 +98,8 @@ export const getGalleryCategoryLabel = (category: string): string => {
 
 export const getNewsTypeLabel = (type: string): string => {
   return NewsTypeLabels[type as NewsType]
+}
+
+export const getNewsStatusLabel = (status: string): string => {
+  return NewsStatusLabels[status as NewsStatus]
 }
