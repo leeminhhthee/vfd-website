@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { Expose, Type } from "class-transformer";
+import "reflect-metadata";
 import { ScheduleStatus } from "../constants/constants";
 
 export class TournamentItem {
@@ -8,13 +9,15 @@ export class TournamentItem {
   @Expose({ name: "name" })
   name!: string;
   @Expose({ name: "description" })
-  description!: string | null;
+  description!: string;
   @Expose({ name: "start_date" })
-  startDate!: Date;
+  startDate!: string;
   @Expose({ name: "end_date" })
-  endDate!: Date;
+  endDate!: string;
   @Expose({ name: "location" })
   location!: string;
+  @Expose({ name: "teams" })
+  teams!: number;
   @Expose({ name: "status" })
   status!: ScheduleStatus;
   @Expose({ name: "form_id" })
@@ -29,12 +32,15 @@ export class TournamentItem {
   @Expose({ name: "match_schedules" })
   @Type(() => MatchSchedule)
   matchSchedules!: MatchSchedule[] | null;
-  @Expose({ name: "created_at" })
-  createdAt!: Date | null;
-  @Expose({ name: "updated_at" })
-  updatedAt!: Date | null;
-  @Expose({ name: "created_by" })
-  createdBy!: number;
+
+  constructor() {
+    if (this.description == null) {
+      this.description = "";
+    }
+    if (typeof this.teams !== "number") {
+      this.teams = 0;
+    }
+  }
 }
 
 export class RelatedFile {

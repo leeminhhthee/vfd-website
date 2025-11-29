@@ -4,6 +4,16 @@ export enum ScheduleStatus {
   ENDED = "ended"
 }
 
+export const ScheduleStatusLabels: Record<ScheduleStatus, string> = {
+  [ScheduleStatus.COMING]: "Sắp diễn ra",
+  [ScheduleStatus.ONGOING]: "Đang diễn ra",
+  [ScheduleStatus.ENDED]: "Đã kết thúc"
+}
+
+export const getScheduleStatusLabel = (status: ScheduleStatus): string => {
+  return ScheduleStatusLabels[status]
+}
+
 export enum DocumentCategorys {
   PLAN = "plan", // Kế hoạch
   CHARTER = "charter", // Điều lệ
@@ -27,10 +37,13 @@ export enum GalleryCategory {
   OTHER = "other"
 }
 
-export enum NewsType {
-  CITY = "city",
-  INSIDEVN = "inside_vn",
-  INTERNATIONAL = "international"
+export const RoundLabels: Record<Round, string> = {
+  [Round.GROUP_STAGE]: "Vòng Bảng",
+  [Round.ROUND_OF_16]: "Vòng 1/8",
+  [Round.QUARTER_FINAL]: "Vòng Tứ Kết",
+  [Round.SEMI_FINAL]: "Vòng Bán Kết",
+  [Round.THRID_PLACE]: "Tranh Hạng Ba",
+  [Round.FINAL]: "Chung Kết"
 }
 
 export enum NewsStatus {
@@ -39,19 +52,30 @@ export enum NewsStatus {
   DELETE = "delete"
 }
 
-export const ScheduleStatusLabels: Record<ScheduleStatus, string> = {
-  [ScheduleStatus.COMING]: "Sắp diễn ra",
-  [ScheduleStatus.ONGOING]: "Đang diễn ra",
-  [ScheduleStatus.ENDED]: "Đã kết thúc"
+export const NewsStatusLabels: Record<NewsStatus, string> = {
+  [NewsStatus.DRAFT]: "Bản nháp",
+  [NewsStatus.PUBLISHED]: "Đã xuất bản",
+  [NewsStatus.DELETE]: "Đã xóa"
 }
 
-export const RoundLabels: Record<Round, string> = {
-  [Round.GROUP_STAGE]: "Vòng Bảng",
-  [Round.ROUND_OF_16]: "Vòng 1/8",
-  [Round.QUARTER_FINAL]: "Vòng Tứ Kết",
-  [Round.SEMI_FINAL]: "Vòng Bán Kết",
-  [Round.THRID_PLACE]: "Tranh Hạng Ba",
-  [Round.FINAL]: "Chung Kết"
+export const getNewsStatusLabel = (status: NewsStatus): string => {
+  return NewsStatusLabels[status]
+}
+
+export enum NewsType {
+  CITY = "city",
+  INTERNATIONAL = "international",
+  NATIONAL = "national",
+}
+
+export const NewsTypeLabels: Record<NewsType, string> = {
+  [NewsType.CITY]: "Thành phố",
+  [NewsType.INTERNATIONAL]: "Quốc tế",
+  [NewsType.NATIONAL]: "Trong nước",
+}
+
+export const getNewsTypeLabel = (type: NewsType): string => {
+  return NewsTypeLabels[type]
 }
 
 export const DocumentCategorysLabels: Record<DocumentCategorys, string> = {
@@ -68,15 +92,6 @@ export const GalleryCategoryLabels: Record<GalleryCategory, string> = {
   [GalleryCategory.OTHER]: "Khác"
 }
 
-export const NewsTypeLabels: Record<NewsType, string> = {
-  [NewsType.CITY]: "Tin thành phố",
-  [NewsType.INSIDEVN]: "Tin trong nước",
-  [NewsType.INTERNATIONAL]: "Tin quốc tế"
-}
-
-export const getScheduleStatusLabel = (status: string): string => {
-  return ScheduleStatusLabels[status as ScheduleStatus]
-}
 
 export const getRoundLabel = (round: string): string => {
   return RoundLabels[round as Round]
@@ -88,8 +103,4 @@ export const getDocumentCategoryLabel = (category: string): string => {
 
 export const getGalleryCategoryLabel = (category: string): string => {
   return GalleryCategoryLabels[category as GalleryCategory]
-}
-
-export const getNewsTypeLabel = (type: string): string => {
-  return NewsTypeLabels[type as NewsType]
 }

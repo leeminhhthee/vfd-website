@@ -1,7 +1,7 @@
 "use client";
 
 import { trans } from "@/app/generated/AppLocalization";
-import { getNewsTypeLabel } from "@/data/constants/constants";
+import { getNewsTypeLabel, NewsType } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
@@ -118,7 +118,7 @@ export default function NewsGrid() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold text-white bg-primary px-3 py-1 rounded-full">
-                  {getNewsTypeLabel(featuredNews.type)}
+                  {getNewsTypeLabel(featuredNews.type as NewsType)}
                 </span>
                 <span className="text-sm text-muted-foreground">
                   {new Date(featuredNews.createdAt).toLocaleDateString("vi-VN")}
@@ -192,7 +192,7 @@ export default function NewsGrid() {
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-bold text-white bg-primary px-3 py-1 rounded-full">
-                      {getNewsTypeLabel(item.type)}
+                      {getNewsTypeLabel(item.type as NewsType)}
                     </span>
                     <span className="text-sm text-muted-foreground">
                       {new Date(item.createdAt).toLocaleDateString("vi-VN")}

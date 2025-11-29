@@ -1,11 +1,16 @@
 "use client";
 
-import { Button, Input, Select, Tag, notification } from "antd";
+import { Button, Image, Input, Modal, notification, Select, Tag } from "antd";
 import { ArrowLeft, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import {
+  getNewsTypeLabel,
+  NewsStatus,
+  NewsType,
+} from "@/data/constants/constants";
+import { NewsItem } from "@/data/model/news.model";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 
@@ -13,33 +18,12 @@ const FroalaEditor = dynamic(() => import("react-froala-wysiwyg"), {
   ssr: false,
 });
 
-interface NewsItem {
-  id?: number;
-  title: string;
-  type: string;
-  content: string;
-  status?: string;
-  excerpt?: string;
-  aiSummary?: string;
-  coverImage?: string;
-  createdAt?: string;
-}
-
-export type NewsFormData = {
-  title: string;
-  type: string;
-  content: string;
-  excerpt?: string;
-  aiSummary?: string;
-  coverImage?: string;
-};
-
 interface NewsEditorFormProps {
   news?: NewsItem;
-  categories: string[];
-  onAddCategory: (cat: string) => void;
-  onSaveDraft: (data: NewsFormData) => void;
-  onPublish: (data: NewsFormData) => void;
+  categories: NewsType[];
+  onAddCategory: (cat: NewsType) => void;
+  onSaveDraft: (data: Partial<NewsItem>) => void;
+  onPublish: (data: Partial<NewsItem>) => void;
   onCancel: () => void;
   isLoading: boolean;
 }
@@ -47,7 +31,6 @@ interface NewsEditorFormProps {
 export default function NewsEditorForm({
   news,
   categories,
-  onAddCategory,
   onSaveDraft,
   onPublish,
   onCancel,
@@ -57,13 +40,23 @@ export default function NewsEditorForm({
     title: "",
     type: "",
     content: "",
-    coverImage: "",
-    aiSummary: "",
+    imageUrl: "",
   });
 
   const [suggestedTitles, setSuggestedTitles] = useState<string[]>([]);
   const [coverPreview, setCoverPreview] = useState<string>("");
   const [isGeneratingTitles, setIsGeneratingTitles] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const initialFormRef = useRef(
+    JSON.stringify(
+      news || {
+        title: "",
+        type: "",
+        content: "",
+        imageUrl: "",
+      }
+    )
+  );
 
   const config = {
     placeholderText: "Nhập nội dung tin tức...",
@@ -84,11 +77,41 @@ export default function NewsEditorForm({
   useEffect(() => {
     if (news) {
       setFormData(news);
-      if (news.coverImage) {
-        setCoverPreview(news.coverImage);
+      if (news.imageUrl) {
+        setCoverPreview(news.imageUrl);
       }
     }
   }, [news]);
+
+  useEffect(() => {
+    setHasUnsavedChanges(JSON.stringify(formData) !== initialFormRef.current);
+  }, [formData]);
+
+  const handleBack = () => {
+    if (hasUnsavedChanges) {
+      Modal.confirm({
+        title: "Bạn có chắc chắn muốn thoát?",
+        content: "Những thay đổi chưa được lưu sẽ bị mất.",
+        okText: "Thoát",
+        okType: "danger",
+        cancelText: "Tiếp tục chỉnh sửa",
+        onOk: onCancel,
+      });
+    } else {
+      onCancel();
+    }
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   const generateAITitles = async () => {
     if (!formData.content?.trim()) {
@@ -119,13 +142,13 @@ export default function NewsEditorForm({
       reader.onload = (event) => {
         const url = event.target?.result as string;
         setCoverPreview(url);
-        setFormData((prev) => ({ ...prev, coverImage: url }));
+        setFormData((prev) => ({ ...prev, imageUrl: url }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSave = (status: "draft" | "published") => {
+  const handleSave = (status: NewsStatus.DRAFT | NewsStatus.PUBLISHED) => {
     if (!formData.title?.trim()) {
       notification.error({ message: "Vui lòng nhập tiêu đề" });
       return;
@@ -139,24 +162,21 @@ export default function NewsEditorForm({
       return;
     }
 
-    const data = { ...formData, status };
-    if (status === "draft") {
+    if (status === NewsStatus.DRAFT) {
       onSaveDraft({
         title: formData.title || "",
         type: formData.type || "",
         content: formData.content || "",
-        excerpt: formData.excerpt,
-        aiSummary: formData.aiSummary,
-        coverImage: formData.coverImage,
+        status: NewsStatus.DRAFT,
+        imageUrl: formData.imageUrl,
       });
     } else {
       onPublish({
         title: formData.title || "",
         type: formData.type || "",
         content: formData.content || "",
-        excerpt: formData.excerpt,
-        aiSummary: formData.aiSummary,
-        coverImage: formData.coverImage,
+        status: NewsStatus.PUBLISHED,
+        imageUrl: formData.imageUrl,
       });
     }
   };
@@ -167,13 +187,12 @@ export default function NewsEditorForm({
       <div className="flex items-center justify-between">
         <Button
           type="text"
-          onClick={onCancel}
+          onClick={handleBack}
           style={{ display: "flex", alignItems: "center", gap: 8 }}
         >
           <ArrowLeft size={20} />
           <span>Quay lại</span>
         </Button>
-
         <h2 className="text-2xl font-bold text-foreground">
           {news?.id ? "Chỉnh sửa tin tức" : "Tạo tin tức mới"}
         </h2>
@@ -243,7 +262,10 @@ export default function NewsEditorForm({
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, type: value }))
               }
-              options={categories.map((cat) => ({ label: cat, value: cat }))}
+              options={categories.map((cat) => ({
+                label: getNewsTypeLabel(cat),
+                value: getNewsTypeLabel(cat),
+              }))}
             />
           </div>
 
@@ -252,62 +274,94 @@ export default function NewsEditorForm({
             <label className="block text-sm font-medium text-foreground">
               Ảnh bìa
             </label>
-            <div className="space-y-2">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleCoverImageChange}
-                className="w-full"
-              />
-              {coverPreview && (
-                <div className="relative">
-                  <Image
-                    src={coverPreview || "/placeholder.svg"}
-                    alt="Cover preview"
-                    className="w-full h-48 object-cover rounded-lg border border-border"
-                    width={400}
-                    height={192}
-                  />
-                  <Button
-                    type="text"
-                    danger
-                    size="small"
-                    icon={<X size={16} />}
-                    onClick={() => {
-                      setCoverPreview("");
-                      setFormData((prev) => ({ ...prev, coverImage: "" }));
-                    }}
-                    style={{ position: "absolute", top: 8, right: 8 }}
-                  />
+            {coverPreview ? (
+              <div className="relative">
+                <Image
+                  src={coverPreview || "/placeholder.svg"}
+                  alt="Cover preview"
+                  className="w-full h-full object-cover rounded-lg border border-border"
+                  preview={{
+                    mask: "Phóng to",
+                  }}
+                />
+                <Button
+                  type="text"
+                  danger
+                  size="large"
+                  icon={<X size={16} />}
+                  onClick={() => {
+                    setCoverPreview("");
+                    setFormData((prev) => ({ ...prev, imageUrl: "" }));
+                  }}
+                  style={{ position: "absolute", top: 0, right: 10 }}
+                />
+              </div>
+            ) : (
+              <label
+                className="flex flex-col items-center justify-center w-full h-48 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      const url = event.target?.result as string;
+                      setCoverPreview(url);
+                      setFormData((prev) => ({ ...prev, imageUrl: url }));
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                onDragOver={(e) => e.preventDefault()}
+              >
+                <div className="flex flex-col items-center justify-center">
+                  <Sparkles size={32} className="text-muted-foreground mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-bold">Nhấp để chọn</span> hoặc kéo thả
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG (tối đa 10MB)
+                  </p>
                 </div>
-              )}
-            </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleCoverImageChange}
+                />
+              </label>
+            )}
           </div>
         </div>
-
-        {/* Content Editor */}
-        {/* <div className="space-y-2">
-            
-          </div> */}
 
         {/* Content Editor */}
         <div className="col-span-3 pb-6">
           <label className="block text-sm font-medium text-foreground pb-2">
             Nội dung
           </label>
-          <FroalaEditor tag="textarea" config={config} />
+          <FroalaEditor
+            tag="textarea"
+            config={config}
+            model={formData.content || ""}
+            onModelChange={(content: string) =>
+              setFormData((prev) => ({ ...prev, content }))
+            }
+          />
         </div>
       </div>
 
       {/* Action Buttons */}
       <div className="flex justify-end gap-2 pt-4 border-t border-border">
         <Button onClick={onCancel}>Hủy</Button>
-        <Button onClick={() => handleSave("draft")} loading={isLoading}>
+        <Button
+          onClick={() => handleSave(NewsStatus.DRAFT)}
+          loading={isLoading}
+        >
           Lưu bản nháp
         </Button>
         <Button
           type="primary"
-          onClick={() => handleSave("published")}
+          onClick={() => handleSave(NewsStatus.PUBLISHED)}
           loading={isLoading}
         >
           {news?.id ? "Cập nhật" : "Đăng bài"}
