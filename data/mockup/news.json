@@ -12,17 +12,10 @@
   },
   {
     "id": 2,
-<<<<<<< HEAD
-    "title": "Giải bóng chuyền Cup CLB TP Đà Nẵng 2025",
-    "type": "Thành phố",
-    "content": "Kết quả chung kết giải vô địch bóng chuyền TP Đà Nẵng năm 2025, đội A đã xuất sắc giành chức vô địch trước đội B với tỉ số 3-1...",
-    "status": "draft",
-=======
     "title": "Đội Trẻ Đà Nẵng tranh tài giải bóng chuyền hạng A",
     "type": "city",
     "content": "Vòng chung kết Giải bóng chuyền hạng A quốc gia 2025 đang diễn ra tại tỉnh Hà Tĩnh.\n\nGiải có sự tham dự của 7 đội nam gồm: Hà Tĩnh, Vĩnh Long, Vật liệu xây dựng Bình Dương, Bộ Tư lệnh Cảnh sát cơ động, Quân khu 3, Thành phố Hồ Chí Minh và Trẻ Đà Nẵng. Các đội được chia làm 2 bảng, thi đấu vòng tròn tính điểm, chọn đội vào tứ kết, bán kết, chung kết. Đội vô địch sẽ giành quyền thăng hạng Giải bóng chuyền vô địch quốc gia 2026.\n\nĐội Trẻ Đà Nẵng dự giải với nòng cốt là các cầu thủ được tuyển chọn để đào tạo chuyên nghiệp, dưới sự dẫn dắt của Huấn luyện viên Huỳnh Hạnh. Mục tiêu đội đặt ra là cọ xát để nâng cao trình độ chuyên môn. Qua 2 trận đấu tại bảng A, Trẻ Đà Nẵng thua Vĩnh Long 3-1 và thua Vật liệu xây dựng Bình Dương. Kết quả này buộc thầy trò Huấn luyện viên Huỳnh Hạnh phải nỗ lực hơn ở những trận đấu tiếp theo. Giải diễn ra đến ngày 2/11. Trước đó, đội bóng chuyền nam Đà Nẵng xếp hạng 6 tại Giải bóng chuyền vô địch quốc gia 2025 và tiếp tục góp mặt ở mùa giải năm sau.",
     "status": "published",
->>>>>>> develop_candidate
     "author_id": 1,
     "image_url": "https://cdn-img.thethao247.vn/origin_640x0/storage/files/btvttth2/2025/10/11/nh-tt247-4-68e9d77532b43.jpg",
     "created_at": "2025-10-28",
