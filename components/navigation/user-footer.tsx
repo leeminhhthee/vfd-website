@@ -9,7 +9,7 @@ export default function UserFooter() {
   return (
     <footer className="bg-primary text-white mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8 pb-8 border-b border-primary-light flex justify-center">
+        <div className="mb-8 pb-8 border-b border-primary-light flex flex-wrap justify-center items-center gap-4">
           <Image
             src={ASSETS.logo.vfv_logo}
             alt={trans.volleyFederDN}
@@ -22,7 +22,7 @@ export default function UserFooter() {
             alt={trans.volleyFederDN}
             width={300}
             height={100}
-            className="h-16 w-auto ml-15 mr-15"
+            className="h-16 w-auto"
           />
           <Image
             src={ASSETS.logo.danangcity_logo}
@@ -134,7 +134,7 @@ export default function UserFooter() {
                 />
               </a>
               <a
-                href="https://www.tiktok.com/@your-tiktok"
+                href="https://www.tiktok.com/@ldbongchuyendanang"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"
@@ -149,7 +149,7 @@ export default function UserFooter() {
                 />
               </a>
               <a
-                href="https://www.youtube.com/@your-channel"
+                href="https://www.youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"

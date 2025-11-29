@@ -1,6 +1,7 @@
 "use client";
 
 import { trans } from "@/app/generated/AppLocalization";
+import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
@@ -51,7 +52,9 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-primary mb-8">{trans.relatedNews}</h2>
+      <h2 className="text-2xl font-bold text-primary mb-8">
+        {trans.relatedNews}
+      </h2>
 
       <div className="space-y-6">
         {relatedNews.map((item) => (
@@ -67,7 +70,7 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xs font-bold text-white bg-primary px-2 py-1 rounded">
-                    {item.type}
+                    {getNewsTypeLabel(item.type)}
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {new Date(item.createdAt).toLocaleDateString("vi-VN")}

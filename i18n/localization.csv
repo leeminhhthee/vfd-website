@@ -12,6 +12,8 @@ quickLinks,Liên Kết Nhanh,Quick Links
 schedule,Lịch Thi Đấu,Schedule
 register,Đăng Ký,Register
 contact,Liên Hệ,Contact
+resourceText,"Các tài liệu, quy định và hướng dẫn từ Liên đoàn","Documents, regulations, and guidelines from the Federation"
+ contactUs,Liên Hệ Với Chúng Tôi,Contact Us
 contactPhone,0914 279 073,0914 279 073
 contactEmail,ldbongchuyendn@gmail.com,ldbongchuyendn@gmail.com
 contactAddress,"212 Văn Tiến Dũng, Phường Hòa Xuân, TP. Đà Nẵng","212 Van Tien Dung, Hoa Xuan Ward, Da Nang City"
@@ -106,3 +108,5 @@ enterNewPassword,Nhập mật khẩu mới của bạn,Enter your new password
 newPassword,Mật khẩu mới,New Password
 confirmPassword,Xác Nhận Mật Khẩu,Confirm Password
 resetPassword,Đặt Lại Mật Khẩu,Reset Password
+noNewsFound,Không tìm thấy tin tức nào,No news found
+relatedTournaments,Giải đấu liên quan,Related Tournaments

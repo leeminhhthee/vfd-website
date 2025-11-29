@@ -12,6 +12,8 @@
   "schedule": "Schedule",
   "register": "Register",
   "contact": "Contact",
+  "resourceText": "Documents, regulations, and guidelines from the Federation",
+  " contactUs": "Contact Us",
   "contactPhone": "0914 279 073",
   "contactEmail": "ldbongchuyendn@gmail.com",
   "contactAddress": "212 Van Tien Dung, Hoa Xuan Ward, Da Nang City",
@@ -105,5 +107,7 @@
   "enterNewPassword": "Enter your new password",
   "newPassword": "New Password",
   "confirmPassword": "Confirm Password",
-  "resetPassword": "Reset Password"
+  "resetPassword": "Reset Password",
+  "noNewsFound": "No news found",
+  "relatedTournaments": "Related Tournaments"
 }

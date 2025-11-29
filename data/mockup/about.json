@@ -54,80 +54,27 @@
   "board_directors": [
     {
       "id": 1,
-      "name": "Nguyễn Văn A",
+      "name": "Huỳnh Thanh Quang",
       "role": "Chủ tịch Liên đoàn Bóng chuyền TP. Đà Nẵng",
-      "term": "Nhiệm kỳ 20xx–20xx",
-      "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1762593888/hocsinh_ffd5es.png",
-      "bio": [
-        "Sinh năm 19xx, quê quán Đà Nẵng.",
-        "Từ năm 20xx: Tham gia công tác quản lý, điều hành phong trào bóng chuyền thành phố.",
-        "20xx–20xx: Giữ chức Phó Chủ tịch Liên đoàn.",
-        "Từ 20xx đến nay: Chủ tịch Liên đoàn Bóng chuyền TP. Đà Nẵng (nhiệm kỳ 20xx–20xx)."
-      ]
+      "term": "Nhiệm kỳ 20xx – 20xx",
+      "image": "/assets/logo/vfd_logo.png",
+      "bio": []
     },
     {
       "id": 2,
-      "name": "Nguyễn Văn B",
-      "role": "Chủ tịch LĐBC Đà Nẵng",
-      "term": "Khóa VI (20xx–20xx)",
-      "note": "Nhiệm kỳ trọn vẹn",
-      "image": "/placeholder.svg?key=past1",
-      "bio": [
-        "Lãnh đạo phong trào bóng chuyền phát triển rộng khắp.",
-        "Tập trung công tác đào tạo tuyến trẻ."
-      ]
+      "name": "Hồ Đình Trí",
+      "role": "Phó Chủ tịch Liên đoàn Bóng chuyền TP. Đà Nẵng",
+      "term": "Nhiệm kỳ 20xx – 20xx",
+      "image": "/assets/logo/vfd_logo.png",
+      "bio": []
     },
     {
       "id": 3,
-      "name": "Nguyễn Văn C",
-      "role": "Chủ tịch LĐBC Đà Nẵng",
-      "term": "Khóa V (20xx–20xx)",
-      "image": "/placeholder.svg?key=past2",
-      "bio": ["Tăng cường xã hội hóa, kết nối doanh nghiệp đồng hành."]
-    },
-    {
-      "id": 4,
-      "name": "Nguyễn Văn D",
-      "role": "Chủ tịch LĐBC Đà Nẵng",
-      "term": "Khóa IV (20xx–20xx)",
-      "note": "Từ 2003 đến hết nhiệm kỳ",
-      "image": "/placeholder.svg?key=past3",
-      "bio": [
-        "Đẩy mạnh phong trào trường học, phát triển hệ thống giải phong trào."
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Nguyễn Văn E",
-      "role": "Quyền Chủ tịch",
-      "term": "Khóa IV (20xx–20xx)",
-      "note": "Từ tháng 1 đến tháng 8/20xx",
-      "image": "/placeholder.svg?key=past4",
-      "bio": ["Điều hành liên đoàn giai đoạn chuyển giao."]
-    },
-    {
-      "id": 6,
-      "name": "Nguyễn Văn F",
-      "role": "Chủ tịch LĐBC Đà Nẵng",
-      "term": "Khóa III (20xx–20xx)",
-      "image": "/placeholder.svg?key=past5",
-      "bio": ["Củng cố tổ chức, kiện toàn các ban chuyên môn."]
-    },
-    {
-      "id": 7,
-      "name": "Bà Nguyễn Thị G",
-      "role": "Chủ tịch LĐBC Đà Nẵng",
-      "term": "Khóa II (20xx–20xx)",
-      "image": "/placeholder.svg?key=past6",
-      "bio": ["Mở rộng hợp tác với các địa phương bạn."]
-    },
-    {
-      "id": 8,
-      "name": "Ông Nguyễn Văn H",
-      "role": "Chủ tịch LĐBC Đà Nẵng",
-      "term": "Khóa I (20xx–20xx)",
-      "image": "/placeholder.svg?key=past7",
-      "bio": ["Đặt nền móng tổ chức Liên đoàn."]
+      "name": "Nguyễn Hải Trường",
+      "role": "Phó Chủ tịch Thường trực - Tổng Thư kí Liên đoàn Bóng chuyền TP. Đà Nẵng",
+      "term": "Nhiệm kỳ 20xx – 20xx",
+      "image": "/assets/logo/vfd_logo.png",
+      "bio": []
     }
   ]
 }

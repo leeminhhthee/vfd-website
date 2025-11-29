@@ -6,7 +6,7 @@ export class PartnerItem {
   @Expose({ name: "name" })
   name!: string;
   @Expose({ name: "email" })
-  email!: string;
+  email!: string | null;
   @Expose({ name: "image_url" })
   image!: string;
   @Expose({ name: "since" })
