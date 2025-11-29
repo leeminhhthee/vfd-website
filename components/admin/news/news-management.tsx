@@ -1,6 +1,13 @@
 "use client";
 
+import {
+  getNewsStatusLabel,
+  getNewsTypeLabel,
+  NewsStatus,
+  NewsType,
+} from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
+import { NewsItem } from "@/data/model/news.model";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
@@ -17,42 +24,15 @@ import { Edit2, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import NewsEditorForm from "./news-editor-form";
 
-interface NewsItem {
-  id: number;
-  title: string;
-  type: string;
-  content: string;
-  status: string;
-  createdAt: string;
-  excerpt?: string;
-  aiSummary?: string;
-  coverImage?: string;
-}
-
-type CreateNewsPayload = {
-  title: string;
-  type: string;
-  content: string;
-  status?: string;
-  excerpt?: string;
-  aiSummary?: string;
-  coverImage?: string;
-  createdAt?: string;
-};
-
-type UpdateNewsPayload = Partial<Omit<NewsItem, "id">>;
-
 export default function NewsManagement() {
   const [editingMode, setEditingMode] = useState(false);
   const [editingNews, setEditingNews] = useState<Partial<NewsItem> | null>(
     null
   );
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState([
-    "Thành phố",
-    "Trong nước",
-    "Quốc tế",
-  ]);
+  const [categories, setCategories] = useState<NewsType[]>(
+    Object.values(NewsType)
+  );
   const queryClient = useQueryClient();
 
   const {
@@ -64,7 +44,7 @@ export default function NewsManagement() {
     queryFn: newsInteractor.getNewsList,
   });
 
-  const createNewsMutation = useMutation<NewsItem, Error, CreateNewsPayload>({
+  const createNewsMutation = useMutation<NewsItem, Error, Partial<NewsItem>>({
     mutationFn: (newNews) => newsInteractor.createNews(newNews),
     onSuccess: () => {
       notification.success({ message: "Tạo tin tức mới thành công!" });
@@ -79,7 +59,7 @@ export default function NewsManagement() {
   const updateNewsMutation = useMutation<
     NewsItem,
     Error,
-    { id: number; data: UpdateNewsPayload }
+    { id: number; data: Partial<NewsItem> }
   >({
     mutationFn: ({ id, data }) => newsInteractor.updateNews(id, data),
     onSuccess: () => {
@@ -127,7 +107,7 @@ export default function NewsManagement() {
     setEditingNews(null);
   };
 
-  const handleAddCategory = (category: string) => {
+  const handleAddCategory = (category: NewsType) => {
     if (!categories.includes(category)) {
       setCategories([...categories, category]);
     }
@@ -143,6 +123,19 @@ export default function NewsManagement() {
       onOk: () => deleteNewsMutation.mutate(id),
     });
   };
+
+  const statusOptions = [
+    { text: getNewsStatusLabel(NewsStatus.DRAFT), value: NewsStatus.DRAFT },
+    {
+      text: getNewsStatusLabel(NewsStatus.PUBLISHED),
+      value: NewsStatus.PUBLISHED,
+    },
+  ];
+
+  const categoryOptions = Object.values(NewsType).map((cat) => ({
+    text: getNewsTypeLabel(cat),
+    value: cat,
+  }));
 
   const columns: ColumnsType<NewsItem> = [
     {
@@ -163,10 +156,11 @@ export default function NewsManagement() {
       title: "Danh mục",
       dataIndex: "type",
       key: "type",
-      filters: categories.map((cat) => ({ text: cat, value: cat })),
-      onFilter: (value, record) =>
-        (record.type || "").startsWith(String(value)),
-      render: (type: string) => <Tag color="blue">{type}</Tag>,
+      filters: categoryOptions,
+      onFilter: (value, record) => record.type === value,
+      render: (type: string) => (
+        <Tag color="blue">{getNewsTypeLabel(type as NewsType)}</Tag>
+      ),
     },
     {
       title: "Ngày tạo",
@@ -183,10 +177,14 @@ export default function NewsManagement() {
       dataIndex: "status",
       key: "status",
       align: "center",
+      filters: statusOptions,
+      onFilter: (value, record) =>
+        (record.status || NewsStatus.DRAFT) === value,
       render: (status: string) => {
-        const s = status || "draft";
-        const color = s === "published" ? "green" : "default";
-        return <Tag color={color}>{s.toUpperCase()}</Tag>;
+        const color = status === NewsStatus.PUBLISHED ? "green" : "default";
+        return (
+          <Tag color={color}>{getNewsStatusLabel(status as NewsStatus)}</Tag>
+        );
       },
     },
     {
@@ -234,19 +232,22 @@ export default function NewsManagement() {
         onAddCategory={handleAddCategory}
         onSaveDraft={(data) => {
           if (editingNews?.id) {
-            updateNewsMutation.mutate({ id: editingNews.id, data });
+            updateNewsMutation.mutate({
+              id: editingNews.id,
+              data,
+            });
           } else {
-            createNewsMutation.mutate({ ...data, status: "draft" });
+            createNewsMutation.mutate({ ...data });
           }
         }}
         onPublish={(data) => {
           if (editingNews?.id) {
             updateNewsMutation.mutate({
               id: editingNews.id,
-              data: { ...data, status: "published" },
+              data,
             });
           } else {
-            createNewsMutation.mutate({ ...data, status: "published" });
+            createNewsMutation.mutate({ ...data });
           }
         }}
         onCancel={handleCloseEditor}
