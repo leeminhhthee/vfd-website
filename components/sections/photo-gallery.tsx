@@ -1,22 +1,26 @@
 "use client";
 
 import { trans } from "@/app/generated/AppLocalization";
+import {
+  GalleryCategory,
+  GalleryCategoryLabels,
+} from "@/data/constants/constants";
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { useQuery } from "@tanstack/react-query";
-import { tr } from "date-fns/locale";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const photoTabs = [
-  { id: "team", label: trans.team },
-  { id: "inside", label: trans.cityTournament },
-  { id: "other", label: trans.otherActivities },
-];
+const ITEMS_TO_SHOW = 8;
+
+const photoTabs = Object.entries(GalleryCategoryLabels).map(([id, label]) => ({
+  id,
+  label,
+}));
 
 export default function PhotoGalleryTeaser() {
-  const [activeTab, setActiveTab] = useState(photoTabs[0].id);
+  const [activeTab, setActiveTab] = useState(GalleryCategory.INSIDE);
 
   const {
     data: galleryData,
@@ -27,9 +31,14 @@ export default function PhotoGalleryTeaser() {
     queryFn: galleryInteractor.getGalleryList,
   });
 
-  const filteredImages = (galleryData || [])
-    .filter((img) => img.category === activeTab)
-    .slice(0, 8);
+  const filteredImages =
+    (galleryData || [])
+      .filter((img) => img.category === activeTab)
+      .slice(0, ITEMS_TO_SHOW) || [];
+
+  const handleTabChange = (categoryId: string) => {
+    setActiveTab(categoryId as GalleryCategory);
+  };
 
   return (
     <section className="w-full md:py-8 bg-white font-body">
@@ -48,12 +57,11 @@ export default function PhotoGalleryTeaser() {
             {photoTabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`py-2 px-2 transition-colors duration-200 border-b-2 
-                  ${
-                    activeTab === tab.id
-                      ? "text-primary border-primary font-bold"
-                      : "text-gray-500 border-transparent hover:text-primary"
+                  ${activeTab === tab.id
+                    ? "text-primary border-primary font-bold"
+                    : "text-gray-500 border-transparent hover:text-primary"
                   }`}
               >
                 {tab.label}
@@ -102,7 +110,9 @@ export default function PhotoGalleryTeaser() {
                         sizes="(max-width: 1024px) 50vw, 25vw"
                       />
                       <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-all duration-300 flex items-end p-4">
-                        <span className="text-white text-sm font-semibold transition-opacity">
+                        <span
+                          className="text-white text-sm font-semibold transition-opacity line-clamp-2"
+                          >
                           {photo.title}
                         </span>
                       </div>
@@ -118,7 +128,7 @@ export default function PhotoGalleryTeaser() {
           )}
         </div>
 
-        <div className="text-center mt-8 md:hidden px-4">
+        <div className="text-center mt-8 mb-4 md:hidden px-4">
           <Link
             href="/gallery"
             className="w-full inline-flex justify-center items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-md"

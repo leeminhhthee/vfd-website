@@ -5,24 +5,43 @@ import GalleryGrid from "@/components/pages/gallery/gallery-grid";
 import GalleryHeader from "@/components/pages/gallery/gallery-header";
 import GalleryPagination from "@/components/pages/gallery/gallery-pagination";
 import GalleryTabs from "@/components/pages/gallery/gallery-tabs";
+import {
+  GalleryCategory,
+  GalleryCategoryLabels,
+} from "@/data/constants/constants";
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trans } from "../generated/AppLocalization";
 
-const GALLERY_CATEGORIES = [
-  { id: "team", label: trans.team },
-  { id: "inside", label: trans.cityTournament },
-  { id: "other", label: trans.otherActivities },
-];
-
 const ITEMS_PER_PAGE = 8;
+const SESSION_TAB_KEY = "gallery_current_tab";
+const SESSION_PAGE_KEY = "gallery_current_page";
+
+const GALLERY_CATEGORIES = Object.entries(GalleryCategoryLabels).map(
+  ([id, label]) => ({
+    id,
+    label,
+  })
+);
 
 export default function GalleryPage() {
-  const [activeCategory, setActiveCategory] = useState(
-    GALLERY_CATEGORIES[0]?.id
-  );
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activeCategory, setActiveCategory] = useState(() => {
+    // Load từ sessionStorage khi component mount
+    if (typeof window !== "undefined") {
+      const savedTab = sessionStorage.getItem(SESSION_TAB_KEY);
+      return savedTab ? (savedTab as GalleryCategory) : GalleryCategory.INSIDE;
+    }
+    return GalleryCategory.INSIDE;
+  });
+  const [currentPage, setCurrentPage] = useState(() => {
+    // Load từ sessionStorage khi component mount
+    if (typeof window !== "undefined") {
+      const savedPage = sessionStorage.getItem(SESSION_PAGE_KEY);
+      return savedPage ? parseInt(savedPage) : 1;
+    }
+    return 1;
+  });
 
   const {
     data: galleryData,
@@ -44,8 +63,22 @@ export default function GalleryPage() {
     startIndex + ITEMS_PER_PAGE
   );
 
+  // Lưu vào sessionStorage mỗi khi currentPage thay đổi
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(SESSION_PAGE_KEY, currentPage.toString());
+    }
+  }, [currentPage]);
+
+  // Lưu vào sessionStorage mỗi khi activeCategory thay đổi
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(SESSION_TAB_KEY, activeCategory);
+    }
+  }, [activeCategory]);
+
   const handleCategoryChange = (categoryId: string) => {
-    setActiveCategory(categoryId);
+    setActiveCategory(categoryId as GalleryCategory);
     setCurrentPage(1);
   };
 
@@ -72,7 +105,10 @@ export default function GalleryPage() {
   return (
     <UserLayout>
       <div className="min-h-screen bg-white">
-        <GalleryHeader title={trans.photoGallery.toUpperCase()} categories={GALLERY_CATEGORIES} />
+        <GalleryHeader
+          title={trans.photoGallery.toUpperCase()}
+          categories={GALLERY_CATEGORIES}
+        />
         <GalleryTabs
           categories={GALLERY_CATEGORIES}
           activeCategory={activeCategory}

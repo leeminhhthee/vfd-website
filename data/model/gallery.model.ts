@@ -9,4 +9,6 @@ export class GalleryAlbum {
   title!: string;
   @Expose({ name: "images" })
   images!: string[];
+  @Expose({ name: "created_at" })
+  createdAt!: Date | null;
 }

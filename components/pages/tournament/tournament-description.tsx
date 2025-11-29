@@ -53,7 +53,7 @@ export default function TournamentDescription({
       </div>
 
       <div className="mb-6">
-        <p className="text-foreground text-base leading-relaxed">
+        <p className="text-foreground text-base leading-relaxed text-justify">
           {description}
         </p>
       </div>

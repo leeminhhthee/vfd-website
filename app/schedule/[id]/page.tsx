@@ -65,7 +65,7 @@ export default function TournamentDetailPage() {
             />
 
             <TournamentScheduleImage
-              imageUrl={tournament.scheduleImg ?? ""}
+              imageUrls={tournament.scheduleImg ?? []}
               tournamentName={tournament.name}
             />
           </div>

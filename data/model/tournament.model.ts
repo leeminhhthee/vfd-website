@@ -1,6 +1,6 @@
+import "reflect-metadata";
 import { Expose, Type } from "class-transformer";
 import { ScheduleStatus } from "../constants/constants";
-import "reflect-metadata";
 
 export class TournamentItem {
   @Expose({ name: "id" })
@@ -22,7 +22,7 @@ export class TournamentItem {
   @Expose({ name: "registration_open" })
   registrationOpen!: boolean;
   @Expose({ name: "schedule_img" })
-  scheduleImg!: string | null;
+  scheduleImg!: string[] | null;
   @Expose({ name: "related_files" })
   @Type(() => RelatedFile)
   relatedFiles!: RelatedFile[] | null;
