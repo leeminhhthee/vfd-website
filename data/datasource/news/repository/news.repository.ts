@@ -1,8 +1,7 @@
-import { NewsStatus } from "@/data/constants/constants";
 import { plainToInstance } from "class-transformer";
+import { api } from "../../../../app/api/api";
 import newsMock from "../../../mockup/news.json";
 import { NewsItem } from "../../../model/news.model";
-import { api } from "../../../remote/api";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
@@ -11,9 +10,7 @@ let mockNewsStore: NewsItem[] | null = null;
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const ensureMockStore = () => {
   if (!mockNewsStore) {
-    mockNewsStore = plainToInstance(NewsItem, newsMock).filter(
-      (item) => item.status === NewsStatus.PUBLISHED
-    );
+    mockNewsStore = plainToInstance(NewsItem, newsMock);
   }
   return mockNewsStore!;
 };

@@ -1,5 +1,5 @@
 // This file is auto-generated. Do not edit manually.
-// Generated at 2025-11-08T08:54:40.724Z
+// Generated at 2025-11-29T16:12:46.329Z
 
 export const ASSETS = {
   "icons": {},
@@ -30,7 +30,11 @@ export const ASSETS = {
     "vfv_logo": "/assets/logo/vfv_logo.png",
     "youtube": "/assets/logo/youtube.png"
   },
+  "lottie": {
+    "volleyball": "/assets/lottie/volleyball.json"
+  },
   "svg": {
+    "bg_admin": "/assets/svg/bg_admin.svg",
     "placeholder": "/assets/svg/placeholder.svg"
   }
 } as const;
