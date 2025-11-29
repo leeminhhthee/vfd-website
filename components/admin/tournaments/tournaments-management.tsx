@@ -1,5 +1,7 @@
 "use client";
 
+import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
+import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   Drawer,
@@ -8,6 +10,7 @@ import {
   Modal,
   notification,
   Space,
+  Spin,
   Table,
   Tag,
 } from "antd";
@@ -26,9 +29,6 @@ interface Tournament {
   banner?: string;
   status?: string;
 }
-
-type CreateTournamentPayload = Omit<Tournament, "id">;
-type UpdateTournamentPayload = Partial<Omit<Tournament, "id">>;
 
 const getStatus = (startDate: string, endDate: string) => {
   const now = new Date();
@@ -59,10 +59,6 @@ export default function TournamentsManagement() {
     null
   );
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
-  const [dateRangeFilter, setDateRangeFilter] = useState<
-    "all" | "upcoming" | "ongoing" | "past"
-  >("all");
   const [formData, setFormData] = useState<
     Omit<Tournament, "id"> & { id?: number }
   >({
@@ -77,67 +73,24 @@ export default function TournamentsManagement() {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  const [tournaments, setTournaments] = useState<Tournament[]>([
-    {
-      id: 1,
-      name: "Giải bóng chuyền nam TP Đà Nẵng",
-      description:
-        "Giải bóng chuyền dành cho các đội nam tại thành phố Đà Nẵng",
-      startDate: "2024-11-15",
-      endDate: "2024-11-20",
-      location: "Nhà thi đấu Quân Ngũ, Đà Nẵng",
-      teams: 12,
-    },
-    {
-      id: 2,
-      name: "Giải bóng chuyền nữ TP Đà Nẵng",
-      description: "Giải bóng chuyền dành cho các đội nữ tại thành phố Đà Nẵng",
-      startDate: "2024-11-22",
-      endDate: "2024-11-27",
-      location: "Nhà thi đấu Quân Ngũ, Đà Nẵng",
-      teams: 10,
-    },
-  ]);
+  const {
+    data: tournaments = [],
+    isLoading: tableLoading,
+    error,
+    refetch,
+  } = useQuery<Tournament[]>({
+    queryKey: ["tournaments"],
+    queryFn: tournamentInteractor.getTournamentList,
+  });
 
   const filteredTournaments = useMemo(() => {
-    let filtered = tournaments;
-
-    // Search filter
     const term = searchTerm.toLowerCase();
-    filtered = filtered.filter(
+    return tournaments.filter(
       (item) =>
         (item.name || "").toLowerCase().includes(term) ||
         (item.location || "").toLowerCase().includes(term)
     );
-
-    // Status filter
-    if (statusFilter.length > 0) {
-      filtered = filtered.filter((item) => {
-        const status = getStatus(item.startDate, item.endDate);
-        return statusFilter.includes(status);
-      });
-    }
-
-    // Date range filter
-    const now = new Date();
-    switch (dateRangeFilter) {
-      case "upcoming":
-        filtered = filtered.filter((item) => new Date(item.startDate) > now);
-        break;
-      case "ongoing":
-        filtered = filtered.filter((item) => {
-          const start = new Date(item.startDate);
-          const end = new Date(item.endDate);
-          return now >= start && now <= end;
-        });
-        break;
-      case "past":
-        filtered = filtered.filter((item) => new Date(item.endDate) < now);
-        break;
-    }
-
-    return filtered;
-  }, [tournaments, searchTerm, statusFilter, dateRangeFilter]);
+  }, [tournaments, searchTerm]);
 
   const handleShowCreateEditor = () => {
     setEditingTournament(null);
@@ -213,7 +166,10 @@ export default function TournamentsManagement() {
     setHasUnsavedChanges(true);
   };
 
-  const handleFormSubmit = () => {
+  // Loading state for editor
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFormSubmit = async () => {
     if (!formData.name?.trim()) {
       notification.error({ message: "Vui lòng nhập tên giải đấu" });
       return;
@@ -235,35 +191,23 @@ export default function TournamentsManagement() {
       return;
     }
 
-    if (editingTournament) {
-      setTournaments((prev) =>
-        prev.map((t) =>
-          t.id === editingTournament.id
-            ? { ...formData, id: editingTournament.id }
-            : t
-        )
-      );
-      notification.success({ message: "Cập nhật giải đấu thành công!" });
-    } else {
-      const newId = Math.max(...tournaments.map((t) => t.id), 0) + 1;
-      setTournaments((prev) => [
-        { ...formData, id: newId } as Tournament,
-        ...prev,
-      ]);
-      notification.success({ message: "Tạo giải đấu mới thành công!" });
-    }
-    setEditingMode(false);
-    setEditingTournament(null);
-  };
+    setIsLoading(true);
+    setTimeout(() => {
+      // Nếu có API tạo/cập nhật thì gọi ở đây, sau đó refetch()
+      // Ví dụ:
+      // await tournamentInteractor.createTournament(formData);
+      // await tournamentInteractor.updateTournament(formData);
 
-  const getStatusFilters = () => {
-    const statuses = tournaments.reduce((acc, item) => {
-      const status = getStatus(item.startDate, item.endDate);
-      if (!acc.includes(status)) acc.push(status);
-      return acc;
-    }, [] as string[]);
-
-    return statuses.map((status) => ({ text: status, value: status }));
+      setIsLoading(false);
+      setEditingMode(false);
+      setEditingTournament(null);
+      refetch();
+      notification.success({
+        message: editingTournament
+          ? "Cập nhật giải đấu thành công!"
+          : "Tạo giải đấu mới thành công!",
+      });
+    }, 1200); // giả lập loading
   };
 
   const columns: ColumnsType<Tournament> = [
@@ -301,7 +245,7 @@ export default function TournamentsManagement() {
       title: "Số đội",
       dataIndex: "teams",
       key: "teams",
-      render: (teams: number) => <span>{teams} đội</span>,
+      render: (teams: number) => <span>{teams ?? 0} đội</span>,
     },
     {
       title: "Địa điểm",
@@ -312,12 +256,7 @@ export default function TournamentsManagement() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      filters: getStatusFilters(),
-      onFilter: (value, record) => {
-        const status = getStatus(record.startDate, record.endDate);
-        return status === String(value);
-      },
-      render: (_, record) => {
+      render: (_: unknown, record) => {
         const status = getStatus(record.startDate, record.endDate);
         return <Tag color={getStatusColor(status)}>{status}</Tag>;
       },
@@ -352,12 +291,22 @@ export default function TournamentsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => {
-        setTournaments((prev) => prev.filter((t) => t.id !== id));
+      onOk: async () => {
+        // Nếu có API xóa thì gọi ở đây, sau đó refetch()
+        // await tournamentInteractor.deleteTournament(id);
+        refetch();
         notification.success({ message: "Đã xóa giải đấu!" });
       },
     });
   };
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <Tag color="red">Lỗi tải dữ liệu giải đấu!</Tag>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -374,32 +323,6 @@ export default function TournamentsManagement() {
               Tìm
             </Button>
           </Space.Compact>
-          <Space.Compact>
-            <Button
-              type={dateRangeFilter === "all" ? "primary" : "default"}
-              onClick={() => setDateRangeFilter("all")}
-            >
-              Tất cả
-            </Button>
-            <Button
-              type={dateRangeFilter === "upcoming" ? "primary" : "default"}
-              onClick={() => setDateRangeFilter("upcoming")}
-            >
-              Sắp diễn ra
-            </Button>
-            <Button
-              type={dateRangeFilter === "ongoing" ? "primary" : "default"}
-              onClick={() => setDateRangeFilter("ongoing")}
-            >
-              Đang diễn ra
-            </Button>
-            <Button
-              type={dateRangeFilter === "past" ? "primary" : "default"}
-              onClick={() => setDateRangeFilter("past")}
-            >
-              Đã kết thúc
-            </Button>
-          </Space.Compact>
         </div>
 
         <Button
@@ -411,13 +334,16 @@ export default function TournamentsManagement() {
         </Button>
       </div>
 
-      <div className="bg-white rounded-lg border border-border overflow-hidden">
-        <Table
-          columns={columns}
-          dataSource={filteredTournaments}
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-        />
+      <div className="bg-white rounded-lg border border-border overflow-x-auto">
+        <Spin spinning={tableLoading}>
+          <Table
+            columns={columns}
+            dataSource={filteredTournaments}
+            rowKey="id"
+            pagination={{ pageSize: 10 }}
+            scroll={{ x: "max-content" }}
+          />
+        </Spin>
       </div>
 
       <Drawer
@@ -428,158 +354,170 @@ export default function TournamentsManagement() {
         width={600}
         closeIcon={<X size={20} />}
       >
-        <div className="space-y-6">
-          {/* Tournament Name */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">
-              Tên giải đấu
-            </label>
-            <Input
-              size="large"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Ví dụ: Giải bóng chuyền nam TP Đà Nẵng 2024"
-            />
-          </div>
-
-          {/* Description */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">
-              Mô tả
-            </label>
-            <Input.TextArea
-              rows={4}
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Nhập mô tả chi tiết về giải đấu..."
-            />
-          </div>
-
-          {/* Dates */}
-          <div className="grid grid-cols-2 gap-4">
+        <Spin spinning={isLoading}>
+          <div className="space-y-6">
+            {/* Tournament Name */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">
-                Ngày bắt đầu
+                Tên giải đấu
               </label>
               <Input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
+                size="large"
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
+                placeholder="Ví dụ: Giải bóng chuyền nam TP Đà Nẵng 2024"
               />
             </div>
 
+            {/* Description */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">
-                Ngày kết thúc
+                Mô tả
               </label>
-              <Input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
+              <Input.TextArea
+                rows={4}
+                name="description"
+                value={formData.description}
                 onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          {/* Location & Teams */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">
-                Địa điểm thi đấu
-              </label>
-              <Input
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Ví dụ: Nhà thi đấu Quân Ngũ, Đà Nẵng"
+                placeholder="Nhập mô tả chi tiết về giải đấu..."
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">
-                Số lượng đội
-              </label>
-              <Input
-                type="number"
-                name="teams"
-                value={formData.teams}
-                onChange={handleInputChange}
-                placeholder="0"
-                min="0"
-              />
-            </div>
-          </div>
-
-          {/* Banner Upload */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">
-              Banner giải đấu
-            </label>
-
-            {bannerPreview ? (
-              <div className="relative">
-                <Image
-                  src={bannerPreview || "/placeholder.svg"}
-                  alt="Banner preview"
-                  className="w-full h-full object-cover rounded-lg border border-border"
-                  preview={{
-                    mask: "Phóng to",
-                  }}
-                />
-                <Button
-                  type="text"
-                  danger
-                  size="small"
-                  icon={<X size={16} />}
-                  onClick={removeBanner}
-                  style={{ position: "absolute", top: 0, right: 0 }}
+            {/* Dates */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">
+                  Ngày bắt đầu
+                </label>
+                <Input
+                  type="date"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleInputChange}
                 />
               </div>
-            ) : (
-              <label
-                className="flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
-                onDrop={(e) => {
-                  e.preventDefault();
-                  const file = e.dataTransfer.files?.[0];
-                  if (file && file.type.startsWith("image/")) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                      const url = event.target?.result as string;
-                      setBannerPreview(url);
-                      setFormData((prev) => ({ ...prev, bannerImage: url }));
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-                onDragOver={(e) => e.preventDefault()}
-              >
-                <div className="flex flex-col items-center justify-center">
-                  <Sparkles size={24} className="text-muted-foreground mb-2" />
-                  <p className="text-xs text-muted-foreground text-center">
-                    <span className="font-bold">Nhấp để chọn</span> hoặc kéo thả
-                  </p>
-                </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleBannerUpload}
-                />
-              </label>
-            )}
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-2 pt-4 border-t border-border">
-            <Button onClick={handleCloseEditor}>Hủy</Button>
-            <Button type="primary" onClick={handleFormSubmit}>
-              {editingTournament ? "Cập nhật" : "Tạo giải đấu"}
-            </Button>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">
+                  Ngày kết thúc
+                </label>
+                <Input
+                  type="date"
+                  name="endDate"
+                  value={formData.endDate}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+
+            {/* Location & Teams */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">
+                  Địa điểm thi đấu
+                </label>
+                <Input
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder="Ví dụ: Nhà thi đấu Quân Ngũ, Đà Nẵng"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">
+                  Số lượng đội
+                </label>
+                <Input
+                  type="number"
+                  name="teams"
+                  value={formData.teams}
+                  onChange={handleInputChange}
+                  placeholder="0"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            {/* Banner Upload */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-foreground">
+                Banner giải đấu
+              </label>
+
+              {bannerPreview ? (
+                <div className="relative">
+                  <Image
+                    src={bannerPreview || "/placeholder.svg"}
+                    alt="Banner preview"
+                    className="w-full h-full object-cover rounded-lg border border-border"
+                    preview={{
+                      mask: "Phóng to",
+                    }}
+                  />
+                  <Button
+                    type="text"
+                    danger
+                    size="small"
+                    icon={<X size={16} />}
+                    onClick={removeBanner}
+                    style={{ position: "absolute", top: 0, right: 0 }}
+                  />
+                </div>
+              ) : (
+                <label
+                  className="flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (file && file.type.startsWith("image/")) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        const url = event.target?.result as string;
+                        setBannerPreview(url);
+                        setFormData((prev) => ({ ...prev, bannerImage: url }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  onDragOver={(e) => e.preventDefault()}
+                >
+                  <div className="flex flex-col items-center justify-center">
+                    <Sparkles
+                      size={24}
+                      className="text-muted-foreground mb-2"
+                    />
+                    <p className="text-xs text-muted-foreground text-center">
+                      <span className="font-bold">Nhấp để chọn</span> hoặc kéo
+                      thả
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleBannerUpload}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2 pt-4 border-t border-border">
+              <Button onClick={handleCloseEditor} disabled={isLoading}>
+                Hủy
+              </Button>
+              <Button
+                type="primary"
+                onClick={handleFormSubmit}
+                loading={isLoading}
+              >
+                {editingTournament ? "Cập nhật" : "Tạo giải đấu"}
+              </Button>
+            </div>
           </div>
-        </div>
+        </Spin>
       </Drawer>
     </div>
   );

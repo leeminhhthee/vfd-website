@@ -1,6 +1,6 @@
 "use client";
 
-import DocumentsManagement from "@/components/admin/documents-management";
+import DocumentsManagement from "@/components/admin/documents/documents-management";
 import AdminLayout from "@/components/layouts/admin-layout";
 
 export default function AdminDocumentsPage() {
