@@ -105,5 +105,9 @@
   "enterNewPassword": "Nhập mật khẩu mới của bạn",
   "newPassword": "Mật khẩu mới",
   "confirmPassword": "Xác Nhận Mật Khẩu",
-  "resetPassword": "Đặt Lại Mật Khẩu"
+  "resetPassword": "Đặt Lại Mật Khẩu",
+  "resourceText": "Các tài liệu, quy định và hướng dẫn từ Liên đoàn",
+  "loginFailed": "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.",
+  "noNewsFound": "Không tìm thấy tin tức",
+  "relatedTournaments": "Giải đấu liên quan"
 }
