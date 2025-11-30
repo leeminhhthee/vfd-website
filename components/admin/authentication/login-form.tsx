@@ -3,7 +3,10 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
+import axios from "axios";
 import { Check, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 interface LoginFormProps {
@@ -11,6 +14,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onForgotPassword }: LoginFormProps) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,15 +28,33 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await authenticationInteractor.login({ email, password });
 
-      if (email && password.length >= 6) {
-        window.location.href = "/admin";
+      // ✅ accessToken: phụ thuộc rememberMe
+      if (rememberMe) {
+        localStorage.setItem("accessToken", response.accessToken);
       } else {
-        setError(() => trans.pleaseEnterValidEmailAndPassword);
+        sessionStorage.setItem("accessToken", response.accessToken);
       }
-    } catch {
-      setError(() => trans.errorOccurred);
+
+      // ✅ refreshToken: luôn nên lưu lâu dài
+      localStorage.setItem("refreshToken", response.refreshToken);
+
+      // ✅ user: có thể lưu lâu dài
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+
+      if (response.user.admin) {
+        router.push("/admin");
+      } else {
+        router.push("/"); // redirect user
+      }
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || trans.loginFailed);
+      } else {
+        setError(trans.errorOccurred);
+      }
     } finally {
       setIsLoading(false);
     }
