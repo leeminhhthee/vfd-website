@@ -1,7 +1,10 @@
 "use client";
 
 import { trans } from "@/app/generated/AppLocalization";
-import { ScheduleStatus } from "@/data/constants/constants";
+import {
+  getScheduleStatusLabel,
+  ScheduleStatus,
+} from "@/data/constants/constants";
 import { RelatedFile } from "@/data/model/tournament.model";
 import { format, parseISO } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -25,22 +28,25 @@ export default function TournamentDescription({
   status,
   relatedFiles,
 }: TournamentDescriptionProps) {
-  const statusMap = {
-    [ScheduleStatus.COMING]: {
-      label: "Sắp diễn ra",
-      color: "bg-blue-100 text-blue-800",
-    },
-    [ScheduleStatus.ONGOING]: {
-      label: "Đang diễn ra",
-      color: "bg-green-100 text-green-800",
-    },
-    [ScheduleStatus.ENDED]: {
-      label: "Đã kết thúc",
-      color: "bg-gray-100 text-gray-800",
-    },
+  
+  // Hàm helper để lấy màu sắc an toàn dựa trên Enum
+  const getStatusColor = (s: ScheduleStatus) => {
+    switch (s) {
+      case ScheduleStatus.COMING:
+        return "bg-blue-100 text-blue-800";
+      case ScheduleStatus.ONGOING:
+        return "bg-green-100 text-green-800";
+      case ScheduleStatus.ENDED:
+        return "bg-gray-100 text-gray-800";
+      case ScheduleStatus.POSTPONED:
+        return "bg-orange-100 text-orange-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
 
-  const { label, color } = statusMap[status];
+  const label = getScheduleStatusLabel(status);
+  const color = getStatusColor(status);
 
   return (
     <div className="bg-white rounded-lg border border-border p-6 mb-6">
