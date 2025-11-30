@@ -6,13 +6,13 @@ export const documentInteractor = {
     return documentRepository.getDocumentList();
   },
 
-  async createDocument(data: { title: string; category: string; file: File }): Promise<DocumentItem> {
+  async createDocument(data: Partial<DocumentItem>): Promise<DocumentItem> {
     return documentRepository.createDocument(data);
   },
 
   async updateDocument(
     id: string,
-    data: Partial<DocumentItem> & { file?: File }
+    data: Partial<DocumentItem>
   ): Promise<DocumentItem> {
     return documentRepository.updateDocument(id, data);
   },

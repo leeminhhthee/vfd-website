@@ -1,17 +1,6 @@
-import "reflect-metadata";
 import { Expose, Type } from "class-transformer";
+import "reflect-metadata";
 
-export class AboutModel {
-    @Expose({ name: 'introduction' })
-    @Type(() => IntroductionItem)
-    introduction!: IntroductionItem[];
-    @Expose({ name: 'affected_object' })
-    @Type(() => AffectedObjectItem)
-    affectedObject!: AffectedObjectItem[];
-    @Expose({ name: 'board_directors' })
-    @Type(() => BoardDirectorItem)
-    boardDirectors!: BoardDirectorItem[];
-}
 
 export class IntroductionItem {
     @Expose({ name: 'title' })
@@ -46,4 +35,24 @@ export class BoardDirectorItem {
     imageUrl!: string;
     @Expose({ name: 'bio' })
     bio!: string[];
+}
+
+export class BankQrItem {
+    @Expose({ name: 'qr_code_url' })
+    qrCodeUrl!: string;
+}
+
+export class AboutModel {
+    @Expose({ name: 'introduction' })
+    @Type(() => IntroductionItem)
+    introduction!: IntroductionItem[];
+    @Expose({ name: 'affected_object' })
+    @Type(() => AffectedObjectItem)
+    affectedObject!: AffectedObjectItem[];
+    @Expose({ name: 'board_directors' })
+    @Type(() => BoardDirectorItem)
+    boardDirectors!: BoardDirectorItem[];
+    @Expose({ name: 'bank_qr' })
+    @Type(() => BankQrItem)
+    bankQr!: BankQrItem;
 }

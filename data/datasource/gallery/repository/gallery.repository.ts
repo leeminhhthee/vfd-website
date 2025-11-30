@@ -30,4 +30,37 @@ export const galleryRepository = {
       return undefined;
     }
   },
+
+  async createGallery(data: Partial<GalleryAlbum>) {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 500));
+      console.log("Mock Create Gallery:", data);
+      return plainToInstance(GalleryAlbum, { id: Date.now(), ...data });
+    }
+
+    const response = await api.post<GalleryAlbum>("/gallery", data);
+    return plainToInstance(GalleryAlbum, response.data);
+  },
+
+  async updateGallery(id: number, data: Partial<GalleryAlbum>) {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 500));
+      console.log("Mock Update Gallery:", id, data);
+      return plainToInstance(GalleryAlbum, { id, ...data });
+    }
+
+    const response = await api.put<GalleryAlbum>(`/gallery/${id}`, data);
+    return plainToInstance(GalleryAlbum, response.data);
+  },
+
+  async deleteGallery(id: number) {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 500));
+      console.log("Mock Delete Gallery:", id);
+      return true;
+    }
+
+    const response = await api.delete(`/gallery/${id}`);
+    return response.data;
+  }
 };

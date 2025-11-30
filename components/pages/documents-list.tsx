@@ -21,7 +21,7 @@ export default function DocumentsList() {
     error,
   } = useQuery({
     queryKey: ["documents"],
-    queryFn: () => documentInteractor.getDocumentList(),
+    queryFn: () => documentInteractor.getDocumentsList(),
   });
 
   const categories: (DocumentCategorys | "all")[] = [
@@ -125,7 +125,7 @@ export default function DocumentsList() {
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm text-muted-foreground">
-                      {doc.size}
+                      {doc.fileSize} MB
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">

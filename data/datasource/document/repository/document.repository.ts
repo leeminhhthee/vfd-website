@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
 import { api } from "../../../../app/api/api";
-import { DocumentItem } from "../../../model/document.model";
 import documentMock from "../../../mockup/document.json";
+import { DocumentItem } from "../../../model/document.model";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
@@ -16,29 +16,12 @@ export const documentRepository = {
     return plainToInstance(DocumentItem, response.data);
   },
 
-  async createDocument(data: { title: string; category: string; file: File }): Promise<DocumentItem> {
+  async createDocument(data: Partial<DocumentItem>): Promise<DocumentItem> {
     if (USE_MOCK) {
-      return plainToInstance(DocumentItem, {
-        id: Date.now().toString(),
-        title: data.title,
-        category: data.category,
-        fileUrl: URL.createObjectURL(data.file),
-        fileName: data.file.name,
-        fileSize: `${(data.file.size / 1024 / 1024).toFixed(2)} MB`,
-        created_at: new Date(),
-        updated_at: new Date(),
-        content: "",
-      });
+      return plainToInstance(DocumentItem, data);
     }
 
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("category", data.category);
-    formData.append("file", data.file);
-
-    const response = await api.post<DocumentItem>("/document", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const response = await api.post<DocumentItem>("/document", data);
     return plainToInstance(DocumentItem, response.data);
   },
 

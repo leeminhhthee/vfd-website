@@ -39,10 +39,10 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
         { label: "Duyệt đơn", href: "/admin/registrations", icon: UserCheck },
       ],
     },
-    { label: "Dự án", href: "/admin/projects", icon: Notebook },
     { label: "Đối tác", href: "/admin/partners", icon: Handshake },
-    { label: "Người dùng", href: "/admin/users", icon: Users },
-    { label: "Hình ảnh", href: "/admin/photos", icon: ImageIcon },
+    { label: "Hình ảnh", href: "/admin/gallerys", icon: ImageIcon },
+    { label: "Dự án", href: "/admin/projects", icon: Notebook },
+    { label: "Thành viên", href: "/admin/members", icon: Users },
     { label: "Cài đặt", href: "/admin/settings", icon: Settings },
   ];
 

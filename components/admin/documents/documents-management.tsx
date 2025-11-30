@@ -1,7 +1,12 @@
 "use client";
 
+import {
+  DocumentCategorys,
+  getDocumentCategoryLabel,
+} from "@/data/constants/constants";
 import { documentInteractor } from "@/data/datasource/document/interactor/document.interactor";
 import { DocumentItem } from "@/data/model/document.model";
+import { confirmUnsavedChanges, formatFileSize } from "@/lib/utils";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,19 +23,17 @@ import {
 import { X } from "lucide-react";
 import { useMemo, useState } from "react";
 import DocumentEditorForm from "./document-editor-form";
-import { getDocumentCategoryLabel } from "@/data/constants/constants";
-import { confirmUnsavedChanges } from "@/lib/utils";
 
 export default function DocumentsManagement() {
-  const [editingDoc, setEditingDoc] = useState<DocumentItem | null>(null);
+  const [editingDoc, setEditingDoc] = useState<Partial<DocumentItem> | null>(
+    null
+  );
   const [editingMode, setEditingMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState([
-    "Quy định",
-    "Hướng dẫn",
-    "Biểu mẫu",
-  ]);
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+  const [categories, setCategories] = useState<DocumentCategorys[]>(
+    Object.values(DocumentCategorys)
+  );
   const queryClient = useQueryClient();
 
   const {
@@ -42,10 +45,16 @@ export default function DocumentsManagement() {
     queryFn: documentInteractor.getDocumentsList,
   });
 
+  const handleCloseEditor = () => {
+    setEditingMode(false);
+    setEditingDoc(null);
+    setIsFormDirty(false);
+  };
+
   const createMutation = useMutation<
     DocumentItem,
     Error,
-    { title: string; category: string; file: File }
+    Partial<DocumentItem>
   >({
     mutationFn: (data) => documentInteractor.createDocument(data),
     onSuccess: () => {
@@ -59,7 +68,7 @@ export default function DocumentsManagement() {
   const updateMutation = useMutation<
     DocumentItem,
     Error,
-    { id: string; data: Partial<DocumentItem> & { file?: File } }
+    { id: string; data: Partial<DocumentItem> }
   >({
     mutationFn: ({ id, data }) => documentInteractor.updateDocument(id, data),
     onSuccess: () => {
@@ -91,16 +100,11 @@ export default function DocumentsManagement() {
   const handleShowEditor = (doc?: DocumentItem) => {
     setEditingDoc(doc || null);
     setEditingMode(true);
-  };
-
-  const handleCloseEditor = () => {
-    setEditingMode(false);
-    setEditingDoc(null);
-    setUnsavedChanges(false);
+    setIsFormDirty(false);
   };
 
   const handleDrawerClose = () => {
-    if (unsavedChanges) {
+    if (isFormDirty) {
       confirmUnsavedChanges(handleCloseEditor);
     } else {
       handleCloseEditor();
@@ -161,19 +165,34 @@ export default function DocumentsManagement() {
               title: "Tiêu đề",
               dataIndex: "title",
               key: "title",
-              width: 500,
-              render: (text) => <strong>{text}</strong>,
+              width: 400,
+              render: (text: string) => (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    wordBreak: "break-word",
+                    maxWidth: 450,
+                    display: "inline-block",
+                  }}
+                >
+                  <strong>{text}</strong>
+                </div>
+              ),
             },
             {
               title: "Danh mục",
               dataIndex: "category",
               key: "category",
-              render: (c) => <Tag color="blue">{getDocumentCategoryLabel(c)}</Tag>,
+              render: (c) => (
+                <Tag color="blue">{getDocumentCategoryLabel(c)}</Tag>
+              ),
             },
             {
               title: "File",
               dataIndex: "fileUrl",
-              key: "file",
+              key: "fileUrl",
               width: 220,
               render: (url: string, record) => (
                 <a
@@ -195,6 +214,12 @@ export default function DocumentsManagement() {
                   {record.fileName || record.title}
                 </a>
               ),
+            },
+            {
+              title: "Dung lượng",
+              dataIndex: "fileSize",
+              key: "fileSize",
+              render: (fileSize) => <>{formatFileSize(fileSize)} MB</>,
             },
             {
               title: "Ngày tạo",
@@ -233,7 +258,6 @@ export default function DocumentsManagement() {
         />
       </div>
 
-      {/* Drawer for document editor */}
       <Drawer
         title={editingDoc ? "Chỉnh sửa tài liệu" : "Tải tài liệu mới"}
         placement="right"
@@ -242,46 +266,26 @@ export default function DocumentsManagement() {
         width={600}
         closeIcon={<X size={20} />}
         destroyOnClose
+        maskClosable={true}
       >
         <DocumentEditorForm
           key={editingDoc ? editingDoc.id : "create-new"}
-          document={editingDoc ?? undefined}
+          document={editingDoc as DocumentItem}
           categories={categories}
           onAddCategory={(cat) => setCategories([...categories, cat])}
           onSaveDraft={(data) => {
-            const isUpdating = !!editingDoc;
-            const hasNewFile = data.file && data.file instanceof File;
-
-            if (!isUpdating && !hasNewFile) {
-              notification.error({
-                message: "Vui lòng chọn file khi tạo mới!",
-              });
-              return;
-            }
-
-            const payload = {
-              title: data.title,
-              category: data.category,
-              file: hasNewFile ? data.file : undefined,
-            };
-
-            if (isUpdating && editingDoc?.id) {
+            if (editingDoc?.id) {
               updateMutation.mutate({
                 id: editingDoc.id,
-                data: payload,
+                data: data,
               });
             } else {
-              if (payload.file) {
-                createMutation.mutate({
-                  ...payload,
-                  file: payload.file,
-                });
-              }
+              createMutation.mutate(data);
             }
           }}
           onCancel={handleDrawerClose}
           isLoading={createMutation.isPending || updateMutation.isPending}
-          hasUnsavedChanges={setUnsavedChanges}
+          hasUnsavedChanges={setIsFormDirty}
         />
       </Drawer>
     </div>

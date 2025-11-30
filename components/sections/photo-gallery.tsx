@@ -20,7 +20,7 @@ const photoTabs = Object.entries(GalleryCategoryLabels).map(([id, label]) => ({
 }));
 
 export default function PhotoGalleryTeaser() {
-  const [activeTab, setActiveTab] = useState(GalleryCategory.INSIDE);
+  const [activeTab, setActiveTab] = useState(GalleryCategory.TOURNAMENT);
 
   const {
     data: galleryData,
@@ -59,9 +59,10 @@ export default function PhotoGalleryTeaser() {
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
                 className={`py-2 px-2 transition-colors duration-200 border-b-2 
-                  ${activeTab === tab.id
-                    ? "text-primary border-primary font-bold"
-                    : "text-gray-500 border-transparent hover:text-primary"
+                  ${
+                    activeTab === tab.id
+                      ? "text-primary border-primary font-bold"
+                      : "text-gray-500 border-transparent hover:text-primary"
                   }`}
               >
                 {tab.label}
@@ -110,9 +111,7 @@ export default function PhotoGalleryTeaser() {
                         sizes="(max-width: 1024px) 50vw, 25vw"
                       />
                       <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-all duration-300 flex items-end p-4">
-                        <span
-                          className="text-white text-sm font-semibold transition-opacity line-clamp-2"
-                          >
+                        <span className="text-white text-sm font-semibold transition-opacity line-clamp-2">
                           {photo.title}
                         </span>
                       </div>

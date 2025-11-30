@@ -1,3 +1,4 @@
+import { GalleryAlbum } from "@/data/model/gallery.model";
 import { galleryRepository } from "../repository/gallery.repository";
 
 export const galleryInteractor = {
@@ -25,4 +26,19 @@ export const galleryInteractor = {
       new Date(a.createdAt || 0).getTime())
       .slice(0, limit);
   },
+
+  async createGallery(data: Partial<GalleryAlbum>) {
+    const created = await galleryRepository.createGallery(data);
+    return created;
+  },
+
+  async updateGallery(id: number, data: Partial<GalleryAlbum>) {
+    const updated = await galleryRepository.updateGallery(id, data);
+    return updated;
+  },
+
+  async deleteGallery(id: number) {
+    const result = await galleryRepository.deleteGallery(id);
+    return result;
+  }
 };

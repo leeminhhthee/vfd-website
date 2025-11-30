@@ -8,7 +8,8 @@ import {
 } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { NewsItem } from "@/data/model/news.model";
-import { confirmUnsavedChanges } from "@/lib/utils"; 
+import { confirmUnsavedChanges } from "@/lib/utils";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
@@ -21,7 +22,7 @@ import {
   Tag,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { Edit2, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import NewsEditorForm from "./news-editor-form";
 
@@ -221,13 +222,13 @@ export default function NewsManagement() {
         <Space size="middle">
           <Button
             type="text"
-            icon={<Edit2 size={18} className="text-yellow-600" />}
+            icon={<EditOutlined />}
             onClick={() => handleShowEditEditor(record)}
           />
           <Button
             type="text"
             danger
-            icon={<Trash2 size={18} />}
+            icon={<DeleteOutlined />}
             onClick={() => handleDelete(record.id)}
             loading={
               deleteNewsMutation.isPending &&
@@ -278,7 +279,7 @@ export default function NewsManagement() {
         }}
         onCancel={handleCancelEditor}
         isLoading={createNewsMutation.isPending || updateNewsMutation.isPending}
-        hasUnsavedChanges={setUnsavedChanges} 
+        hasUnsavedChanges={setUnsavedChanges}
       />
     );
   }
