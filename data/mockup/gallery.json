@@ -40,7 +40,7 @@
   },
   {
     "id": 3,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải bóng chuyền Cup BC_Đà Nẵng mở rộng năm 2020",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653799/c1_ebn6bz.jpg",
@@ -61,7 +61,7 @@
   },
   {
     "id": 4,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải vô địch các CLB thành phố Đà Nẵng năm 2020",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653791/d1_rqivhv.jpg",
@@ -98,7 +98,7 @@
   },
   {
     "id": 6,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải vô địch các CLB Đà Nẵng năm 2021",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653743/g1_wm6rix.jpg",
@@ -113,7 +113,7 @@
   },
   {
     "id": 7,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải bóng chuyền sinh viên đại học, cao đẳng và khối lực lượng vũ trang liên kết - kết nghĩa năm 2022",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653758/o9_nsv7us.jpg",
@@ -155,7 +155,7 @@
   },
   {
     "id": 9,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải thể thao học sinh thành phố Đà Nẵng năm học 2022-2023",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653734/z8_yckdzm.jpg",
@@ -209,7 +209,7 @@
   },
   {
     "id": 12,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải Bóng Chuyền Thanh Niên Lần 2 Năm 2023",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653695/q7_cnluzo.jpg",
@@ -259,7 +259,7 @@
   },
   {
     "id": 14,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải bóng chuyền nam công an TP Đà Nẵng năm 2024",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653687/j2_erkiu6.jpg",
@@ -281,7 +281,7 @@
   },
   {
     "id": 15,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải Bóng chuyền Truyền thống Thanh niên Đà Nẵng lần thứ III Năm 2024",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762653650/k1_xivrrh.jpg",
@@ -353,7 +353,7 @@
   },
   {
     "id": 19,
-    "category": "inside",
+    "category": "tournament",
     "title": "Giải Bóng Chuyền Sinh Viên Toàn Quốc SV6 VietSport Cup năm 2025",
     "images": [
       "https://res.cloudinary.com/dikzmjuff/image/upload/v1762659550/499718993_1222382216349222_1495485388200704431_n_xdhvcw.jpg",

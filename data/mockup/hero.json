@@ -11,14 +11,6 @@
   },
   {
     "id": 2,
-    "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1761972275/hero4_nbb3fx.jpg",
-    "title": "Giải Bóng Chuyền Cup CLB TP Đà Nẵng 2025",
-    "sub_title": "Trải nghiệm không khí thi đấu sôi động và gắn kết cộng đồng! Đừng bỏ lỡ!",
-    "button_text": "Xem lịch thi đấu",
-    "button_href": "/schedule/3"
-  },
-  {
-    "id": 3,
     "image": "https://res.cloudinary.com/dikzmjuff/image/upload/v1762625099/e1_hwatgg.jpg",
     "title": null,
     "sub_title": null,

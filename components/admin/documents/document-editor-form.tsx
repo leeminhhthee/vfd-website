@@ -1,29 +1,32 @@
 "use client";
 
+import {
+  DocumentCategorys,
+  getDocumentCategoryLabel,
+} from "@/data/constants/constants";
 import { DocumentItem } from "@/data/model/document.model";
-import { confirmUnsavedChanges } from "@/lib/utils";
+import { uploadFile } from "@/lib/utils";
 import { Button, Input, notification, Select, Space } from "antd";
 import { FileText, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props {
   document?: DocumentItem;
-  categories: string[];
-  onAddCategory: (cat: string) => void;
-  onSaveDraft: (data: { title: string; category: string; file?: File }) => void;
+  categories: DocumentCategorys[];
+  onAddCategory: (cat: DocumentCategorys) => void;
+  onSaveDraft: (data: Partial<DocumentItem>) => void;
   onCancel: () => void;
   isLoading: boolean;
-  hasUnsavedChanges?: (changed: boolean) => void; 
+  hasUnsavedChanges?: (changed: boolean) => void;
 }
 
 export default function DocumentEditorForm({
   document,
   categories,
-  onAddCategory,
   onSaveDraft,
   onCancel,
   isLoading,
-  hasUnsavedChanges: notifyUnsavedChanges, 
+  hasUnsavedChanges: notifyUnsavedChanges,
 }: Props) {
   const [formData, setFormData] = useState({
     title: document?.title || "",
@@ -31,16 +34,39 @@ export default function DocumentEditorForm({
     file: undefined as File | undefined,
   });
 
-  const [filePreview, setFilePreview] = useState<{
+  const [currentFile, setCurrentFile] = useState<{
     name: string;
     url: string;
+    size?: number;
   } | null>(
     document?.fileUrl && document?.fileName
-      ? { name: document.fileName, url: document.fileUrl }
+      ? {
+          name: document.fileName,
+          url: document.fileUrl,
+          size: document.fileSize,
+        }
       : null
   );
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    if (notifyUnsavedChanges) {
+      notifyUnsavedChanges(hasUnsavedChanges);
+    }
+  }, [hasUnsavedChanges, notifyUnsavedChanges]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,66 +83,71 @@ export default function DocumentEditorForm({
 
   const handleFileChange = (file: File) => {
     setFormData((prev) => ({ ...prev, file }));
-    setFilePreview({ name: file.name, url: URL.createObjectURL(file) });
+    setCurrentFile({
+      name: file.name,
+      url: URL.createObjectURL(file),
+      size: file.size,
+    });
     setHasUnsavedChanges(true);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+    if (isUploading || isLoading) return;
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (file) handleFileChange(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.title)
       return notification.error({ message: "Vui lòng nhập tên tài liệu" });
     if (!formData.category)
       return notification.error({ message: "Vui lòng chọn danh mục" });
-    if (!formData.file && !filePreview)
+    if (!formData.file && !currentFile?.url)
       return notification.error({ message: "Vui lòng chọn file" });
 
-    onSaveDraft(formData);
-  };
+    setIsUploading(true);
 
-  const handleCancel = () => {
-    if (hasUnsavedChanges) {
-      confirmUnsavedChanges(onCancel);
-    } else {
-      onCancel();
-    }
-  };
+    try {
+      let finalFileUrl = currentFile?.url || "";
+      let finalFileName = currentFile?.name || "";
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = ""; // Chrome requires returnValue to be set
+      if (formData.file) {
+        try {
+          const uploadResult = await uploadFile(formData.file);
+          finalFileUrl = uploadResult.link;
+          finalFileName = formData.file.name;
+        } catch (error) {
+          notification.error({
+            message: "Lỗi upload file: " + (error as Error).message,
+          });
+          setIsUploading(false);
+          return;
+        }
       }
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [hasUnsavedChanges]);
 
-  useEffect(() => {
-    if (notifyUnsavedChanges) {
-      notifyUnsavedChanges(hasUnsavedChanges);
+      const result: Partial<DocumentItem> = {
+        title: formData.title,
+        category: formData.category,
+        fileUrl: finalFileUrl,
+        fileName: finalFileName,
+      };
+
+      onSaveDraft(result);
+    } catch (error) {
+      notification.error({ message: "Có lỗi xảy ra" });
+    } finally {
+      setIsUploading(false);
     }
-  }, [hasUnsavedChanges, notifyUnsavedChanges]);
+  };
+
+  const isProcessing = isLoading || isUploading;
 
   return (
-    <form
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSave();
-      }}
-    >
-      {/* Title */}
+    <div className="space-y-6">
       <div className="space-y-2 mb-3">
         <label className="block text-sm font-medium text-foreground">
-          Tên tài liệu
+          Tên tài liệu <span className="text-red-500">*</span>
         </label>
         <Input
           size="large"
@@ -124,13 +155,13 @@ export default function DocumentEditorForm({
           value={formData.title}
           onChange={handleInputChange}
           placeholder="Nhập tên tài liệu..."
+          disabled={isProcessing}
         />
       </div>
 
-      {/* Category */}
       <div className="space-y-2 mb-3">
         <label className="block text-sm font-medium text-foreground">
-          Danh mục
+          Danh mục <span className="text-red-500">*</span>
         </label>
         <Space.Compact style={{ width: "100%" }}>
           <Select
@@ -138,29 +169,32 @@ export default function DocumentEditorForm({
             style={{ width: "100%" }}
             value={formData.category || undefined}
             onChange={handleCategoryChange}
-            options={categories.map((cat) => ({ label: cat, value: cat }))}
+            options={categories.map((cat) => ({
+              label: getDocumentCategoryLabel(cat),
+              value: cat,
+            }))}
             placeholder="Chọn danh mục"
+            disabled={isProcessing}
           />
         </Space.Compact>
       </div>
 
-      {/* File Upload */}
       <div className="space-y-2 mb-3">
         <label className="block text-sm font-medium text-foreground">
-          Chọn file
+          Chọn file <span className="text-red-500">*</span>
         </label>
-        {filePreview ? (
+        {currentFile ? (
           <div className="relative flex items-center justify-between border border-border rounded-lg p-4 hover:bg-muted">
-            <div className="flex items-center gap-2">
-              <FileText size={24} />
-              <span className="truncate">{filePreview.name}</span>
+            <div className="flex items-center gap-2 overflow-hidden">
+              <FileText size={24} className="flex-shrink-0" />
+              <span className="truncate max-w-[300px]">{currentFile.name}</span>
             </div>
-            <div className="flex gap-2">
-              {filePreview.url && (
+            <div className="flex gap-2 flex-shrink-0">
+              {currentFile.url && !formData.file && (
                 <Button
                   type="link"
                   size="small"
-                  onClick={() => window.open(filePreview.url, "_blank")}
+                  onClick={() => window.open(currentFile.url, "_blank")}
                 >
                   Xem
                 </Button>
@@ -170,8 +204,9 @@ export default function DocumentEditorForm({
                 danger
                 size="small"
                 icon={<X size={16} />}
+                disabled={isProcessing}
                 onClick={() => {
-                  setFilePreview(null);
+                  setCurrentFile(null);
                   setFormData((prev) => ({ ...prev, file: undefined }));
                   setHasUnsavedChanges(true);
                 }}
@@ -180,7 +215,11 @@ export default function DocumentEditorForm({
           </div>
         ) : (
           <label
-            className="flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
+            className={`flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed border-border rounded-lg transition-colors ${
+              isProcessing
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer hover:bg-card"
+            }`}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
           >
@@ -197,6 +236,7 @@ export default function DocumentEditorForm({
               type="file"
               className="hidden"
               accept=".pdf,.doc,.docx"
+              disabled={isProcessing}
               onChange={(e) =>
                 e.target.files && handleFileChange(e.target.files[0])
               }
@@ -205,13 +245,18 @@ export default function DocumentEditorForm({
         )}
       </div>
 
-      {/* Action Buttons */}
       <div className="flex justify-end gap-2 pt-4 border-t border-border">
-        <Button onClick={handleCancel}>Hủy</Button>
-        <Button type="primary" htmlType="submit" loading={isLoading}>
-          {document?.id ? "Cập nhật" : "Tải lên"}
+        <Button onClick={onCancel} disabled={isProcessing}>
+          Hủy
+        </Button>
+        <Button type="primary" onClick={handleSave} loading={isProcessing}>
+          {isUploading
+            ? "Đang tải file..."
+            : document?.id
+            ? "Cập nhật"
+            : "Tải lên"}
         </Button>
       </div>
-    </form>
+    </div>
   );
 }

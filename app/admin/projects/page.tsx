@@ -1,6 +1,6 @@
 "use client";
 
-import ProjectsManagement from "@/components/admin/projects-management";
+import ProjectsManagement from "@/components/admin/projects/projects-management";
 import AdminLayout from "@/components/layouts/admin-layout";
 
 export default function AdminProjectsPage() {

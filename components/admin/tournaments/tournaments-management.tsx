@@ -1,86 +1,101 @@
 "use client";
 
-import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
-import { useQuery } from "@tanstack/react-query";
 import {
+  getScheduleStatusLabel,
+  ScheduleStatus,
+} from "@/data/constants/constants";
+import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
+import { TournamentItem } from "@/data/model/tournament.model";
+import { confirmUnsavedChanges, getStatusColor } from "@/lib/utils";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Alert,
   Button,
   Drawer,
-  Image,
   Input,
   Modal,
   notification,
   Space,
-  Spin,
   Table,
   Tag,
+  Tooltip,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { Edit2, Plus, Sparkles, Trash2, X } from "lucide-react";
+import { CheckCircle2, X, XCircle } from "lucide-react";
 import { useMemo, useState } from "react";
-
-interface Tournament {
-  id: number;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-  teams: number;
-  banner?: string;
-  status?: string;
-}
-
-const getStatus = (startDate: string, endDate: string) => {
-  const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  if (now < start) return "Chưa bắt đầu";
-  if (now > end) return "Đã kết thúc";
-  return "Đang diễn ra";
-};
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Đang diễn ra":
-      return "green";
-    case "Chưa bắt đầu":
-      return "blue";
-    case "Đã kết thúc":
-      return "default";
-    default:
-      return "default";
-  }
-};
+import TournamentEditorForm from "./tournament-form";
 
 export default function TournamentsManagement() {
   const [editingMode, setEditingMode] = useState(false);
-  const [editingTournament, setEditingTournament] = useState<Tournament | null>(
-    null
-  );
+  const [editingTournament, setEditingTournament] =
+    useState<TournamentItem | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [formData, setFormData] = useState<
-    Omit<Tournament, "id"> & { id?: number }
-  >({
-    name: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    location: "",
-    teams: 0,
-    banner: "",
-  });
-  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const {
     data: tournaments = [],
     isLoading: tableLoading,
     error,
-    refetch,
-  } = useQuery<Tournament[]>({
+  } = useQuery<TournamentItem[]>({
     queryKey: ["tournaments"],
     queryFn: tournamentInteractor.getTournamentList,
+  });
+
+  const handleCloseEditor = () => {
+    setEditingMode(false);
+    setEditingTournament(null);
+    setIsFormDirty(false);
+  };
+
+  const handleDrawerClose = () => {
+    if (isFormDirty) {
+      confirmUnsavedChanges(() => {
+        handleCloseEditor();
+      });
+    } else {
+      handleCloseEditor();
+    }
+  };
+
+  const createMutation = useMutation<
+    TournamentItem,
+    Error,
+    Partial<TournamentItem>
+  >({
+    mutationFn: (data) => tournamentInteractor.createTournament(data),
+    onSuccess: () => {
+      notification.success({ message: "Tạo giải đấu thành công" });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      handleCloseEditor();
+    },
+    onError: () => notification.error({ message: "Tạo giải đấu thất bại" }),
+  });
+
+  const updateMutation = useMutation<
+    TournamentItem,
+    Error,
+    { id: number; data: Partial<TournamentItem> }
+  >({
+    mutationFn: ({ id, data }) =>
+      tournamentInteractor.updateTournament(id, data),
+    onSuccess: () => {
+      notification.success({ message: "Cập nhật thành công" });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      handleCloseEditor();
+    },
+    onError: () => notification.error({ message: "Cập nhật thất bại" }),
+  });
+
+  const deleteMutation = useMutation<boolean, Error, number>({
+    mutationFn: (id) => tournamentInteractor.deleteTournament(id),
+    onSuccess: () => {
+      notification.success({ message: "Đã xóa giải đấu" });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+    },
+    onError: () => notification.error({ message: "Xóa thất bại" }),
   });
 
   const filteredTournaments = useMemo(() => {
@@ -92,125 +107,43 @@ export default function TournamentsManagement() {
     );
   }, [tournaments, searchTerm]);
 
-  const handleShowCreateEditor = () => {
-    setEditingTournament(null);
-    setFormData({
-      name: "",
-      description: "",
-      startDate: "",
-      endDate: "",
-      location: "",
-      teams: 0,
-      banner: "",
+  const statusOptions = [
+    {
+      text: getScheduleStatusLabel(ScheduleStatus.COMING),
+      value: ScheduleStatus.COMING,
+    },
+    {
+      text: getScheduleStatusLabel(ScheduleStatus.ONGOING),
+      value: ScheduleStatus.ONGOING,
+    },
+    {
+      text: getScheduleStatusLabel(ScheduleStatus.ENDED),
+      value: ScheduleStatus.ENDED,
+    },
+    {
+      text: getScheduleStatusLabel(ScheduleStatus.POSTPONED),
+      value: ScheduleStatus.POSTPONED,
+    },
+  ];
+
+  const handleShowEditor = (record?: TournamentItem) => {
+    setEditingTournament(record || null);
+    setEditingMode(true);
+    setIsFormDirty(false);
+  };
+
+  const handleDelete = (id: number) => {
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xóa giải đấu này?",
+      content: "Hành động này không thể hoàn tác.",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk: () => deleteMutation.mutate(id),
     });
-    setBannerPreview(null);
-    setHasUnsavedChanges(false);
-    setEditingMode(true);
   };
 
-  const handleShowEditEditor = (record: Tournament) => {
-    setEditingTournament(record);
-    setFormData(record);
-    setBannerPreview(record.banner || null);
-    setHasUnsavedChanges(false);
-    setEditingMode(true);
-  };
-
-  const handleCloseEditor = () => {
-    if (hasUnsavedChanges) {
-      Modal.confirm({
-        title: "Bạn có chắc chắn muốn thoát?",
-        content: "Những thay đổi chưa được lưu sẽ bị mất.",
-        okText: "Thoát",
-        okType: "danger",
-        cancelText: "Tiếp tục chỉnh sửa",
-        onOk: () => {
-          setEditingMode(false);
-          setEditingTournament(null);
-        },
-      });
-    } else {
-      setEditingMode(false);
-      setEditingTournament(null);
-    }
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "teams" ? parseInt(value) : value,
-    }));
-    setHasUnsavedChanges(true);
-  };
-
-  const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const preview = event.target?.result as string;
-        setBannerPreview(preview);
-        setFormData((prev) => ({ ...prev, banner: preview }));
-        setHasUnsavedChanges(true);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeBanner = () => {
-    setBannerPreview(null);
-    setFormData((prev) => ({ ...prev, banner: "" }));
-    setHasUnsavedChanges(true);
-  };
-
-  // Loading state for editor
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleFormSubmit = async () => {
-    if (!formData.name?.trim()) {
-      notification.error({ message: "Vui lòng nhập tên giải đấu" });
-      return;
-    }
-    if (!formData.description?.trim()) {
-      notification.error({ message: "Vui lòng nhập mô tả" });
-      return;
-    }
-    if (!formData.startDate) {
-      notification.error({ message: "Vui lòng chọn ngày bắt đầu" });
-      return;
-    }
-    if (!formData.endDate) {
-      notification.error({ message: "Vui lòng chọn ngày kết thúc" });
-      return;
-    }
-    if (!formData.location?.trim()) {
-      notification.error({ message: "Vui lòng nhập địa điểm" });
-      return;
-    }
-
-    setIsLoading(true);
-    setTimeout(() => {
-      // Nếu có API tạo/cập nhật thì gọi ở đây, sau đó refetch()
-      // Ví dụ:
-      // await tournamentInteractor.createTournament(formData);
-      // await tournamentInteractor.updateTournament(formData);
-
-      setIsLoading(false);
-      setEditingMode(false);
-      setEditingTournament(null);
-      refetch();
-      notification.success({
-        message: editingTournament
-          ? "Cập nhật giải đấu thành công!"
-          : "Tạo giải đấu mới thành công!",
-      });
-    }, 1200); // giả lập loading
-  };
-
-  const columns: ColumnsType<Tournament> = [
+  const columns: ColumnsType<TournamentItem> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -221,15 +154,32 @@ export default function TournamentsManagement() {
       title: "Tên giải đấu",
       dataIndex: "name",
       key: "name",
+      width: 300,
       render: (text: string) => (
-        <strong className="text-foreground">{text}</strong>
+        <div
+          style={{
+            display: "WebkitBox",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "normal",
+            wordBreak: "break-word",
+            maxWidth: 350,
+            lineHeight: "1.4",
+          }}
+          className="text-foreground font-semibold"
+        >
+          {text}
+        </div>
       ),
     },
     {
       title: "Ngày bắt đầu",
       dataIndex: "startDate",
       key: "startDate",
-      render: (date: string) => new Date(date).toLocaleDateString("vi-VN"),
+      render: (date: Date | string) =>
+        date ? new Date(date).toLocaleDateString("vi-VN") : "",
       sorter: (a, b) =>
         new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
     },
@@ -237,7 +187,8 @@ export default function TournamentsManagement() {
       title: "Ngày kết thúc",
       dataIndex: "endDate",
       key: "endDate",
-      render: (date: string) => new Date(date).toLocaleDateString("vi-VN"),
+      render: (date: Date | string) =>
+        date ? new Date(date).toLocaleDateString("vi-VN") : "",
       sorter: (a, b) =>
         new Date(a.endDate).getTime() - new Date(b.endDate).getTime(),
     },
@@ -251,60 +202,83 @@ export default function TournamentsManagement() {
       title: "Địa điểm",
       dataIndex: "location",
       key: "location",
+      width: 100,
+      render: (text: string) => (
+        <div
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            wordBreak: "break-word",
+            maxWidth: 120,
+            cursor: "pointer",
+            display: "inline-block",
+          }}
+        >
+          {text}
+        </div>
+      ),
     },
     {
       title: "Trạng thái",
-      dataIndex: "status",
       key: "status",
-      render: (_: unknown, record) => {
-        const status = getStatus(record.startDate, record.endDate);
-        return <Tag color={getStatusColor(status)}>{status}</Tag>;
+      filters: statusOptions,
+      onFilter: (value, record) => record.status === value,
+      render: (_, record) => {
+        return (
+          <Tag color={getStatusColor(record.status)}>
+            {getScheduleStatusLabel(record.status)}
+          </Tag>
+        );
       },
+    },
+    {
+      title: "Trang chủ",
+      dataIndex: "isVisibleOnHome",
+      key: "isVisibleOnHome",
+      align: "center",
+      render: (visible: boolean) =>
+        visible ? (
+          <Tooltip title="Đang hiển thị trên trang chủ">
+            <CheckCircle2 className="text-green-500 mx-auto" size={20} />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Không hiển thị">
+            <XCircle className="text-gray-300 mx-auto" size={20} />
+          </Tooltip>
+        ),
     },
     {
       title: "Hành động",
       key: "action",
       align: "center",
-      width: 100,
-      render: (_: unknown, record) => (
+      render: (_, record) => (
         <Space size="middle">
           <Button
             type="text"
-            icon={<Edit2 size={18} className="text-yellow-600" />}
-            onClick={() => handleShowEditEditor(record)}
+            icon={<EditOutlined />}
+            onClick={() => handleShowEditor(record)}
           />
           <Button
             type="text"
             danger
-            icon={<Trash2 size={18} />}
+            icon={<DeleteOutlined />}
             onClick={() => handleDelete(record.id)}
+            loading={deleteMutation.isPending}
           />
         </Space>
       ),
     },
   ];
 
-  const handleDelete = (id: number) => {
-    Modal.confirm({
-      title: "Bạn có chắc chắn muốn xóa giải đấu này?",
-      content: "Hành động này không thể hoàn tác.",
-      okText: "Xóa",
-      okType: "danger",
-      cancelText: "Hủy",
-      onOk: async () => {
-        // Nếu có API xóa thì gọi ở đây, sau đó refetch()
-        // await tournamentInteractor.deleteTournament(id);
-        refetch();
-        notification.success({ message: "Đã xóa giải đấu!" });
-      },
-    });
-  };
-
   if (error) {
     return (
-      <div className="text-center py-12">
-        <Tag color="red">Lỗi tải dữ liệu giải đấu!</Tag>
-      </div>
+      <Alert
+        type="error"
+        message="Lỗi tải dữ liệu"
+        description={(error as Error).message}
+        showIcon
+      />
     );
   }
 
@@ -314,7 +288,7 @@ export default function TournamentsManagement() {
         <div className="flex items-center gap-2">
           <Space.Compact style={{ width: 320 }}>
             <Input
-              placeholder="Tìm kiếm tên giải đấu, địa điểm..."
+              placeholder="Tìm kiếm giải đấu..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               allowClear
@@ -327,197 +301,51 @@ export default function TournamentsManagement() {
 
         <Button
           type="primary"
-          icon={<Plus size={20} />}
-          onClick={handleShowCreateEditor}
+          icon={<PlusOutlined />}
+          onClick={() => handleShowEditor()}
         >
           Thêm giải đấu
         </Button>
       </div>
 
       <div className="bg-white rounded-lg border border-border overflow-x-auto">
-        <Spin spinning={tableLoading}>
-          <Table
-            columns={columns}
-            dataSource={filteredTournaments}
-            rowKey="id"
-            pagination={{ pageSize: 10 }}
-            scroll={{ x: "max-content" }}
-          />
-        </Spin>
+        <Table
+          columns={columns}
+          dataSource={filteredTournaments}
+          rowKey="id"
+          loading={tableLoading}
+          pagination={{ pageSize: 10 }}
+          scroll={{ x: "max-content" }}
+        />
       </div>
 
       <Drawer
         title={editingTournament ? "Chỉnh sửa giải đấu" : "Tạo giải đấu mới"}
         placement="right"
-        onClose={handleCloseEditor}
+        onClose={handleDrawerClose}
         open={editingMode}
         width={600}
         closeIcon={<X size={20} />}
+        destroyOnClose
+        maskClosable={true}
       >
-        <Spin spinning={isLoading}>
-          <div className="space-y-6">
-            {/* Tournament Name */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">
-                Tên giải đấu
-              </label>
-              <Input
-                size="large"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Ví dụ: Giải bóng chuyền nam TP Đà Nẵng 2024"
-              />
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">
-                Mô tả
-              </label>
-              <Input.TextArea
-                rows={4}
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Nhập mô tả chi tiết về giải đấu..."
-              />
-            </div>
-
-            {/* Dates */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Ngày bắt đầu
-                </label>
-                <Input
-                  type="date"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Ngày kết thúc
-                </label>
-                <Input
-                  type="date"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-
-            {/* Location & Teams */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Địa điểm thi đấu
-                </label>
-                <Input
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  placeholder="Ví dụ: Nhà thi đấu Quân Ngũ, Đà Nẵng"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Số lượng đội
-                </label>
-                <Input
-                  type="number"
-                  name="teams"
-                  value={formData.teams}
-                  onChange={handleInputChange}
-                  placeholder="0"
-                  min="0"
-                />
-              </div>
-            </div>
-
-            {/* Banner Upload */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-foreground">
-                Banner giải đấu
-              </label>
-
-              {bannerPreview ? (
-                <div className="relative">
-                  <Image
-                    src={bannerPreview || "/placeholder.svg"}
-                    alt="Banner preview"
-                    className="w-full h-full object-cover rounded-lg border border-border"
-                    preview={{
-                      mask: "Phóng to",
-                    }}
-                  />
-                  <Button
-                    type="text"
-                    danger
-                    size="small"
-                    icon={<X size={16} />}
-                    onClick={removeBanner}
-                    style={{ position: "absolute", top: 0, right: 0 }}
-                  />
-                </div>
-              ) : (
-                <label
-                  className="flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const file = e.dataTransfer.files?.[0];
-                    if (file && file.type.startsWith("image/")) {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        const url = event.target?.result as string;
-                        setBannerPreview(url);
-                        setFormData((prev) => ({ ...prev, bannerImage: url }));
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                  onDragOver={(e) => e.preventDefault()}
-                >
-                  <div className="flex flex-col items-center justify-center">
-                    <Sparkles
-                      size={24}
-                      className="text-muted-foreground mb-2"
-                    />
-                    <p className="text-xs text-muted-foreground text-center">
-                      <span className="font-bold">Nhấp để chọn</span> hoặc kéo
-                      thả
-                    </p>
-                  </div>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleBannerUpload}
-                  />
-                </label>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-2 pt-4 border-t border-border">
-              <Button onClick={handleCloseEditor} disabled={isLoading}>
-                Hủy
-              </Button>
-              <Button
-                type="primary"
-                onClick={handleFormSubmit}
-                loading={isLoading}
-              >
-                {editingTournament ? "Cập nhật" : "Tạo giải đấu"}
-              </Button>
-            </div>
-          </div>
-        </Spin>
+        <TournamentEditorForm
+          key={editingTournament ? editingTournament.id : "create-new"}
+          initialData={editingTournament ?? undefined}
+          onSave={(data) => {
+            if (editingTournament?.id) {
+              updateMutation.mutate({
+                id: editingTournament.id,
+                data: data,
+              });
+            } else {
+              createMutation.mutate(data);
+            }
+          }}
+          onCancel={handleDrawerClose}
+          isLoading={createMutation.isPending || updateMutation.isPending}
+          hasUnsavedChanges={setIsFormDirty}
+        />
       </Drawer>
     </div>
   );

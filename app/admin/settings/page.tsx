@@ -1,6 +1,6 @@
 "use client";
 
-import SettingsManagement from "@/components/admin/settings-management";
+import SettingsManagement from "@/components/admin/settings/settings-management";
 import AdminLayout from "@/components/layouts/admin-layout";
 
 export default function AdminSettingsPage() {

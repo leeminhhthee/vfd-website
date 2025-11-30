@@ -125,7 +125,7 @@ export default function DocumentsList() {
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm text-muted-foreground">
-                      {doc.fileSize}
+                      {doc.fileSize} MB
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">

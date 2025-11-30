@@ -1,6 +1,14 @@
 "use client";
 
 import {
+  getRegistrationStatusLabel,
+  RegistrationStatus,
+} from "@/data/constants/constants";
+import { registrationInteractor } from "@/data/datasource/registration/interactor/registration.interactor";
+import { RegistrationItem } from "@/data/model/registration.model";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Alert,
   Button,
   Divider,
   Drawer,
@@ -15,79 +23,57 @@ import type { ColumnsType } from "antd/es/table";
 import { Download, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
 
-interface Registration {
-  id: number;
-  teamName: string;
-  tournament: string;
-  contactName: string;
-  email: string;
-  phone: string;
-  organization: string;
-  coach: string;
-  players: number;
-  date: string;
-  status: "Chờ duyệt" | "Đã duyệt" | "Từ chối";
-  documentUrl?: string;
-  updatedAt?: string;
-}
-
-const mockRegistrations: Registration[] = [
-  {
-    id: 1,
-    teamName: "Đội Bóng Chuyền A",
-    tournament: "Giải bóng chuyền nam TP Đà Nẵng",
-    contactName: "Nguyễn Văn A",
-    email: "nguyenvana@example.com",
-    phone: "0901234567",
-    organization: "Trung tâm TDTT Đà Nẵng",
-    coach: "Nguyễn Văn A",
-    players: 12,
-    date: "2024-10-20",
-    status: "Chờ duyệt",
-    documentUrl: "https://example.com/doc1.pdf",
-    updatedAt: "2024-10-20",
-  },
-  {
-    id: 2,
-    teamName: "Đội Bóng Chuyền B",
-    tournament: "Giải bóng chuyền nữ TP Đà Nẵng",
-    contactName: "Trần Thị B",
-    email: "tranthib@example.com",
-    phone: "0912345678",
-    organization: "Công ty TNHH B",
-    coach: "Trần Thị B",
-    players: 10,
-    date: "2024-10-19",
-    status: "Đã duyệt",
-    documentUrl: "https://example.com/doc2.pdf",
-    updatedAt: "2024-10-21",
-  },
-  {
-    id: 3,
-    teamName: "Đội Bóng Chuyền C",
-    tournament: "Giải bóng chuyền nam TP Đà Nẵng",
-    contactName: "Lê Văn C",
-    email: "levanc@example.com",
-    phone: "0923456789",
-    organization: "Trường Đại học C",
-    coach: "Lê Văn C",
-    players: 11,
-    date: "2024-10-18",
-    status: "Từ chối",
-    documentUrl: "https://example.com/doc3.pdf",
-    updatedAt: "2024-10-19",
-  },
-];
-
 export default function RegistrationsManagement() {
-  const [registrations, setRegistrations] =
-    useState<Registration[]>(mockRegistrations);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [tournamentFilter, setTournamentFilter] = useState<string>("all");
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedRegistration, setSelectedRegistration] =
-    useState<Registration | null>(null);
+    useState<RegistrationItem | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: registrations = [],
+    isLoading,
+    error,
+  } = useQuery<RegistrationItem[]>({
+    queryKey: ["registrations"],
+    queryFn: registrationInteractor.getRegistrationList,
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: RegistrationStatus }) =>
+      registrationInteractor.updateRegistrationStatus(id, status),
+    onSuccess: (_, variables) => {
+      const label = getRegistrationStatusLabel(variables.status);
+      notification.success({
+        message: "Cập nhật thành công",
+        description: `Đã thay đổi trạng thái thành "${label}"`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["registrations"] });
+
+      if (selectedRegistration?.id === variables.id) {
+        setSelectedRegistration((prev) =>
+          prev ? { ...prev, status: variables.status } : null
+        );
+      }
+    },
+    onError: () => {
+      notification.error({ message: "Có lỗi xảy ra khi cập nhật trạng thái" });
+    },
+  });
+
+  const getStatusColor = (status: RegistrationStatus) => {
+    switch (status) {
+      case RegistrationStatus.PENDING:
+        return "orange";
+      case RegistrationStatus.APPROVED:
+        return "green";
+      case RegistrationStatus.REJECTED:
+        return "red";
+      default:
+        return "default";
+    }
+  };
 
   const tournaments = useMemo(() => {
     const unique = [...new Set(registrations.map((r) => r.tournament))];
@@ -100,51 +86,28 @@ export default function RegistrationsManagement() {
         reg.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.tournament.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchStatus = statusFilter === "all" || reg.status === statusFilter;
-
-      const matchTournament =
-        tournamentFilter === "all" || reg.tournament === tournamentFilter;
-
-      return matchSearch && matchStatus && matchTournament;
+      return matchSearch;
     });
-  }, [registrations, searchTerm, statusFilter, tournamentFilter]);
+  }, [registrations, searchTerm]);
 
-  const handleShowDetail = (record: Registration) => {
+  const handleShowDetail = (record: RegistrationItem) => {
     setSelectedRegistration(record);
     setDetailModalOpen(true);
   };
 
   const handleStatusChange = (
-    registration: Registration,
-    newStatus: "Đã duyệt" | "Từ chối"
+    registration: RegistrationItem,
+    newStatus: RegistrationStatus
   ) => {
+    const newStatusLabel = getRegistrationStatusLabel(newStatus);
     Modal.confirm({
       title: `Thay đổi trạng thái đăng ký`,
-      content: `Bạn có chắc chắn muốn thay đổi trạng thái của "${registration.teamName}" thành "${newStatus}"?`,
+      content: `Bạn có chắc chắn muốn thay đổi trạng thái của "${registration.teamName}" thành "${newStatusLabel}"?`,
       okText: "Xác nhận",
       cancelText: "Hủy",
-      okType: newStatus === "Từ chối" ? "danger" : "primary",
+      okType: newStatus === RegistrationStatus.REJECTED ? "danger" : "primary",
       onOk: () => {
-        setRegistrations(
-          registrations.map((reg) =>
-            reg.id === registration.id
-              ? {
-                  ...reg,
-                  status: newStatus,
-                  updatedAt: new Date().toLocaleDateString("vi-VN"),
-                }
-              : reg
-          )
-        );
-        if (selectedRegistration?.id === registration.id) {
-          setSelectedRegistration((prev) =>
-            prev ? { ...prev, status: newStatus } : null
-          );
-        }
-        notification.success({
-          message: "Cập nhật trạng thái",
-          description: `Trạng thái đã được thay đổi thành ${newStatus}`,
-        });
+        updateStatusMutation.mutate({ id: registration.id, status: newStatus });
       },
     });
   };
@@ -157,7 +120,7 @@ export default function RegistrationsManagement() {
     }
   };
 
-  const columns: ColumnsType<Registration> = [
+  const columns: ColumnsType<RegistrationItem> = [
     {
       title: "Tên đội",
       dataIndex: "teamName",
@@ -202,26 +165,16 @@ export default function RegistrationsManagement() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status: string) => {
-        let color = "default";
-        if (status === "Chờ duyệt") color = "orange";
-        else if (status === "Đã duyệt") color = "green";
-        else if (status === "Từ chối") color = "red";
-        return <Tag color={color}>{status}</Tag>;
-      },
-      filters: [
-        { text: "Chờ duyệt", value: "Chờ duyệt" },
-        { text: "Đã duyệt", value: "Đã duyệt" },
-        { text: "Từ chối", value: "Từ chối" },
-      ],
+      render: (status: RegistrationStatus) => (
+        <Tag color={getStatusColor(status)}>
+          {getRegistrationStatusLabel(status)}
+        </Tag>
+      ),
+      filters: Object.values(RegistrationStatus).map((status) => ({
+        text: getRegistrationStatusLabel(status),
+        value: status,
+      })),
       onFilter: (value, record) => record.status === value,
-    },
-    {
-      title: "Cập nhật gần nhất",
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      render: (date?: string) =>
-        date ? new Date(date).toLocaleDateString("vi-VN") : "-",
     },
     {
       title: "Hành động",
@@ -244,56 +197,45 @@ export default function RegistrationsManagement() {
     },
   ];
 
+  if (error) {
+    return (
+      <Alert
+        type="error"
+        message="Lỗi tải dữ liệu"
+        description={(error as Error).message}
+        showIcon
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
       <div className="flex gap-4 flex-wrap">
-        <Input
-          placeholder="Tìm kiếm theo tên đội hoặc giải đấu..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: 300 }}
-          allowClear
-        />
-        <Space.Compact>
-          <Button
-            type={statusFilter === "all" ? "primary" : "default"}
-            onClick={() => setStatusFilter("all")}
-          >
-            Tất cả
-          </Button>
-          <Button
-            type={statusFilter === "Chờ duyệt" ? "primary" : "default"}
-            onClick={() => setStatusFilter("Chờ duyệt")}
-          >
-            Chờ duyệt
-          </Button>
-          <Button
-            type={statusFilter === "Đã duyệt" ? "primary" : "default"}
-            onClick={() => setStatusFilter("Đã duyệt")}
-          >
-            Đã duyệt
-          </Button>
-          <Button
-            type={statusFilter === "Từ chối" ? "primary" : "default"}
-            onClick={() => setStatusFilter("Từ chối")}
-          >
-            Từ chối
+        <Space.Compact style={{ width: 320 }}>
+          <Input
+            placeholder="Tìm kiếm theo tên đội hoặc giải đấu..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: 300 }}
+            allowClear
+          />
+          <Button type="primary" onClick={() => setSearchTerm(searchTerm)}>
+            Tìm
           </Button>
         </Space.Compact>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-lg border border-border overflow-hidden">
         <Table
           columns={columns}
           dataSource={filteredRegistrations}
           rowKey="id"
           pagination={{ pageSize: 10 }}
+          loading={isLoading}
+          scroll={{ x: "max-content" }}
         />
       </div>
 
-      {/* Detail Drawer */}
       <Drawer
         title="Chi tiết đăng ký"
         placement="right"
@@ -303,7 +245,6 @@ export default function RegistrationsManagement() {
       >
         {selectedRegistration && (
           <div className="space-y-6">
-            {/* Read-only Info */}
             <div className="space-y-4">
               <div>
                 <p className="text-muted-foreground text-sm">Tên đội</p>
@@ -331,11 +272,18 @@ export default function RegistrationsManagement() {
                   )}
                 </p>
               </div>
+              <div>
+                <p className="text-muted-foreground text-sm">
+                  Trạng thái hiện tại
+                </p>
+                <Tag color={getStatusColor(selectedRegistration.status)}>
+                  {getRegistrationStatusLabel(selectedRegistration.status)}
+                </Tag>
+              </div>
             </div>
 
             <Divider />
 
-            {/* Contact Info */}
             <div className="space-y-4">
               <h3 className="font-bold text-foreground">
                 Thông tin người đăng ký
@@ -368,7 +316,6 @@ export default function RegistrationsManagement() {
 
             <Divider />
 
-            {/* Document */}
             {selectedRegistration.documentUrl && (
               <div>
                 <p className="text-muted-foreground text-sm mb-2">
@@ -389,20 +336,24 @@ export default function RegistrationsManagement() {
 
             <Divider />
 
-            {/* Status Actions */}
             <div className="space-y-3">
               <h3 className="font-bold text-foreground">Cập nhật trạng thái</h3>
-              {selectedRegistration.status === "Chờ duyệt" && (
+
+              {selectedRegistration.status === RegistrationStatus.PENDING && (
                 <>
                   <Button
                     type="primary"
                     block
+                    loading={updateStatusMutation.isPending}
                     style={{
                       backgroundColor: "#22c55e",
                       borderColor: "#22c55e",
                     }}
                     onClick={() =>
-                      handleStatusChange(selectedRegistration, "Đã duyệt")
+                      handleStatusChange(
+                        selectedRegistration,
+                        RegistrationStatus.APPROVED
+                      )
                     }
                   >
                     Duyệt đơn
@@ -410,32 +361,49 @@ export default function RegistrationsManagement() {
                   <Button
                     danger
                     block
+                    loading={updateStatusMutation.isPending}
                     onClick={() =>
-                      handleStatusChange(selectedRegistration, "Từ chối")
+                      handleStatusChange(
+                        selectedRegistration,
+                        RegistrationStatus.REJECTED
+                      )
                     }
                   >
                     Từ chối đơn
                   </Button>
                 </>
               )}
-              {selectedRegistration.status === "Đã duyệt" && (
+
+              {selectedRegistration.status === RegistrationStatus.APPROVED && (
                 <Button
                   danger
                   block
+                  loading={updateStatusMutation.isPending}
                   onClick={() =>
-                    handleStatusChange(selectedRegistration, "Từ chối")
+                    handleStatusChange(
+                      selectedRegistration,
+                      RegistrationStatus.REJECTED
+                    )
                   }
                 >
                   Đổi sang Từ chối
                 </Button>
               )}
-              {selectedRegistration.status === "Từ chối" && (
+
+              {selectedRegistration.status === RegistrationStatus.REJECTED && (
                 <Button
                   type="primary"
                   block
-                  style={{ backgroundColor: "#22c55e", borderColor: "#22c55e" }}
+                  loading={updateStatusMutation.isPending}
+                  style={{
+                    backgroundColor: "#22c55e",
+                    borderColor: "#22c55e",
+                  }}
                   onClick={() =>
-                    handleStatusChange(selectedRegistration, "Đã duyệt")
+                    handleStatusChange(
+                      selectedRegistration,
+                      RegistrationStatus.APPROVED
+                    )
                   }
                 >
                   Đổi sang Đã duyệt

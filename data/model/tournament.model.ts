@@ -1,5 +1,5 @@
-import "reflect-metadata";
 import { Expose, Type } from "class-transformer";
+import "reflect-metadata";
 import { ScheduleStatus } from "../constants/constants";
 
 export class TournamentItem {
@@ -15,6 +15,12 @@ export class TournamentItem {
   endDate!: Date;
   @Expose({ name: "location" })
   location!: string;
+  @Expose({ name: "teams" })
+  teams!: number | null;
+  @Expose({ name: "banner" })
+  banner!: string | null;
+  @Expose({ name: "is_visible_on_home" })
+  isVisibleOnHome!: boolean;
   @Expose({ name: "status" })
   status!: ScheduleStatus;
   @Expose({ name: "form_id" })

@@ -8,6 +8,7 @@
     "location": "Trung tâm Huấn luyện VĐV TP. Đà Nẵng",
     "status": "ended",
     "form_id": "F001",
+    "is_visible_on_home": true,
     "registration_open": false,
     "schedule_img": null,
     "related_files": [],
@@ -23,7 +24,7 @@
     "start_date": "2020-12-12",
     "end_date": "2025-12-22",
     "location": "Nhà thi đấu Khu GDTC Đại học Đà Nẵng",
-    "status": "ended",
+    "status": "ongoing",
     "form_id": "F002",
     "registration_open": false,
     "schedule_img": null,
@@ -57,7 +58,7 @@
     "start_date": "2022-10-27",
     "end_date": "2022-11-02",
     "location": "Trường THCS Sơn Trà, TP. Đà Nẵng",
-    "status": "ended",
+    "status": "postponed",
     "form_id": "F004",
     "registration_open": false,
     "schedule_img": [
@@ -1034,6 +1035,7 @@
     "end_date": "2025-05-23",
     "location": "Nhà thi đấu Đại học Đà Nẵng, 62 Ngô Sĩ Liên, Quận Liên Chiểu, TP. Đà Nẵng",
     "status": "ended",
+    "is_visible_on_home": true,
     "form_id": "F009",
     "registration_open": false,
     "schedule_img": [

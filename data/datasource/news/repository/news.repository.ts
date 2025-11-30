@@ -39,26 +39,6 @@ export const newsRepository = {
   },
 
   async createNews(payload: Partial<NewsItem>): Promise<NewsItem> {
-    if (USE_MOCK) {
-      await delay(300);
-      const store = ensureMockStore();
-      const nextId =
-        store.length > 0 ? Math.max(...store.map((n) => n.id)) + 1 : 1;
-      const now = new Date().toISOString();
-      const created = plainToInstance(NewsItem, {
-        id: nextId,
-        title: payload.title ?? "",
-        type: payload.type ?? "",
-        content: payload.content ?? "",
-        status: payload.status ?? "draft",
-        createdAt: payload.createdAt ?? now,
-        // excerpt: payload.excerpt ?? "",
-        // aiSummary: payload.aiSummary ?? "",
-      });
-      store.unshift(created);
-      return created;
-    }
-
     const response = await api.post<NewsItem>("/news", payload);
     return plainToInstance(NewsItem, response.data);
   },
