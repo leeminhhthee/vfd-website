@@ -33,7 +33,13 @@ const nextConfig: NextConfig = {
         hostname: "cdnmedia.webthethao.vn",
         port: "",
         pathname: "/**",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "img.vietqr.io",
+        port: "",
+        pathname: "/**",
+      },
     ],
     qualities: [75, 100],
   },

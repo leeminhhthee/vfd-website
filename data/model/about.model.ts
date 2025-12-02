@@ -38,8 +38,18 @@ export class BoardDirectorItem {
 }
 
 export class BankQrItem {
+    @Expose({ name: 'id' })
+    id!: number;
+    @Expose({ name: 'account_number' })
+    accountNumber!: string;
+    @Expose({ name: 'account_name' })
+    accountName!: string;
     @Expose({ name: 'qr_code_url' })
     qrCodeUrl!: string;
+    @Expose({ name: 'bank_name' })
+    bankName!: string;
+    @Expose({ name: 'branch_name' })
+    branchName!: string;
 }
 
 export class AboutModel {
@@ -52,7 +62,7 @@ export class AboutModel {
     @Expose({ name: 'board_directors' })
     @Type(() => BoardDirectorItem)
     boardDirectors!: BoardDirectorItem[];
-    @Expose({ name: 'bank_qr' })
+    @Expose({ name: 'bank_qrs' })
     @Type(() => BankQrItem)
-    bankQr!: BankQrItem;
+    bankQr!: BankQrItem[];
 }
