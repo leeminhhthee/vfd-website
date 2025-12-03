@@ -1,4 +1,4 @@
-import { BoardDirectorItem } from "@/data/model/about.model";
+import { BankQrItem, BoardDirectorItem } from "@/data/model/about.model";
 import { aboutRepository } from "../repository/about.repository";
 
 export const aboutInteractor = {
@@ -30,12 +30,19 @@ export const aboutInteractor = {
     return await aboutRepository.deleteBoardDirector(id);
   },
 
-  async getBankQrUrl() {
-    const data = await aboutRepository.getBankQr();
-    return data?.qrCodeUrl || "";
+  async getBankQrs() {
+    return await aboutRepository.getBankQrs();
   },
 
-  async updateBankQr(url: string) {
-    return await aboutRepository.updateBankQr(url);
+  async createBankQr(data: Partial<BankQrItem>) {
+    return await aboutRepository.createBankQr(data);
+  },
+
+  async updateBankQr(id: number, data: Partial<BankQrItem>) {
+    return await aboutRepository.updateBankQr(id, data);
+  },
+
+  async deleteBankQr(id: number) {
+    return await aboutRepository.deleteBankQr(id);
   }
 };

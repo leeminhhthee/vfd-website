@@ -196,3 +196,39 @@ export const MemberRoleLabels: Record<MemberRole, string> = {
 export const getMemberRoleLabel = (role: string): string => {
   return MemberRoleLabels[role as MemberRole] || role;
 };
+
+export enum ActionType {
+  CREATE = "create",
+  UPDATE = "update",
+  DELETE = "delete",
+  LOGIN = "login",
+  EXPORT = "export",
+}
+
+export const ActionTypeLabels: Record<ActionType, string> = {
+  [ActionType.CREATE]: "Thêm mới",
+  [ActionType.UPDATE]: "Cập nhật",
+  [ActionType.DELETE]: "Xóa",
+  [ActionType.LOGIN]: "Đăng nhập",
+  [ActionType.EXPORT]: "Xuất dữ liệu",
+};
+
+export const getActionTypeLabel = (type: string) => ActionTypeLabels[type as ActionType] || type;
+
+export enum TargetTable {
+  MEMBERS = "members",
+  TOURNAMENTS = "tournaments",
+  SETTINGS = "settings",
+  HERO_BANNER = "hero_banner",
+  AUTH = "auth",
+}
+
+export const TargetTableLabels: Record<TargetTable, string> = {
+  [TargetTable.MEMBERS]: "Thành viên",
+  [TargetTable.TOURNAMENTS]: "Giải đấu",
+  [TargetTable.SETTINGS]: "Cài đặt",
+  [TargetTable.HERO_BANNER]: "Banner",
+  [TargetTable.AUTH]: "Hệ thống",
+};
+
+export const getTargetTableLabel = (table: string) => TargetTableLabels[table as TargetTable] || table;

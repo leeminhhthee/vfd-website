@@ -29,7 +29,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
       cancelText: "Hủy",
       okType: "danger",
       onOk: () => {
-        router.push("/admin/login");
+        router.push("/login");
       },
     });
   };

@@ -77,7 +77,14 @@
       "bio": []
     }
   ],
-  "bank_qr": {
-    "qr_code_url": "https://img.vietqr.io/image/MB-0000000000-compact.png"
-  }
+  "bank_qrs": [
+    {
+      "id": 1,
+      "bank_name": "MB Bank",
+      "branch_name": "CN Đà Nẵng",
+      "account_number": "0000123456789",
+      "account_name": "LIEN DOAN BONG CHUYEN DN",
+      "qr_code_url": "https://img.vietqr.io/image/MB-0000000000-compact.png"
+    }
+  ]
 }

@@ -8,6 +8,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   Notebook,
+  ScanEye,
   Settings,
   Trophy,
   UserCheck,
@@ -43,6 +44,7 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
     { label: "Hình ảnh", href: "/admin/gallerys", icon: ImageIcon },
     { label: "Dự án", href: "/admin/projects", icon: Notebook },
     { label: "Thành viên", href: "/admin/members", icon: Users },
+    { label: "Hành động", href: "/admin/logs", icon: ScanEye },
     { label: "Cài đặt", href: "/admin/settings", icon: Settings },
   ];
 
