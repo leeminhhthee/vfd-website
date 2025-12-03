@@ -6,7 +6,7 @@
     "start_date": "2020-02-29",
     "end_date": "2020-03-02",
     "location": "Trung tâm Huấn luyện VĐV TP. Đà Nẵng",
-    "status": "ended",
+    "status": "coming",
     "form_id": "F001",
     "is_visible_on_home": true,
     "registration_open": false,
@@ -41,7 +41,7 @@
     "start_date": "2021-12-15",
     "end_date": "2022-12-21",
     "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
-    "status": "ended",
+    "status": "coming",
     "form_id": "F003",
     "registration_open": false,
     "schedule_img": null,
@@ -79,7 +79,7 @@
     "start_date": "2022-12-18",
     "end_date": "2023-01-20",
     "location": "Trường THCS Sơn Trà, TP. Đà Nẵng",
-    "status": "ended",
+    "status": "coming",
     "form_id": "F005",
     "registration_open": false,
     "schedule_img": null,
@@ -1200,6 +1200,24 @@
     ],
     "created_at": "2025-05-19",
     "updated_at": null,
+    "created_by": 1
+  },
+
+  {
+    "id": 10,
+    "name": "Giải Vô Địch Bóng Chuyền Thanh Niên Đà Nẵng 2025",
+    "description": "Giải Bóng chuyền Thanh Niên Đà Nẵng lần 2 năm 2023” là hoạt động thể thao ý nghĩa nhằm tăng cường mối quan hệ giao lưu, đoàn kết giữa sinh viên và các đơn vị lực lượng vũ trang trên địa bàn. Giải đấu không chỉ tạo sân chơi lành mạnh, rèn luyện sức khỏe, mà còn góp phần phát huy tinh thần trẻ trung, năng động và gắn kết cộng đồng trong phong trào thể thao toàn thành phố.",
+    "start_date": "2025-12-15",
+    "end_date": "2025-12-21",
+    "location": "Cung Thể thao Tiên Sơn, Đà Nẵng",
+    "status": "coming",
+    "form_id": "F004",
+    "registration_open": false,
+    "schedule_img": null,
+    "related_files": [],
+    "match_schedules": [],
+    "created_at": "2025-12-15",
+    "updated_at": "2025-12-21",
     "created_by": 1
   }
 ]
