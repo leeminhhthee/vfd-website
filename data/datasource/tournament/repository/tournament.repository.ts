@@ -116,5 +116,5 @@ export const tournamentRepository = {
     });
 
     return matches;
-  }
+  },
 };

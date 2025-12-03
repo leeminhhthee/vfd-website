@@ -17,6 +17,8 @@ export class RegistrationItem {
     phone!: string;
     @Expose({ name: 'organization' })
     organization!: string;
+    @Expose({ name: 'leader' })
+    leader!: string;
     @Expose({ name: 'coach' })
     coach!: string;
     @Expose({ name: 'num_players' })

@@ -1,8 +1,8 @@
+import { RegistrationStatus } from "@/data/constants/constants";
 import { plainToInstance } from "class-transformer";
 import registrationMock from "../../../mockup/registration.json";
 import { RegistrationItem } from "../../../model/registration.model";
 import { api } from "../../../remote/api";
-import { RegistrationStatus } from "@/data/constants/constants";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
@@ -14,6 +14,20 @@ export const registrationRepository = {
     }
 
     const response = await api.get<RegistrationItem[]>("/registration");
+    return plainToInstance(RegistrationItem, response.data);
+  },
+
+  async createRegistration(data: Partial<RegistrationItem>): Promise<RegistrationItem> {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 1000));
+      const newItem = {
+        ...data,
+        status: RegistrationStatus.PENDING,
+      };
+      return plainToInstance(RegistrationItem, newItem);
+    }
+
+    const response = await api.post<RegistrationItem>("/registrations", data);
     return plainToInstance(RegistrationItem, response.data);
   },
 
