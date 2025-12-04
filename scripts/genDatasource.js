@@ -60,6 +60,7 @@ async function main() {
     const repositoryContent = `import ${camelName}Mock from "../../../mockup/${trimmedName}.json";
 import { ${pascalName} } from "../../../model/${trimmedName}.model";
 import { api } from "../../../remote/api";
+import { plainToInstance } from "class-transformer";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
@@ -67,11 +68,11 @@ export const ${camelName}Repository = {
   async get${pascalName}List(): Promise<${pascalName}[]> {
     if (USE_MOCK) {
       await new Promise((r) => setTimeout(r, 300));
-      return ${camelName}Mock;
+      return plainToInstance(${pascalName}, ${camelName}Mock);
     }
 
     const response = await api.get<${pascalName}[]>("/${trimmedName}");
-    return response.data;
+    return plainToInstance(${pascalName}, response.data);
   },
 };
 `;

@@ -11,6 +11,7 @@ import {
   NewsType,
 } from "@/data/constants/constants";
 import { NewsItem } from "@/data/model/news.model";
+import { uploadFile } from "@/lib/utils";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 
@@ -48,6 +49,9 @@ export default function NewsEditorForm({
   const [suggestedTitles, setSuggestedTitles] = useState<string[]>([]);
   const [coverPreview, setCoverPreview] = useState<string>("");
   const [isGeneratingTitles, setIsGeneratingTitles] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const initialFormRef = useRef(
     JSON.stringify(
@@ -63,10 +67,9 @@ export default function NewsEditorForm({
   const config = {
     placeholderText: "Nhập nội dung tin tức...",
     imageUpload: true,
-    imageUploadURL: "/api/upload-image",
+    imageUploadURL: "/api/upload",
     imageUploadParam: "file",
     imageAllowedTypes: ["jpeg", "jpg", "png", "gif"],
-
     imageDefaultWidth: 0,
     pasteAllowLocalImages: true,
   };
@@ -138,6 +141,7 @@ export default function NewsEditorForm({
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
         const url = event.target?.result as string;
@@ -148,7 +152,15 @@ export default function NewsEditorForm({
     }
   };
 
-  const handleSave = (status: NewsStatus.DRAFT | NewsStatus.PUBLISHED) => {
+  const handleRemoveCoverImage = () => {
+    setCoverPreview("");
+    setFormData((prev) => ({ ...prev, imageUrl: "" }));
+    setSelectedFile(null);
+  };
+
+  const handleSave = async (
+    status: NewsStatus.DRAFT | NewsStatus.PUBLISHED
+  ) => {
     if (!formData.title?.trim()) {
       notification.error({ message: "Vui lòng nhập tiêu đề" });
       return;
@@ -157,38 +169,61 @@ export default function NewsEditorForm({
       notification.error({ message: "Vui lòng chọn danh mục" });
       return;
     }
+
     if (!formData.content?.trim()) {
       notification.error({ message: "Vui lòng nhập nội dung" });
       return;
     }
 
-    if (status === NewsStatus.DRAFT) {
-      onSaveDraft({
+    setIsUploading(true);
+
+    try {
+      let finalImageUrl = formData.imageUrl;
+
+      if (selectedFile) {
+        try {
+          const uploadResult = await uploadFile(selectedFile);
+          finalImageUrl = uploadResult.link;
+        } catch (error) {
+          notification.error({
+            message: "Lỗi upload ảnh bìa: " + (error as Error).message,
+          });
+          setIsUploading(false);
+          return;
+        }
+      }
+
+      const finalData = {
         title: formData.title || "",
         type: formData.type || "",
         content: formData.content || "",
-        status: NewsStatus.DRAFT,
-        imageUrl: formData.imageUrl,
-      });
-    } else {
-      onPublish({
-        title: formData.title || "",
-        type: formData.type || "",
-        content: formData.content || "",
-        status: NewsStatus.PUBLISHED,
-        imageUrl: formData.imageUrl,
-      });
+        status: status,
+        imageUrl: finalImageUrl,
+      };
+
+      if (status === NewsStatus.DRAFT) {
+        onSaveDraft(finalData);
+      } else {
+        onPublish(finalData);
+      }
+    } catch (error) {
+      console.error(error);
+      notification.error({ message: "Có lỗi xảy ra khi xử lý dữ liệu" });
+    } finally {
+      setIsUploading(false);
     }
   };
 
+  const isProcessing = isUploading || isLoading;
+
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <Button
           type="text"
           onClick={handleBack}
           style={{ display: "flex", alignItems: "center", gap: 8 }}
+          disabled={isProcessing}
         >
           <ArrowLeft size={20} />
           <span>Quay lại</span>
@@ -200,12 +235,10 @@ export default function NewsEditorForm({
       </div>
 
       <div className="grid grid-cols-3 gap-6 p-12 bg-white rounded-lg border border-border overflow-hidden">
-        {/* Main Content */}
         <div className="col-span-2 space-y-6">
-          {/* Title Input */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">
-              Tiêu đề
+              Tiêu đề <span className="text-red-500">*</span>
             </label>
             <Input
               size="large"
@@ -214,10 +247,10 @@ export default function NewsEditorForm({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, title: e.target.value }))
               }
+              disabled={isProcessing}
             />
           </div>
 
-          {/* AI Suggested Titles */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="block text-sm font-medium text-foreground">
@@ -229,6 +262,7 @@ export default function NewsEditorForm({
                 icon={<Sparkles size={16} />}
                 onClick={generateAITitles}
                 loading={isGeneratingTitles}
+                disabled={isProcessing}
               >
                 Tạo gợi ý
               </Button>
@@ -238,7 +272,9 @@ export default function NewsEditorForm({
                 <Tag
                   key={idx}
                   className="cursor-pointer hover:bg-blue-100"
-                  onClick={() => setFormData((prev) => ({ ...prev, title }))}
+                  onClick={() =>
+                    !isProcessing && setFormData((prev) => ({ ...prev, title }))
+                  }
                 >
                   {title}
                 </Tag>
@@ -247,12 +283,10 @@ export default function NewsEditorForm({
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Category */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">
-              Danh mục
+              Danh mục <span className="text-red-500">*</span>
             </label>
             <Select
               size="large"
@@ -262,14 +296,14 @@ export default function NewsEditorForm({
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, type: value }))
               }
+              disabled={isProcessing}
               options={categories.map((cat) => ({
                 label: getNewsTypeLabel(cat),
-                value: getNewsTypeLabel(cat),
+                value: cat,
               }))}
             />
           </div>
 
-          {/* Cover Image */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">
               Ảnh bìa
@@ -289,20 +323,24 @@ export default function NewsEditorForm({
                   danger
                   size="large"
                   icon={<X size={16} />}
-                  onClick={() => {
-                    setCoverPreview("");
-                    setFormData((prev) => ({ ...prev, imageUrl: "" }));
-                  }}
+                  onClick={handleRemoveCoverImage}
+                  disabled={isProcessing}
                   style={{ position: "absolute", top: 0, right: 10 }}
                 />
               </div>
             ) : (
               <label
-                className="flex flex-col items-center justify-center w-full h-48 px-4 py-6 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-card transition-colors"
+                className={`flex flex-col items-center justify-center w-full h-48 px-4 py-6 border-2 border-dashed border-border rounded-lg transition-colors ${
+                  isProcessing
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer hover:bg-card"
+                }`}
                 onDrop={(e) => {
+                  if (isProcessing) return;
                   e.preventDefault();
                   const file = e.dataTransfer.files?.[0];
                   if (file && file.type.startsWith("image/")) {
+                    setSelectedFile(file);
                     const reader = new FileReader();
                     reader.onload = (event) => {
                       const url = event.target?.result as string;
@@ -328,16 +366,16 @@ export default function NewsEditorForm({
                   className="hidden"
                   accept="image/*"
                   onChange={handleCoverImageChange}
+                  disabled={isProcessing}
                 />
               </label>
             )}
           </div>
         </div>
 
-        {/* Content Editor */}
         <div className="col-span-3 pb-6">
           <label className="block text-sm font-medium text-foreground pb-2">
-            Nội dung
+            Nội dung <span className="text-red-500">*</span>
           </label>
           <FroalaEditor
             tag="textarea"
@@ -350,21 +388,22 @@ export default function NewsEditorForm({
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="flex justify-end gap-2 pt-4 border-t border-border">
-        <Button onClick={onCancel}>Hủy</Button>
+        <Button onClick={onCancel} disabled={isProcessing}>
+          Hủy
+        </Button>
         <Button
           onClick={() => handleSave(NewsStatus.DRAFT)}
-          loading={isLoading}
+          loading={isProcessing}
         >
-          Lưu bản nháp
+          {isUploading ? "Đang tải ảnh..." : "Lưu bản nháp"}
         </Button>
         <Button
           type="primary"
           onClick={() => handleSave(NewsStatus.PUBLISHED)}
-          loading={isLoading}
+          loading={isProcessing}
         >
-          {news?.id ? "Cập nhật" : "Đăng bài"}
+          {isUploading ? "Đang tải ảnh..." : news?.id ? "Cập nhật" : "Đăng bài"}
         </Button>
       </div>
     </div>

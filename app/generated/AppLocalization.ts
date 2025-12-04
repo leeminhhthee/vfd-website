@@ -235,4 +235,12 @@ export const trans = new Proxy(
   confirmPassword: string;
   /** Đặt Lại Mật Khẩu | Reset Password */
   resetPassword: string;
+  /** Các tài liệu, quy định và hướng dẫn từ Liên đoàn | Resources, regulations, and guidelines from the Federation */
+  resourceText: string;
+  /** Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu. | Login failed. Please check your email and password. */
+  loginFailed: string;
+  /** Không tìm thấy tin tức | No news found */
+  noNewsFound: string;
+  /** Giải đấu liên quan | Related Tournaments */
+  relatedTournaments: string;
 };

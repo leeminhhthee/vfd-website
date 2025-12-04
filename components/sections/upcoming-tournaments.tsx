@@ -66,7 +66,7 @@ export default function UpcomingTournaments() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tournaments.map((tournament) => (
+          {tournaments.slice(0, 3).map((tournament) => (
             <div
               key={tournament.id}
               className="bg-white rounded-lg p-6 border border-border hover:shadow-lg transition-shadow"

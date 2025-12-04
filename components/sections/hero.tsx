@@ -17,7 +17,7 @@ export default function Hero() {
     error,
   } = useQuery({
     queryKey: ["heroes"],
-    queryFn: homeInteractor.getHeroList,
+    queryFn: homeInteractor.getFullHeroList,
   });
 
   const [current, setCurrent] = useState(0);
@@ -81,10 +81,10 @@ export default function Hero() {
             <div className="absolute inset-0 bg-black/10 lg:bg-gradient-to-t lg:from-black/40 lg:to-transparent"></div>
 
             <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-6 z-20">
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold mb-4 animate-in fade-in-up duration-1000 ease-out [text-shadow:_0_4px_8px_rgb(0_0_0_/_70%)]">
+              <h1 className="text-2xl md:text-3xl lg:text-5xl font-extrabold mb-4 animate-in fade-in-up duration-1000 ease-out [text-shadow:_0_4px_8px_rgb(0_0_0_/_70%)]">
                 {hero.title}
               </h1>
-              <p className="text-lg md:text-xl mb-10 max-w-3xl font-medium text-gray-100 animate-in fade-in-up delay-200 duration-1000 ease-out [text-shadow:_0_2px_4px_rgb(0_0_0_/_60%)]">
+              <p className="text-base md:text-lg mb-10 max-w-3xl font-medium text-gray-100 animate-in fade-in-up delay-200 duration-1000 ease-out [text-shadow:_0_2px_4px_rgb(0_0_0_/_60%)] line-clamp-2">
                 {hero.subTitle}
               </p>
 

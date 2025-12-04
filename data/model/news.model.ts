@@ -16,7 +16,7 @@ export class NewsItem {
   @Expose({ name: 'image_url' })
   imageUrl!: string;
   @Expose({ name: 'created_at' })
-  createdAt!: string;
+  createdAt!: Date;
   @Expose({ name: 'updated_at' })
-  updatedAt?: string | null;
+  updatedAt?: Date | null;
 }

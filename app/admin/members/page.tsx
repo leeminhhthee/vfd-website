@@ -1,9 +1,9 @@
 "use client";
 
 import AdminLayout from "@/components/layouts/admin-layout"
-import UsersManagement from "@/components/admin/users-management"
+import UsersManagement from "@/components/admin/members/members-management"
 
-export default function AdminUsersPage() {
+export default function AdminMembersPage() {
   return (
     <AdminLayout>
       <div className="space-y-6">

@@ -105,5 +105,9 @@
   "enterNewPassword": "Enter your new password",
   "newPassword": "New Password",
   "confirmPassword": "Confirm Password",
-  "resetPassword": "Reset Password"
+  "resetPassword": "Reset Password",
+  "resourceText": "Resources, regulations, and guidelines from the Federation",
+  "loginFailed": "Login failed. Please check your email and password.",
+  "noNewsFound": "No news found",
+  "relatedTournaments": "Related Tournaments"
 }

@@ -1,4 +1,5 @@
 import { ScheduleStatus } from "@/data/constants/constants";
+import { TournamentItem } from "@/data/model/tournament.model";
 import { tournamentRepository } from "../repository/tournament.repository";
 
 export const tournamentInteractor = {
@@ -18,14 +19,27 @@ export const tournamentInteractor = {
 
   async getUpcomingTournaments() {
     const tournaments = await tournamentRepository.getTournamentList();
-    const now = new Date();
-    
+
     return tournaments
       .filter(tournament => {
-        const endDate = new Date(tournament.endDate);
-        return endDate >= now && tournament.status === ScheduleStatus.COMING;
+        return tournament.status === ScheduleStatus.COMING;
       })
-      .sort((a, b) => new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime())
-      .slice(0, 3);
+      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+  },
+
+  async createTournament(data: Partial<TournamentItem>) {
+    return await tournamentRepository.createTournament(data);
+  },
+
+  async updateTournament(id: number, data: Partial<TournamentItem>) {
+    return await tournamentRepository.updateTournament(id, data);
+  },
+
+  async deleteTournament(id: number) {
+    return await tournamentRepository.deleteTournament(id);
+  },
+
+  async generateScheduleFromImages(urls: string[]) {
+    return await tournamentRepository.generateScheduleFromImages(urls);
   },
 };

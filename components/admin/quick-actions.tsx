@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import React from 'react'
-import Link from 'next/link'
-import { Plus, FilePlus, FileCheck } from 'lucide-react'
+import { FileCheck, FilePlus, Plus } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 
 type QuickAction = {
   label: string;
@@ -15,21 +15,21 @@ const actions: QuickAction[] = [
   {
     label: "Tạo giải đấu mới",
     icon: Plus,
-    href: "/admin/tournaments/new",
-    color: "text-blue-600 bg-blue-100"
+    href: "/admin/tournaments",
+    color: "text-blue-600 bg-blue-100",
   },
   {
     label: "Đăng tin mới",
     icon: FilePlus,
-    href: "/admin/posts/new",
-    color: "text-green-600 bg-green-100"
+    href: "/admin/news",
+    color: "text-green-600 bg-green-100",
   },
   {
     label: "Duyệt hồ sơ",
     icon: FileCheck,
-    href: "/admin/registrations?status=pending",
-    color: "text-orange-600 bg-orange-100"
-  }
+    href: "/admin/registrations",
+    color: "text-orange-600 bg-orange-100",
+  },
 ];
 
 export default function QuickActions() {
@@ -38,11 +38,11 @@ export default function QuickActions() {
       <h3 className="text-lg font-semibold text-foreground mb-4">
         Tác vụ nhanh
       </h3>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {actions.map((action) => {
           const Icon = action.icon;
-          
+
           return (
             <Link
               href={action.href}
@@ -52,8 +52,10 @@ export default function QuickActions() {
               <div className={`${action.color} p-2 rounded-lg mr-4`}>
                 <Icon size={20} />
               </div>
-              
-              <span className="font-medium text-foreground">{action.label}</span>
+
+              <span className="font-medium text-foreground">
+                {action.label}
+              </span>
             </Link>
           );
         })}

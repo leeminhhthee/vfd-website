@@ -30,9 +30,11 @@ export default function GalleryPage() {
     // Load từ sessionStorage khi component mount
     if (typeof window !== "undefined") {
       const savedTab = sessionStorage.getItem(SESSION_TAB_KEY);
-      return savedTab ? (savedTab as GalleryCategory) : GalleryCategory.INSIDE;
+      return savedTab
+        ? (savedTab as GalleryCategory)
+        : GalleryCategory.TOURNAMENT;
     }
-    return GalleryCategory.INSIDE;
+    return GalleryCategory.TOURNAMENT;
   });
   const [currentPage, setCurrentPage] = useState(() => {
     // Load từ sessionStorage khi component mount

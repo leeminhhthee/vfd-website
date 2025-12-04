@@ -1,118 +1,91 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { Alert, Button, Input, Modal, notification, Space, Table, Tag, Tooltip } from "antd"
-import type { ColumnsType } from "antd/es/table"
-import { Edit2 } from 'lucide-react'
-import ScheduleResultsEditor from "./schedule-results-editor"
-
-interface Tournament {
-  id: number
-  name: string
-  startDate: string
-  endDate: string
-  location: string
-  teams: number
-  status?: string
-  hasSchedule?: boolean
-  updatedAt?: string
-  matchSchedules?: MatchSchedule[]
-  scheduleImg?: string[]
-}
-
-interface MatchSchedule {
-  id: number
-  round: string
-  table?: string
-  matchDate: string
-  teamA: string
-  teamB: string
-  scoreA?: number | null
-  scoreB?: number | null
-}
-
-const getStatus = (startDate: string, endDate: string) => {
-  const now = new Date()
-  const start = new Date(startDate)
-  const end = new Date(endDate)
-
-  if (now < start) return "Chưa bắt đầu"
-  if (now > end) return "Đã kết thúc"
-  return "Đang diễn ra"
-}
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Đang diễn ra":
-      return "green"
-    case "Chưa bắt đầu":
-      return "blue"
-    case "Đã kết thúc":
-      return "default"
-    default:
-      return "default"
-  }
-}
+import {
+  getScheduleStatusLabel,
+  ScheduleStatus,
+} from "@/data/constants/constants";
+import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
+import { TournamentItem } from "@/data/model/tournament.model";
+import { getStatusColor } from "@/lib/utils";
+import { EditOutlined } from "@ant-design/icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Alert,
+  Button,
+  Input,
+  notification,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+} from "antd";
+import type { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
+import ScheduleResultsEditor from "./schedule-results-editor";
 
 export default function ScheduleResultsManagement() {
-  const [editingMode, setEditingMode] = useState(false)
-  const [editingTournament, setEditingTournament] = useState<Tournament | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [editingMode, setEditingMode] = useState(false);
+  const [editingTournament, setEditingTournament] =
+    useState<TournamentItem | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Sample data
-  const [tournaments, setTournaments] = useState<Tournament[]>([
-    {
-      id: 6,
-      name: "Giải Bóng chuyền Thanh Niên Đà Nẵng Lần 2 Năm 2023",
-      startDate: "2023-11-11",
-      endDate: "2023-11-18",
-      location: "Trường THCS Trần Đại Nghĩa, Q. Ngũ Hành Sơn, TP. Đà Nẵng",
-      teams: 12,
-      hasSchedule: true,
-      updatedAt: "2023-11-18",
-      matchSchedules: [],
-      scheduleImg: ["https://res.cloudinary.com/dikzmjuff/image/upload/v1762622647/w5_worjqz.jpg"]
+  const queryClient = useQueryClient();
+
+  const {
+    data: tournaments = [],
+    isLoading: tableLoading,
+    error,
+  } = useQuery<TournamentItem[]>({
+    queryKey: ["tournaments"],
+    queryFn: tournamentInteractor.getTournamentList,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Partial<TournamentItem>;
+    }) => tournamentInteractor.updateTournament(id, data),
+    onSuccess: () => {
+      notification.success({ message: "Cập nhật lịch thi đấu thành công!" });
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      handleCloseEditor();
     },
-    {
-      id: 7,
-      name: "Giải bóng chuyền nam TP Đà Nẵng 2024",
-      startDate: "2024-11-15",
-      endDate: "2024-11-20",
-      location: "Nhà thi đấu Quân Ngũ, Đà Nẵng",
-      teams: 10,
-      hasSchedule: false,
-      updatedAt: "2024-11-15",
-      matchSchedules: []
-    },
-  ])
+    onError: () => notification.error({ message: "Cập nhật thất bại" }),
+  });
 
   const filteredTournaments = useMemo(() => {
-    const term = searchTerm.toLowerCase()
-    return tournaments.filter((item) =>
-      (item.name || "").toLowerCase().includes(term) ||
-      (item.location || "").toLowerCase().includes(term)
-    )
-  }, [tournaments, searchTerm])
+    const term = searchTerm.toLowerCase();
+    return tournaments.filter(
+      (item) =>
+        (item.name || "").toLowerCase().includes(term) ||
+        (item.location || "").toLowerCase().includes(term)
+    );
+  }, [tournaments, searchTerm]);
 
-  const handleShowEditEditor = (record: Tournament) => {
-    setEditingTournament(record)
-    setEditingMode(true)
-  }
+  const handleShowEditEditor = (record: TournamentItem) => {
+    setEditingTournament(record);
+    setEditingMode(true);
+  };
 
   const handleCloseEditor = () => {
-    setEditingMode(false)
-    setEditingTournament(null)
-  }
+    setEditingMode(false);
+    setEditingTournament(null);
+  };
 
-  const handleUpdateSchedule = (updatedTournament: Tournament) => {
-    setTournaments((prev) =>
-      prev.map((t) => (t.id === updatedTournament.id ? updatedTournament : t))
-    )
-    notification.success({ message: "Cập nhật lịch thi đấu thành công!" })
-    handleCloseEditor()
-  }
+  const handleUpdateSchedule = (data: Partial<TournamentItem>) => {
+    if (editingTournament) {
+      updateMutation.mutate({
+        id: editingTournament.id,
+        data: data,
+      });
+    }
+  };
 
-  const columns: ColumnsType<Tournament> = [
+  const columns: ColumnsType<TournamentItem> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -123,6 +96,7 @@ export default function ScheduleResultsManagement() {
       title: "Tên giải đấu",
       dataIndex: "name",
       key: "name",
+      width: 350,
       render: (text: string) => <strong className="text-foreground">{text}</strong>,
     },
     {
@@ -143,46 +117,59 @@ export default function ScheduleResultsManagement() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (_, record) => {
-        const status = getStatus(record.startDate, record.endDate)
-        return <Tag color={getStatusColor(status)}>{status}</Tag>
-      },
       width: 120,
+      render: (status: string) => {
+        return (
+          <Tag color={getStatusColor(status)}>
+            {getScheduleStatusLabel(status) || status}
+          </Tag>
+        );
+      },
     },
     {
-      title: "Đã có lịch",
-      dataIndex: "hasSchedule",
+      title: "Lịch đấu",
       key: "hasSchedule",
-      render: (hasSchedule: boolean) => (
-        <Tag color={hasSchedule ? "green" : "red"}>
-          {hasSchedule ? "Có" : "Chưa"}
-        </Tag>
-      ),
+      align: "center",
       width: 100,
-    },
-    {
-      title: "Cập nhật gần nhất",
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      render: (date: string) => date ? new Date(date).toLocaleDateString("vi-VN") : "-",
-      width: 130,
+      render: (_, record) => {
+        // Kiểm tra dựa trên matchSchedules hoặc scheduleImg
+        const hasSchedule =
+          (record.matchSchedules && record.matchSchedules.length > 0) ||
+          (record.scheduleImg && record.scheduleImg.length > 0);
+        return (
+          <Tag color={hasSchedule ? "green" : "red"}>
+            {hasSchedule ? "Có" : "Chưa"}
+          </Tag>
+        );
+      },
     },
     {
       title: "Hành động",
       key: "action",
       align: "center",
-      width: 80,
-      render: (_: unknown, record) => (
+      width: 100,
+      render: (_, record) => (
         <Tooltip title="Cập nhật lịch thi đấu">
           <Button
             type="text"
-            icon={<Edit2 size={18} className="text-yellow-600" />}
+            icon={<EditOutlined className="text-blue-600" />}
             onClick={() => handleShowEditEditor(record)}
           />
         </Tooltip>
       ),
     },
-  ]
+  ];
+
+  if (error) {
+    return (
+      <Alert
+        type="error"
+        message="Lỗi tải dữ liệu"
+        description={(error as Error).message}
+        showIcon
+      />
+    );
+  }
 
   if (editingMode && editingTournament) {
     return (
@@ -190,8 +177,9 @@ export default function ScheduleResultsManagement() {
         tournament={editingTournament}
         onUpdate={handleUpdateSchedule}
         onCancel={handleCloseEditor}
+        isLoading={updateMutation.isPending}
       />
-    )
+    );
   }
 
   return (
@@ -216,8 +204,10 @@ export default function ScheduleResultsManagement() {
           dataSource={filteredTournaments}
           rowKey="id"
           pagination={{ pageSize: 10 }}
+          loading={tableLoading}
+          scroll={{ x: "max-content" }}
         />
       </div>
     </div>
-  )
+  );
 }
