@@ -10,6 +10,7 @@ import {
 } from "@/data/constants/constants";
 import { logsInteractor } from "@/data/datasource/logs/interactor/logs.interactor";
 import { LogItem } from "@/data/model/logs.model";
+import { useLoading } from "@/providers/loading-provider";
 import { ReloadOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -28,6 +29,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
 export default function LogsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const queryClient = useQueryClient();
 
@@ -77,7 +79,14 @@ export default function LogsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteLogsMutation.mutate(selectedRowKeys as number[]),
+      onOk: () => {
+        showLoading();
+        deleteLogsMutation.mutate(selectedRowKeys as number[], {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -88,7 +97,14 @@ export default function LogsManagement() {
       okText: "Xóa tất cả",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => clearAllLogsMutation.mutate(),
+      onOk: () => {
+        showLoading();
+        clearAllLogsMutation.mutate(undefined, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 

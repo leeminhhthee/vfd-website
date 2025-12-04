@@ -14,6 +14,7 @@ import {
 import { memberInteractor } from "@/data/datasource/member/interactor/member.interactor";
 import { MemberItem } from "@/data/model/member.model";
 import { confirmUnsavedChanges } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -33,6 +34,7 @@ import { useMemo, useState } from "react";
 import MembersEditorForm from "./members-editor-form";
 
 export default function MembersManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingMember, setEditingMember] = useState<MemberItem | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -113,7 +115,14 @@ export default function MembersManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -314,10 +323,18 @@ export default function MembersManagement() {
           initialData={editingMember ?? undefined}
           onSave={(data) => {
             if (editingMember?.id) {
-              updateMutation.mutate({
-                id: editingMember.id,
-                data: data,
-              });
+              showLoading();
+              updateMutation.mutate(
+                {
+                  id: editingMember.id,
+                  data: data,
+                },
+                {
+                  onSettled: () => {
+                    hideLoading();
+                  },
+                }
+              );
             }
           }}
           onCancel={handleDrawerClose}

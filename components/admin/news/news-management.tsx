@@ -9,6 +9,7 @@ import {
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { NewsItem } from "@/data/model/news.model";
 import { confirmUnsavedChanges } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -27,6 +28,7 @@ import { useMemo, useState } from "react";
 import NewsEditorForm from "./news-editor-form";
 
 export default function NewsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingNews, setEditingNews] = useState<Partial<NewsItem> | null>(
     null
@@ -132,7 +134,14 @@ export default function NewsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteNewsMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteNewsMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -259,22 +268,54 @@ export default function NewsManagement() {
         onAddCategory={handleAddCategory}
         onSaveDraft={(data) => {
           if (editingNews?.id) {
-            updateNewsMutation.mutate({
-              id: editingNews.id,
-              data,
-            });
+            showLoading();
+            updateNewsMutation.mutate(
+              {
+                id: editingNews.id,
+                data,
+              },
+              {
+                onSettled: () => {
+                  hideLoading();
+                },
+              }
+            );
           } else {
-            createNewsMutation.mutate({ ...data });
+            showLoading();
+            createNewsMutation.mutate(
+              { ...data },
+              {
+                onSettled: () => {
+                  hideLoading();
+                },
+              }
+            );
           }
         }}
         onPublish={(data) => {
           if (editingNews?.id) {
-            updateNewsMutation.mutate({
-              id: editingNews.id,
-              data,
-            });
+            showLoading();
+            updateNewsMutation.mutate(
+              {
+                id: editingNews.id,
+                data,
+              },
+              {
+                onSettled: () => {
+                  hideLoading();
+                },
+              }
+            );
           } else {
-            createNewsMutation.mutate({ ...data });
+            showLoading();
+            createNewsMutation.mutate(
+              { ...data },
+              {
+                onSettled: () => {
+                  hideLoading();
+                },
+              }
+            );
           }
         }}
         onCancel={handleCancelEditor}

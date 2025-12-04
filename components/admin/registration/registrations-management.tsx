@@ -6,6 +6,12 @@ import {
 } from "@/data/constants/constants";
 import { registrationInteractor } from "@/data/datasource/registration/interactor/registration.interactor";
 import { RegistrationItem } from "@/data/model/registration.model";
+import { useLoading } from "@/providers/loading-provider";
+import {
+  DeleteOutlined,
+  DownloadOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
@@ -20,10 +26,10 @@ import {
   Tag,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { Download, Eye } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export default function RegistrationsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [searchTerm, setSearchTerm] = useState("");
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedRegistration, setSelectedRegistration] =
@@ -61,6 +67,40 @@ export default function RegistrationsManagement() {
       notification.error({ message: "Có lỗi xảy ra khi cập nhật trạng thái" });
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => registrationInteractor.deleteRegistration(id),
+    onSuccess: () => {
+      notification.success({
+        message: "Xóa thành công",
+        description: "Đơn đăng ký đã được xóa khỏi hệ thống.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["registrations"] });
+      setDetailModalOpen(false);
+      setSelectedRegistration(null);
+    },
+    onError: () => {
+      notification.error({ message: "Có lỗi xảy ra khi xóa đơn đăng ký" });
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    Modal.confirm({
+      title: "Xóa đơn đăng ký?",
+      content: "Hành động này không thể hoàn tác.",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
+    });
+  };
 
   const getStatusColor = (status: RegistrationStatus) => {
     switch (status) {
@@ -107,7 +147,15 @@ export default function RegistrationsManagement() {
       cancelText: "Hủy",
       okType: newStatus === RegistrationStatus.REJECTED ? "danger" : "primary",
       onOk: () => {
-        updateStatusMutation.mutate({ id: registration.id, status: newStatus });
+        showLoading();
+        updateStatusMutation.mutate(
+          { id: registration.id, status: newStatus },
+          {
+            onSettled: () => {
+              hideLoading();
+            },
+          }
+        );
       },
     });
   };
@@ -184,13 +232,24 @@ export default function RegistrationsManagement() {
         <Space size="middle">
           <Button
             type="text"
-            icon={<Eye size={18} className="text-blue-600" />}
+            icon={<EyeOutlined />}
             onClick={() => handleShowDetail(record)}
           />
           <Button
             type="text"
-            icon={<Download size={18} className="text-green-600" />}
+            icon={<DownloadOutlined />}
+            className="text-green-600"
             onClick={() => handleDownloadDocument(record.documentUrl)}
+            disabled={!record.documentUrl}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+            loading={
+              deleteMutation.isPending && deleteMutation.variables === record.id
+            }
           />
         </Space>
       ),
@@ -323,7 +382,7 @@ export default function RegistrationsManagement() {
                 </p>
                 <Button
                   type="primary"
-                  icon={<Download size={18} />}
+                  icon={<DownloadOutlined className="text-green-600" />}
                   onClick={() =>
                     handleDownloadDocument(selectedRegistration.documentUrl)
                   }
