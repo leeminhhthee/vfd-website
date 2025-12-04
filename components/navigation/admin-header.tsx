@@ -1,4 +1,8 @@
 "use client";
+import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
+import { LogOut, Menu, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import {
   LogoutOutlined,
@@ -14,6 +18,28 @@ interface AdminHeaderProps {
 }
 
 export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
+
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+
+  const handleLogout = async () => {
+    try {
+      await authenticationInteractor.logout();
+    } catch (e) {
+      // backend có thể đã hết token → vẫn logout frontend
+      console.warn("Logout API failed, force logout");
+    } finally {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("accessToken");
+
+      router.replace("/login");
+    }
+  };
+
   const router = useRouter();
 
   const user = {

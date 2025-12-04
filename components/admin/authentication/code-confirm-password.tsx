@@ -3,12 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 interface CodeConfirmPasswordProps {
   email: string;
-  onSuccess: () => void;
+  onSuccess: (resetToken: string) => void;
   onBack?: () => void;
 }
 
@@ -26,16 +27,23 @@ export function CodeConfirmPassword({
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    if (code === "000000") {
+    try {
+      const res = await authenticationInteractor.forgetPasswordVerifyOtp(email, code);
+      
       setSuccess(true);
+
       setTimeout(() => {
-        onSuccess();
+        onSuccess(res.resetToken);
       }, 1000);
-    } else {
-      setError("Mã xác nhận không đúng.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Xác nhận OTP thất bại. Vui lòng thử lại.");
+      }
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   if (success) {

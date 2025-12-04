@@ -4,17 +4,18 @@ import { trans } from "@/app/generated/AppLocalization";
 import { Button } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Loader2 } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 interface ResetPasswordFormProps {
-  email: string;
-  onSuccess: (password: string) => void;
+  resetToken: string;
+  onSuccess: () => void;
   onBack?: () => void;
 }
 
 export function ResetPasswordForm({
-  email,
+  resetToken,
   onSuccess,
   onBack,
 }: ResetPasswordFormProps) {
@@ -43,14 +44,25 @@ export function ResetPasswordForm({
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Gọi API thực sự để reset password
+      await authenticationInteractor.resetPassword({
+        resetToken,
+        newPassword: password,
+        confirmPassword,
+      });
+
       setSuccess(true);
+
+      // Hiển thị success và gọi callback
       setTimeout(() => {
-        onSuccess(password);
+        onSuccess();
       }, 1000);
-    } catch {
-      setError(() => trans.errorOccurred);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(trans.errorOccurred);
+      }
     } finally {
       setIsLoading(false);
     }
