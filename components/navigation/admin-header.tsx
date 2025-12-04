@@ -1,9 +1,5 @@
 "use client";
 import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
-import { LogOut, Menu, User } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
 import {
   LogoutOutlined,
   SettingOutlined,
@@ -19,12 +15,12 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
 
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
+  const router = useRouter();
 
-  const handleLogout = async () => {
+
+  const doLogout = async () => {
     try {
       await authenticationInteractor.logout();
     } catch (e) {
@@ -40,13 +36,6 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
     }
   };
 
-  const router = useRouter();
-
-  const user = {
-    name: "Admin",
-    avatar: "",
-  };
-
   const handleLogout = () => {
     Modal.confirm({
       title: "Xác nhận đăng xuất",
@@ -54,9 +43,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
       okText: "Đăng xuất",
       cancelText: "Hủy",
       okType: "danger",
-      onOk: () => {
-        router.push("/login");
-      },
+      onOk: doLogout,
     });
   };
 
@@ -65,11 +52,11 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
       key: "profile",
       label: "Thông tin cá nhân",
       icon: <UserOutlined />,
-      onClick: () => router.push("/admin/profile"),
+      onClick: () => router.push("/admin/#"),
     },
     {
       key: "settings",
-      label: "Cài đặt tài khoản",
+      label: "Cài đặt",
       icon: <SettingOutlined />,
       onClick: () => router.push("/admin/settings"),
     },
@@ -101,7 +88,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
               <div className="text-sm font-semibold text-gray-700">
                 {user.name}
               </div>
-              <div className="text-xs text-gray-500">Quản trị viên</div>
+              <div className="text-xs text-gray-700">Quản trị viên: <span className="font-black">{user.fullName}</span></div>
             </div>
 
             <Avatar
