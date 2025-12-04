@@ -11,12 +11,16 @@ interface ResetPasswordProps {
 
 export function ResetPassword({ email, onBack }: ResetPasswordProps) {
   const [step, setStep] = useState<"code" | "reset">("code");
+  const [resetToken, setResetToken] = useState<string | null>(null);
 
   if (step === "code") {
     return (
       <CodeConfirmPassword
         email={email}
-        onSuccess={() => setStep("reset")}
+        onSuccess={(token) => {
+          setResetToken(token);
+          setStep("reset");
+        }}
         onBack={onBack}
       />
     );
@@ -24,9 +28,9 @@ export function ResetPassword({ email, onBack }: ResetPasswordProps) {
 
   return (
     <ResetPasswordForm
-      email={email}
-      onSuccess={async (password: string) => {
-        window.location.href = "/admin";
+      resetToken={resetToken!}
+      onSuccess={() => {
+        window.location.href = "/login";
       }}
       onBack={() => setStep("code")}
     />

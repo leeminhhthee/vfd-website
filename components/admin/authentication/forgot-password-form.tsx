@@ -4,6 +4,7 @@ import { trans } from "@/app/generated/AppLocalization";
 import { Button } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
 import { ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 import { FormEvent, useState } from "react";
 
@@ -28,18 +29,16 @@ export function ForgotPasswordForm({
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await authenticationInteractor.forgetPassword(email);
+      setSubmitted(true);
 
-      if (email) {
-        setSubmitted(true);
-        setTimeout(() => {
-          onSubmit(email);
-        }, 2000);
+      setTimeout(() => onSubmit(email), 2000);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
       } else {
-        setError(() => trans.pleaseEnterValidEmail);
+        setError(trans.errorOccurred);
       }
-    } catch {
-      setError(() => trans.errorOccurred);
     } finally {
       setIsLoading(false);
     }

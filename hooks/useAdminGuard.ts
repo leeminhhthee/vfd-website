@@ -12,7 +12,7 @@ export const useAdminGuard = () => {
     const accessToken = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
 
     if (!accessToken || !userString) {
-      router.replace("/admin/authentication"); // chưa login
+      router.replace("/login"); // chưa login
       return;
     }
 
@@ -27,7 +27,7 @@ export const useAdminGuard = () => {
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
       sessionStorage.removeItem("accessToken");
-      router.replace("/admin/authentication");
+      router.replace("/login");
       return;
     } finally {
       setIsLoading(false);
