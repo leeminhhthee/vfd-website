@@ -7,6 +7,7 @@ import {
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { GalleryAlbum } from "@/data/model/gallery.model";
 import { confirmUnsavedChanges } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -35,6 +36,7 @@ import GallerysEditorForm from "./gallerys-editor-form";
 const { Meta } = Card;
 
 export default function GallerysManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingAlbum, setEditingAlbum] = useState<GalleryAlbum | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -128,7 +130,14 @@ export default function GallerysManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -262,12 +271,25 @@ export default function GallerysManagement() {
           initialData={editingAlbum ?? undefined}
           onSave={(data) => {
             if (editingAlbum?.id) {
-              updateMutation.mutate({
-                id: editingAlbum.id,
-                data: data,
-              });
+              showLoading();
+              updateMutation.mutate(
+                {
+                  id: editingAlbum.id,
+                  data: data,
+                },
+                {
+                  onSettled: () => {
+                    hideLoading();
+                  },
+                }
+              );
             } else {
-              createMutation.mutate(data);
+              showLoading();
+              createMutation.mutate(data, {
+                onSettled: () => {
+                  hideLoading();
+                },
+              });
             }
           }}
           onCancel={handleDrawerClose}

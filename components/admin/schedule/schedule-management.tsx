@@ -1,12 +1,10 @@
 "use client";
 
-import {
-  getScheduleStatusLabel,
-  ScheduleStatus,
-} from "@/data/constants/constants";
+import { getScheduleStatusLabel } from "@/data/constants/constants";
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { TournamentItem } from "@/data/model/tournament.model";
 import { getStatusColor } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { EditOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -20,11 +18,11 @@ import {
   Tooltip,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import ScheduleResultsEditor from "./schedule-results-editor";
 
 export default function ScheduleResultsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingTournament, setEditingTournament] =
     useState<TournamentItem | null>(null);
@@ -42,13 +40,8 @@ export default function ScheduleResultsManagement() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number;
-      data: Partial<TournamentItem>;
-    }) => tournamentInteractor.updateTournament(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Partial<TournamentItem> }) =>
+      tournamentInteractor.updateTournament(id, data),
     onSuccess: () => {
       notification.success({ message: "Cập nhật lịch thi đấu thành công!" });
       queryClient.invalidateQueries({ queryKey: ["tournaments"] });
@@ -78,10 +71,18 @@ export default function ScheduleResultsManagement() {
 
   const handleUpdateSchedule = (data: Partial<TournamentItem>) => {
     if (editingTournament) {
-      updateMutation.mutate({
-        id: editingTournament.id,
-        data: data,
-      });
+      showLoading();
+      updateMutation.mutate(
+        {
+          id: editingTournament.id,
+          data: data,
+        },
+        {
+          onSettled: () => {
+            hideLoading();
+          },
+        }
+      );
     }
   };
 
@@ -97,7 +98,9 @@ export default function ScheduleResultsManagement() {
       dataIndex: "name",
       key: "name",
       width: 350,
-      render: (text: string) => <strong className="text-foreground">{text}</strong>,
+      render: (text: string) => (
+        <strong className="text-foreground">{text}</strong>
+      ),
     },
     {
       title: "Ngày bắt đầu",

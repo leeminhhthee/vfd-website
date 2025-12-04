@@ -3,10 +3,11 @@
 import {
   getProjectCategoryLabel,
   ProjectCategory,
-} from "@/data/constants/constants"; // Giả định đường dẫn
+} from "@/data/constants/constants";
 import { projectInteractor } from "@/data/datasource/project/interactor/project.interactor";
 import { ProjectItem } from "@/data/model/project.model";
 import { confirmUnsavedChanges, formatCurrencyVND } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -27,6 +28,7 @@ import { useMemo, useState } from "react";
 import ProjectsEditorForm from "./projects-editor-form";
 
 export default function ProjectsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingProject, setEditingProject] = useState<ProjectItem | null>(
     null
@@ -119,7 +121,14 @@ export default function ProjectsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -284,12 +293,25 @@ export default function ProjectsManagement() {
           initialData={editingProject ?? undefined}
           onSave={(data) => {
             if (editingProject?.id) {
-              updateMutation.mutate({
-                id: editingProject.id,
-                data: data,
-              });
+              showLoading();
+              updateMutation.mutate(
+                {
+                  id: editingProject.id,
+                  data: data,
+                },
+                {
+                  onSettled: () => {
+                    hideLoading();
+                  },
+                }
+              );
             } else {
-              createMutation.mutate(data);
+              showLoading();
+              createMutation.mutate(data, {
+                onSettled: () => {
+                  hideLoading();
+                },
+              });
             }
           }}
           onCancel={handleDrawerClose}

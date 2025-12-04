@@ -200,3 +200,7 @@
 .text-accent {
   @apply text-[#ff8c42];
 }
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}

@@ -7,6 +7,7 @@ import {
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { TournamentItem } from "@/data/model/tournament.model";
 import { confirmUnsavedChanges, getStatusColor } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -27,6 +28,7 @@ import { useMemo, useState } from "react";
 import TournamentEditorForm from "./tournament-form";
 
 export default function TournamentsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingTournament, setEditingTournament] =
     useState<TournamentItem | null>(null);
@@ -139,7 +141,14 @@ export default function TournamentsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -334,12 +343,22 @@ export default function TournamentsManagement() {
           initialData={editingTournament ?? undefined}
           onSave={(data) => {
             if (editingTournament?.id) {
-              updateMutation.mutate({
-                id: editingTournament.id,
-                data: data,
-              });
+              showLoading();
+              updateMutation.mutate(
+                { id: editingTournament.id, data: data },
+                {
+                  onSettled: () => {
+                    hideLoading();
+                  },
+                }
+              );
             } else {
-              createMutation.mutate(data);
+              showLoading();
+              createMutation.mutate(data, {
+                onSettled: () => {
+                  hideLoading();
+                },
+              });
             }
           }}
           onCancel={handleDrawerClose}

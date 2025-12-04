@@ -45,4 +45,14 @@ export const registrationRepository = {
     await api.patch(`/registrations/${id}`, { status });
     return true;
   },
+
+  async deleteRegistration(id: number): Promise<boolean> {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 500));
+      console.log(`Mock Delete: Registration ${id}`);
+      return true;
+    }
+    await api.delete(`/registrations/${id}`);
+    return true;
+  }
 };

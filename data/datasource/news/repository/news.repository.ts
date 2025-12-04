@@ -21,9 +21,8 @@ export const newsRepository = {
       await delay(300);
       return ensureMockStore();
     }
-
     // API public list (giữ nguyên endpoint đang dùng)
-    const response = await api.get<NewsItem[]>("/home/news");
+    const response = await api.get<NewsItem[]>("/news");
     return plainToInstance(NewsItem, response.data);
   },
 

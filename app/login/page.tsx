@@ -5,8 +5,6 @@ import { ASSETS } from "@/app/generated/assets";
 import { ForgotPasswordForm } from "@/components/admin/authentication/forgot-password-form";
 import { LoginForm } from "@/components/admin/authentication/login-form";
 import { ResetPassword } from "@/components/admin/authentication/reset-password";
-import volleyballAnim from "@/public/assets/lottie/volleyball.json";
-import Lottie from "lottie-react";
 import Image from "next/image";
 
 import { useState } from "react";
@@ -32,13 +30,13 @@ export default function AuthPage() {
             />
 
             {/* Volleyball image */}
-            <div className="w-full max-w-xs relative h-48 flex items-center justify-center overflow-hidden">
+            {/* <div className="w-full max-w-xs relative h-48 flex items-center justify-center overflow-hidden">
               <Lottie
                 animationData={volleyballAnim}
                 loop
                 className="h-full w-full object-contain"
               />
-            </div>
+            </div> */}
 
             {/* Text content */}
             <div className="text-center space-y-2">
