@@ -54,7 +54,6 @@ export default function NewsManagement() {
     mutationFn: (newNews) => newsInteractor.createNews(newNews),
     onSuccess: async () => {
       notification.success({ message: "Tạo tin tức mới thành công!" });
-      // 🔥 Đợi invalidate hoàn thành
       await queryClient.invalidateQueries({ queryKey: ["adminNews"] });
       handleCloseEditor();
     },
@@ -218,7 +217,6 @@ export default function NewsManagement() {
       key: "createdAt",
       render: (date: string) => formatDateSafe(date),
       sorter: (a, b) => {
-        // Cần xử lý an toàn cho cả sorter để tránh lỗi NaN
         const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
         return timeA - timeB;

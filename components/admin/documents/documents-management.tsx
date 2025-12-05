@@ -6,7 +6,7 @@ import {
 } from "@/data/constants/constants";
 import { documentInteractor } from "@/data/datasource/document/interactor/document.interactor";
 import { DocumentItem } from "@/data/model/document.model";
-import { confirmUnsavedChanges, formatFileSize } from "@/lib/utils";
+import { confirmUnsavedChanges } from "@/lib/utils";
 import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -59,12 +59,18 @@ export default function DocumentsManagement() {
     Partial<DocumentItem>
   >({
     mutationFn: (data) => documentInteractor.createDocument(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Tải tài liệu thành công" });
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
+      await queryClient.invalidateQueries({ queryKey: ["documents"] });
       handleCloseEditor();
     },
-    onError: () => notification.error({ message: "Tải tài liệu thất bại" }),
+    onError: (error) => {
+      console.error("CHI TIẾT LỖI TẠO:", error);
+      notification.error({
+        message: "Tải tài liệu thất bại",
+        description: error.message,
+      });
+    },
   });
 
   const updateMutation = useMutation<
@@ -73,30 +79,38 @@ export default function DocumentsManagement() {
     { id: string; data: Partial<DocumentItem> }
   >({
     mutationFn: ({ id, data }) => documentInteractor.updateDocument(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Cập nhật tài liệu thành công" });
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
+      await queryClient.invalidateQueries({ queryKey: ["documents"] });
       handleCloseEditor();
     },
-    onError: () => notification.error({ message: "Cập nhật thất bại" }),
+    onError: (error) => {
+      console.error("CHI TIẾT LỖI CẬP NHẬT:", error);
+      notification.error({
+        message: "Cập nhật thất bại",
+        description: error.message,
+      });
+    },
   });
 
   const deleteMutation = useMutation<{ success: boolean }, Error, string>({
     mutationFn: (id) => documentInteractor.deleteDocument(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Xóa thành công" });
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
+      await queryClient.invalidateQueries({ queryKey: ["documents"] });
     },
-    onError: () => notification.error({ message: "Xóa thất bại" }),
+    onError: (error) => {
+      console.error("CHI TIẾT LỖI XÓA:", error);
+      notification.error({
+        message: "Xóa thất bại",
+        description: error.message,
+      });
+    },
   });
 
   const filteredDocs = useMemo(() => {
     const term = searchTerm.toLowerCase();
-    return allDocs.filter(
-      (doc) =>
-        doc.title.toLowerCase().includes(term) ||
-        (doc.content ? doc.content.toLowerCase().includes(term) : false)
-    );
+    return allDocs.filter((doc) => doc.title.toLowerCase().includes(term));
   }, [allDocs, searchTerm]);
 
   const handleShowEditor = (doc?: DocumentItem) => {
@@ -228,7 +242,7 @@ export default function DocumentsManagement() {
               title: "Dung lượng",
               dataIndex: "fileSize",
               key: "fileSize",
-              render: (fileSize) => <>{formatFileSize(fileSize)} MB</>,
+              render: (fileSize) => <>{fileSize}</>,
             },
             {
               title: "Ngày tạo",
@@ -253,7 +267,10 @@ export default function DocumentsManagement() {
                     danger
                     icon={<DeleteOutlined />}
                     onClick={() => handleDelete(record.id)}
-                    loading={deleteMutation.isPending}
+                    loading={
+                      deleteMutation.isPending &&
+                      deleteMutation.variables === record.id
+                    }
                   />
                 </Space>
               ),

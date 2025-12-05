@@ -1,4 +1,6 @@
-import { Expose } from "class-transformer";
+import 'reflect-metadata';
+import { Expose, Type } from "class-transformer";
+import { AuthData } from "./auth.model";
 
 export class NewsItem {
   @Expose({ name: 'id' })
@@ -22,12 +24,9 @@ export class NewsItem {
   @Expose({ name: 'updatedAt' })
   updatedAt?: Date | null;
 
-  @Expose() authorBy!: {
-    id: number;
-    fullName: string;
-    email: string;
-    imageUrl?: string | null;
-  };
+  @Expose({ name: 'authorBy' })
+  @Type(() => AuthData)
+  authorBy!: AuthData;
 
   @Expose() tags!: string;
 }

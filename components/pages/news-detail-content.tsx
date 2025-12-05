@@ -56,7 +56,6 @@ export default function NewsDetailContent({
     );
   }
 
-  // Get recent news (excluding current)
   const recentNews = allNews.filter((item) => item.id !== news.id).slice(0, 5);
 
   return (
