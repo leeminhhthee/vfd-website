@@ -44,5 +44,15 @@ export const projectRepository = {
     }
     const response = await api.delete(`/project/${id}`);
     return response.data;
-  }, 
+  },
+
+  async getProjectById(id: number) {
+    if (USE_MOCK) {
+      await new Promise((r) => setTimeout(r, 300));
+      const project = projectMock.find((p) => p.id === id);
+      return plainToInstance(ProjectItem, project);
+    }
+    const response = await api.get<ProjectItem>(`/project/${id}`);
+    return plainToInstance(ProjectItem, response.data);
+  }
 };

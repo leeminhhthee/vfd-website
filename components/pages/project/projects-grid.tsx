@@ -1,10 +1,10 @@
-import Link from "next/link"
-import { ChevronRight } from "lucide-react"
-import Image from "next/image"
-import { ProjectItem } from "@/data/model/project.model"
+import { ProjectItem } from "@/data/model/project.model";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ProjectsGridProps {
-  projects: ProjectItem[]
+  projects: ProjectItem[];
 }
 
 export default function ProjectsGrid({ projects }: ProjectsGridProps) {
@@ -27,29 +27,43 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
 
           {/* Content */}
           <div className="p-6">
-            <h3 className="text-lg font-bold text-primary mb-3 line-clamp-2">{project.title}</h3>
+            <h3 className="text-lg font-bold text-primary mb-3 line-clamp-2">
+              {project.title}
+            </h3>
 
-            <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{project.overview}</p>
+            <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+              {project.overview}
+            </p>
 
             {/* Details */}
             <div className="space-y-2 mb-4 text-sm">
               <div className="flex items-start gap-2">
-                <span className="font-bold text-foreground min-w-fit">Duration:</span>
-                <span className="text-muted-foreground">{project.duration}</span>
+                <span className="font-bold text-foreground min-w-fit">
+                  Duration:
+                </span>
+                <span className="text-muted-foreground">
+                  {project.duration}
+                </span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="font-bold text-foreground min-w-fit">Location:</span>
-                <span className="text-muted-foreground">{project.location}</span>
+                <span className="font-bold text-foreground min-w-fit">
+                  Location:
+                </span>
+                <span className="text-muted-foreground">
+                  {project.location}
+                </span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="font-bold text-foreground min-w-fit">Budget:</span>
+                <span className="font-bold text-foreground min-w-fit">
+                  Budget:
+                </span>
                 <span className="text-accent font-bold">{project.price}</span>
               </div>
             </div>
 
             {/* Button */}
             <Link
-              href={`/projects`}
+              href={`/projects/${project.id}`}
               className="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent text-accent font-bold rounded-lg hover:bg-accent hover:text-white transition-colors duration-200"
             >
               Xem chi tiết
@@ -59,5 +73,5 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
         </div>
       ))}
     </div>
-  )
+  );
 }
