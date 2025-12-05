@@ -23,7 +23,9 @@ import {
   Tooltip,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
 import { CheckCircle2, X, XCircle } from "lucide-react";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import TournamentEditorForm from "./tournament-form";
 
@@ -205,7 +207,7 @@ export default function TournamentsManagement() {
       title: "Số đội",
       dataIndex: "teams",
       key: "teams",
-      render: (teams: number) => <span>{teams ?? 0} đội</span>,
+      render: (teams: number) => <span>{teams ?? '--'} đội</span>,
     },
     {
       title: "Địa điểm",
@@ -230,6 +232,7 @@ export default function TournamentsManagement() {
     },
     {
       title: "Trạng thái",
+      dataIndex: "status",
       key: "status",
       filters: statusOptions,
       onFilter: (value, record) => record.status === value,
@@ -258,7 +261,23 @@ export default function TournamentsManagement() {
         ),
     },
     {
-      title: "Hành động",
+      title: "Đăng ký",
+      dataIndex: "registrationOpen",
+      key: "registrationOpen",
+      align: "center",
+      render: (open: boolean) =>
+        open ? (
+          <Tooltip title="Đang mở đăng ký">
+            <CheckCircle2 className="text-blue-500 mx-auto" size={20} />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Đã đóng đăng ký">
+            <XCircle className="text-gray-300 mx-auto" size={20} />
+          </Tooltip>
+        ),
+    },
+    {
+      title: "Thao tác",
       key: "action",
       align: "center",
       render: (_, record) => (

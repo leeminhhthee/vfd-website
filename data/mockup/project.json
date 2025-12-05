@@ -10,7 +10,7 @@
     "image": "/project/volleyball-community-program.jpg",
     "category": "training",
     "bank_qr_code": {
-      "id": 101,
+      "id": 1,
       "qr_code_url": "/project/qrcode.webp",
       "bank_name": "BIDV",
       "account_number": "0011223344",
@@ -35,7 +35,7 @@
     "image": "/project/volleyball-community-program.jpg",
     "category": "community",
     "bank_qr_code": {
-      "id": 102,
+      "id": 2,
       "qr_code_url": "/project/qrcode.webp",
       "bank_name": "Vietcombank",
       "account_number": "987654321",
@@ -60,7 +60,7 @@
     "image": "/project/volleyball-community-program.jpg",
     "category": "sponsorship",
     "bank_qr_code": {
-      "id": 103,
+      "id": 1,
       "qr_code_url": "/project/qrcode.webp",
       "bank_name": "Techcombank",
       "account_number": "5566778899",
@@ -85,7 +85,7 @@
     "image": "/project/volleyball-community-program.jpg",
     "category": "other",
     "bank_qr_code": {
-      "id": 104,
+      "id": 2,
       "qr_code_url": "/project/qrcode.webp",
       "bank_name": "VPBank",
       "account_number": "3344556677",
@@ -161,12 +161,12 @@
     "image": "/project/volleyball-community-program.jpg",
     "category": "other",
     "bank_qr_code": {
-      "id": 107,
-      "qr_code_url": "/project/qrcode.webp",
-      "bank_name": "BIDV",
-      "account_number": "9933445566",
-      "account_name": "Trung tâm Công nghệ VAR Việt Nam",
-      "branch_name": "Đà Nẵng"
+      "id": 1,
+      "bank_name": "MB Bank",
+      "branch_name": "CN Đà Nẵng",
+      "account_number": "0000123456789",
+      "account_name": "LIEN DOAN BONG CHUYEN DN",
+      "qr_code_url": "https://img.vietqr.io/image/MB-0000000000-compact.png"
     },
     "goals": [
       "Tăng tính minh bạch thi đấu.",
