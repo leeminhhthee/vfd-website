@@ -77,7 +77,7 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
             <span>{new Date(news.createdAt).toLocaleString("vi-VN")}</span>
           </div>
           <span>
-            {trans.source}: {news.authorId}
+            {trans.source}: {news.authorBy.id}
           </span>
         </div>
 
