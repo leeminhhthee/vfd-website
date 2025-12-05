@@ -4,6 +4,7 @@ import { trans } from "@/app/generated/AppLocalization";
 import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -36,8 +37,11 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
 
   if (isLoading) {
     return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">{trans.loading}.</p>
+      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <Spin size="large" />
+        <span className="text-gray-500 font-medium text-sm ml-5">
+          {trans.loading}
+        </span>
       </div>
     );
   }
@@ -79,6 +83,10 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
                 <h3 className="font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
                   {item.title}
                 </h3>
+                <p
+                  className="text-foreground group-hover:text-primary transition-colors line-clamp-1 text-sm"
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
               </div>
             </div>
           </Link>

@@ -2,6 +2,7 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -22,8 +23,11 @@ export default function UpcomingTournaments() {
           <h2 className="text-3xl md:text-3xl font-black text-foreground mb-8 uppercase">
             {trans.upcomingTournaments}
           </h2>
-          <div className="text-center text-muted-foreground">
-            {trans.loading}
+          <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+            <Spin size="large" />
+            <span className="text-gray-500 font-medium text-sm ml-5">
+              {trans.loading}
+            </span>
           </div>
         </div>
       </section>

@@ -4,6 +4,7 @@ import { trans } from "@/app/generated/AppLocalization";
 import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -70,7 +71,14 @@ export default function NewsGrid() {
   }, [currentPage]);
 
   if (isLoading) {
-    return <div className="text-center py-12">{trans.loading}</div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <Spin size="large" />
+        <span className="text-gray-500 font-medium text-sm ml-5">
+          {trans.loading}
+        </span>
+      </div>
+    );
   }
 
   if (error) {
@@ -127,9 +135,10 @@ export default function NewsGrid() {
               <h2 className="text-2xl font-bold text-foreground mb-4">
                 {featuredNews.title}
               </h2>
-              <p className="text-muted-foreground text-base mb-4 line-clamp-3">
-                {featuredNews.content}
-              </p>
+              <p
+                className="text-muted-foreground text-base mb-4 line-clamp-3"
+                dangerouslySetInnerHTML={{ __html: featuredNews.content }}
+              />
               <Link
                 href={`/news/${featuredNews.id}`}
                 className="text-accent font-bold hover:text-accent-light transition-colors inline-flex items-center gap-2"
@@ -201,9 +210,10 @@ export default function NewsGrid() {
                   <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                    {item.content}
-                  </p>
+                  <p
+                    className="text-muted-foreground text-sm mb-4 line-clamp-2"
+                    dangerouslySetInnerHTML={{ __html: item.content }}
+                  />
                   <Link
                     href={`/news/${item.id}`}
                     className="text-accent font-bold hover:text-accent-light transition-colors"

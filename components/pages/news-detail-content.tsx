@@ -5,6 +5,7 @@ import { ASSETS } from "@/app/generated/assets";
 import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,8 +35,11 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
 
   if (isLoading) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground text-lg">{trans.loading}.</p>
+      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <Spin size="large" />
+        <span className="text-gray-500 font-medium text-sm ml-5">
+          {trans.loading}
+        </span>
       </div>
     );
   }
@@ -76,9 +80,7 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
           <div className="flex items-center gap-4">
             <span>{new Date(news.createdAt).toLocaleString("vi-VN")}</span>
           </div>
-          <span>
-            {trans.source}: {news.authorBy.id}
-          </span>
+          <span>{trans.source}: VFD</span>
         </div>
 
         {/* Featured Image */}
@@ -93,38 +95,10 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
         </div>
 
         {/* Article Content */}
-        <div className="prose prose-lg max-w-none mb-8 text-justify">
-          {news.content.split("\n\n").map((paragraph, index) => {
-            // Kiểm tra xem paragraph có chứa URL hình ảnh không
-            const imageUrlMatch = paragraph.match(
-              /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i
-            );
-
-            if (imageUrlMatch) {
-              return (
-                <div key={index} className="my-6">
-                  <Image
-                    src={imageUrlMatch[0]}
-                    alt={`Content image ${index + 1}`}
-                    className="w-full h-auto rounded-lg"
-                    width={1200}
-                    height={675}
-                  />
-                </div>
-              );
-            }
-
-            // Render text bình thường
-            return (
-              <p
-                key={index}
-                className="text-base text-foreground leading-relaxed mb-6"
-              >
-                {paragraph}
-              </p>
-            );
-          })}
-        </div>
+        <div
+          className="prose prose-lg max-w-none mb-8 text-justify"
+          dangerouslySetInnerHTML={{ __html: news.content }}
+        />
 
         {/* Share & Actions */}
         <div className="flex items-center gap-4 py-8 border-t border-border">
