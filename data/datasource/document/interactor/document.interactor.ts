@@ -3,7 +3,12 @@ import { documentRepository } from "../repository/document.repository";
 
 export const documentInteractor = {
   async getDocumentsList(): Promise<DocumentItem[]> {
-    return documentRepository.getDocumentList();
+    const documents = await documentRepository.getDocumentList();
+    return documents
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
   },
 
   async createDocument(data: Partial<DocumentItem>): Promise<DocumentItem> {

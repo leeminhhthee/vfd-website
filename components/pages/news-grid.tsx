@@ -16,7 +16,6 @@ const SESSION_KEY = "news_current_page";
 export default function NewsGrid() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(() => {
-    // Load từ sessionStorage khi component mount
     if (typeof window !== "undefined") {
       const savedPage = sessionStorage.getItem(SESSION_KEY);
       return savedPage ? parseInt(savedPage) : 1;
@@ -33,7 +32,6 @@ export default function NewsGrid() {
     queryFn: newsInteractor.getNewsListPublished,
   });
 
-  // Filter news by search term
   const filteredNews = useMemo(() => {
     return allNews.filter(
       (item) =>
@@ -42,14 +40,11 @@ export default function NewsGrid() {
     );
   }, [allNews, searchTerm]);
 
-  // Sort by date (newest first) - already sorted from API
   const sortedNews = filteredNews;
 
-  // Split into featured (first) and remaining news
   const featuredNews = sortedNews[0];
   const remainingNews = sortedNews.slice(1);
 
-  // Get 6 items with same type as featured (excluding featured itself)
   const sideSidebarNews = useMemo(() => {
     if (!featuredNews) return [];
     return remainingNews
@@ -57,13 +52,11 @@ export default function NewsGrid() {
       .slice(0, 6);
   }, [featuredNews, remainingNews]);
 
-  // Paginate remaining news
   const totalPages = Math.ceil(remainingNews.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const paginatedNews = remainingNews.slice(startIndex, endIndex);
 
-  // Lưu vào sessionStorage mỗi khi currentPage thay đổi
   useEffect(() => {
     if (typeof window !== "undefined") {
       sessionStorage.setItem(SESSION_KEY, currentPage.toString());

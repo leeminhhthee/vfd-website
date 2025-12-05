@@ -1,22 +1,27 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import 'reflect-metadata';
+import { AuthData } from './auth.model';
 
 export class DocumentItem {
   @Expose({ name: 'id' })
   id!: string;
   @Expose({ name: 'title' })
   title!: string;
-  @Expose({ name: 'content' })
-  content!: string;
   @Expose({ name: 'category' })
   category!: string;
-  @Expose({ name: 'doc_url' })
-  fileUrl?: string;
-  @Expose({ name: 'file_name' })
+  @Expose({ name: 'fileUrl' })
+  fileUrl!: string;
+  @Expose({ name: 'fileName' })
   fileName?: string;
-  @Expose({ name: 'size' })
+  @Expose({ name: 'fileType' })
+  fileType?: string;
+  @Expose({ name: 'fileSize' })
   fileSize?: number;
-  @Expose({ name: 'created_at' })
-  createdAt!: Date | null;
-  @Expose({ name: 'updated_at' })
-  updatedAt!: Date | null;
+  @Expose({ name: 'createdAt' })
+  createdAt!: Date;
+  @Expose({ name: 'updatedAt' })
+  updatedAt!: Date;
+  @Expose({ name: 'uploadedBy' })
+  @Type(() => AuthData)
+  uploadedBy!: AuthData;
 }

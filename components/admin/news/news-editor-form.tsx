@@ -14,7 +14,7 @@ import { ArrowLeft, Eye, Sparkles, Upload, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
-import { api } from "@/app/api/api"; // ✅ Import api instance
+import { api } from "@/app/api/api";
 import {
   getNewsTypeLabel,
   NewsStatus,
@@ -212,7 +212,6 @@ export default function NewsEditorForm({
         }
       }
 
-      // 🔥 KIỂM TRA LẦN CUỐI TRƯỚC KHI GỬI
       if (!finalImageUrl) {
         notification.error({ message: "Không thể tải ảnh bìa lên" });
         setIsUploading(false);
