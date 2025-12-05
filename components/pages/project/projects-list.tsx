@@ -1,8 +1,10 @@
 "use client";
 
+import { trans } from "@/app/generated/AppLocalization";
 import { projectInteractor } from "@/data/datasource/project/interactor/project.interactor";
 import { ProjectItem } from "@/data/model/project.model";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { useState } from "react";
 import ProjectsGrid from "./projects-grid";
 
@@ -29,7 +31,14 @@ export default function ProjectsList() {
   const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <Spin size="large" />
+        <span className="text-gray-500 font-medium text-sm ml-5">
+          {trans.loading}
+        </span>
+      </div>
+    );
   }
 
   if (isError) {

@@ -10,6 +10,7 @@ import TournamentResults from "@/components/pages/tournament/tournament-results"
 import TournamentScheduleImage from "@/components/pages/tournament/tournament-schedule-image";
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { notFound, useParams } from "next/navigation";
 
 export default function TournamentDetailPage() {
@@ -34,8 +35,11 @@ export default function TournamentDetailPage() {
   if (isLoading) {
     return (
       <UserLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">{trans.loading}</div>
+        <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+          <Spin size="large" />
+          <span className="text-gray-500 font-medium text-sm ml-5">
+            {trans.loading}
+          </span>
         </div>
       </UserLayout>
     );

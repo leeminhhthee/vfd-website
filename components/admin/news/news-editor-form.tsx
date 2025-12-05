@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Image, Input, notification, Select, Tag } from "antd";
-import { ArrowLeft, Sparkles, X } from "lucide-react";
+import { Button, Image, Input, Modal, notification, Select, Tag } from "antd";
+import { ArrowLeft, Eye, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
@@ -51,6 +51,7 @@ export default function NewsEditorForm({
   const [isGeneratingTitles, setIsGeneratingTitles] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const initialFormRef = useRef(
@@ -72,6 +73,8 @@ export default function NewsEditorForm({
     imageAllowedTypes: ["jpeg", "jpg", "png", "gif"],
     imageDefaultWidth: 0,
     pasteAllowLocalImages: true,
+    height: 300,
+    heightMin: 200, 
   };
 
   useEffect(() => {
@@ -231,7 +234,14 @@ export default function NewsEditorForm({
         <h2 className="text-2xl font-bold text-foreground">
           {news?.id ? "Chỉnh sửa tin tức" : "Tạo tin tức mới"}
         </h2>
-        <div style={{ width: 48 }} />
+        <Button
+          type="default"
+          icon={<Eye size={16} />}
+          onClick={() => setIsPreviewOpen(true)}
+          disabled={isProcessing}
+        >
+          Xem trước
+        </Button>
       </div>
 
       <div className="grid grid-cols-3 gap-6 p-12 bg-white rounded-lg border border-border overflow-hidden">
@@ -393,6 +403,13 @@ export default function NewsEditorForm({
           Hủy
         </Button>
         <Button
+          icon={<Eye size={16} />}
+          onClick={() => setIsPreviewOpen(true)}
+          disabled={isProcessing}
+        >
+          Xem trước
+        </Button>
+        <Button
           onClick={() => handleSave(NewsStatus.DRAFT)}
           loading={isProcessing}
         >
@@ -406,6 +423,60 @@ export default function NewsEditorForm({
           {isUploading ? "Đang tải ảnh..." : news?.id ? "Cập nhật" : "Đăng bài"}
         </Button>
       </div>
+
+      {/* Preview Modal */}
+      <Modal
+        title="Xem trước bài viết"
+        open={isPreviewOpen}
+        onCancel={() => setIsPreviewOpen(false)}
+        footer={null}
+        width="90%"
+        style={{ maxWidth: 1200 }}
+      >
+        <article className="p-8">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 mb-6 text-sm text-muted-foreground">
+            <span>Tin tức</span>
+            <span>/</span>
+            <span className="text-foreground font-medium">
+              {formData.type
+                ? getNewsTypeLabel(formData.type as NewsType)
+                : "Danh mục"}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-4xl font-bold text-primary mb-6 leading-tight">
+            {formData.title || "Tiêu đề tin tức"}
+          </h1>
+
+          {/* Meta Info */}
+          <div className="flex items-center justify-between mb-8 pb-6 border-b border-border text-sm text-muted-foreground">
+            <span>{new Date().toLocaleString("vi-VN")}</span>
+            <span>Nguồn: VFD</span>
+          </div>
+
+          {/* Cover Image */}
+          {coverPreview && (
+            <div className="mb-8">
+              <Image
+                src={coverPreview}
+                alt="Cover"
+                className="w-full h-auto object-cover"
+                preview={false}
+              />
+            </div>
+          )}
+
+          {/* Content */}
+          <div
+            className="prose prose-lg max-w-none mb-8 text-justify"
+            dangerouslySetInnerHTML={{
+              __html: formData.content || "<p>Nội dung tin tức...</p>",
+            }}
+          />
+        </article>
+      </Modal>
     </div>
   );
 }

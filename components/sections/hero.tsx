@@ -3,6 +3,7 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { homeInteractor } from "@/data/datasource/home/interactor/home.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,7 +40,12 @@ export default function Hero() {
   if (isLoading) {
     return (
       <section className="relative w-full overflow-hidden pt-20 min-h-[calc(100vh-5rem)] lg:min-h-[calc(100vh-5rem)] flex items-center justify-center">
-        <div className="text-white">{trans.loading}</div>
+        <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+          <Spin size="large" />
+          <span className="text-gray-500 font-medium text-sm ml-5">
+            {trans.loading}
+          </span>
+        </div>
       </section>
     );
   }

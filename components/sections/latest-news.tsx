@@ -2,6 +2,7 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,8 +20,11 @@ export default function LatestNews() {
   if (isLoading) {
     return (
       <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center">{trans.loading}</p>
+        <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+          <Spin size="large" />
+          <span className="text-gray-500 font-medium text-sm ml-5">
+            {trans.loading}
+          </span>
         </div>
       </section>
     );
@@ -78,9 +82,8 @@ export default function LatestNews() {
                 <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                  {item.content}
-                </p>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: item.content }} />
                 <Link
                   href={`/news/${item.id}`}
                   className="text-accent font-bold hover:text-accent-light transition-colors"

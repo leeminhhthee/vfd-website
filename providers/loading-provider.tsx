@@ -1,5 +1,6 @@
 "use client";
 
+import { Spin } from "antd";
 import type React from "react";
 import { createContext, useCallback, useContext, useState } from "react";
 
@@ -43,7 +44,7 @@ function Loading() {
       <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative z-10">
-        <div className="loading-spinner h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+        <Spin size="large" />
       </div>
     </div>
   );

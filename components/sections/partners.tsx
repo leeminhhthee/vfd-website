@@ -3,6 +3,7 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { partnerInteractor } from "@/data/datasource/partner/interactor/partner.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import Image from "next/image";
 
 export default function Partners() {
@@ -18,8 +19,11 @@ export default function Partners() {
   if (isLoading) {
     return (
       <section className="pt-0 md:pt-10 pb-0 md:pb-0 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>{trans.loading}</p>
+        <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+          <Spin size="large" />
+          <span className="text-gray-500 font-medium text-sm ml-5">
+            {trans.loading}
+          </span>
         </div>
       </section>
     );

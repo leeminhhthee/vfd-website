@@ -4,6 +4,7 @@ import { trans } from "@/app/generated/AppLocalization";
 import { ASSETS } from "@/app/generated/assets";
 import { aboutInteractor } from "@/data/datasource/about/interactor/about.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 
 type Props = {
   backgroundUrl?: string;
@@ -22,7 +23,14 @@ export default function Introductions({
   });
 
   if (isLoading) {
-    return <div className="text-center py-12">{trans.loading}</div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <Spin size="large" />
+        <span className="text-gray-500 font-medium text-sm ml-5">
+          {trans.loading}
+        </span>
+      </div>
+    );
   }
 
   if (error) {
