@@ -82,10 +82,12 @@ export default function LatestNews() {
                 <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2"
-                  dangerouslySetInnerHTML={{ __html: item.content }} />
+                <p
+                  className="text-muted-foreground text-sm mb-4 line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
                 <Link
-                  href={`/news/${item.id}`}
+                  href={`/news/${item.slug}`}
                   className="text-accent font-bold hover:text-accent-light transition-colors"
                 >
                   {trans.readMore}

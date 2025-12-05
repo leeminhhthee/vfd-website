@@ -24,6 +24,10 @@ export const newsInteractor = {
     return await newsRepository.getNewsById(id);
   },
 
+  async getNewsBySlug(slug: string): Promise<NewsItem | null> {
+    return await newsRepository.getNewsBySlug(slug);
+  },
+
   async createNews(payload: Partial<NewsItem>): Promise<NewsItem> {
     return await newsRepository.createNews(payload);
   },

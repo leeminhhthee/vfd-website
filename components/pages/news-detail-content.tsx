@@ -14,10 +14,12 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface NewsDetailContentProps {
-  newsId: number;
+  newsSlug: string;
 }
 
-export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
+export default function NewsDetailContent({
+  newsSlug,
+}: NewsDetailContentProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const {
@@ -25,9 +27,9 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["news", newsId],
-    queryFn: () => newsInteractor.getNewsById(newsId),
-    enabled: !!newsId,
+    queryKey: ["news", newsSlug],
+    queryFn: () => newsInteractor.getNewsBySlug(newsSlug),
+    enabled: !!newsSlug,
   });
 
   const { data: allNews = [] } = useQuery({
@@ -55,7 +57,7 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
   }
 
   // Get recent news (excluding current)
-  const recentNews = allNews.filter((item) => item.id !== newsId).slice(0, 5);
+  const recentNews = allNews.filter((item) => item.id !== news.id).slice(0, 5);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -145,7 +147,7 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
             {recentNews.map((item) => (
               <Link
                 key={item.id}
-                href={`/news/${item.id}`}
+                href={`/news/${item.slug}`}
                 className="block group"
               >
                 <div className="flex gap-3 mb-3">

@@ -83,7 +83,7 @@ export default function NewsEditorForm({
     imageAllowedTypes: ["jpeg", "jpg", "png", "gif"],
     imageDefaultWidth: 0,
     pasteAllowLocalImages: true,
-    height: 600,
+    height: 400,
     heightMin: 300,
   };
 

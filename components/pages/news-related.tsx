@@ -10,14 +10,14 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 interface NewsRelatedProps {
-  currentNewsId: number;
+  currentNewsSlug: string;
 }
 
-export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
+export default function NewsRelated({ currentNewsSlug }: NewsRelatedProps) {
   const { data: currentNews } = useQuery({
-    queryKey: ["news", currentNewsId],
-    queryFn: () => newsInteractor.getNewsById(currentNewsId),
-    enabled: !!currentNewsId,
+    queryKey: ["news", currentNewsSlug],
+    queryFn: () => newsInteractor.getNewsBySlug(currentNewsSlug),
+    enabled: !!currentNewsSlug,
   });
 
   const { data: allNews = [], isLoading } = useQuery({
@@ -30,10 +30,10 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
 
     return allNews
       .filter(
-        (item) => item.id !== currentNewsId && item.type === currentNews.type
+        (item) => item.id !== currentNews.id && item.type === currentNews.type
       )
       .slice(0, 5);
-  }, [allNews, currentNewsId, currentNews]);
+  }, [allNews, currentNews]);
 
   if (isLoading) {
     return (
@@ -62,7 +62,11 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
 
       <div className="space-y-6">
         {relatedNews.map((item) => (
-          <Link key={item.id} href={`/news/${item.id}`} className="group block">
+          <Link
+            key={item.id}
+            href={`/news/${item.slug}`}
+            className="group block"
+          >
             <div className="flex items-start gap-3 p-4 rounded-lg border border-border hover:bg-background transition-colors">
               {/* Arrow Icon */}
               <ChevronRight

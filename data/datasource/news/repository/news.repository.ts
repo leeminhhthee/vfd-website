@@ -34,6 +34,16 @@ export const newsRepository = {
     }
   },
 
+  async getNewsBySlug(slug: string): Promise<NewsItem | null> {
+    try {
+      const response = await api.get<NewsItem>(`${API_BASE}/slug/${slug}`);
+      return plainToInstance(NewsItem, response.data);
+    } catch (err: unknown) {
+      // Nếu không tìm thấy, trả về null
+      return null;
+    }
+  },
+
   async createNews(payload: Partial<NewsItem>): Promise<NewsItem> {
     const response = await api.post<NewsItem>(`${API_BASE}`, payload, {
       timeout: 60000, // Riêng cái này đợi 60 giây
