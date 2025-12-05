@@ -1,10 +1,20 @@
 "use client";
 
-import { Button, Image, Input, Modal, notification, Select, Tag } from "antd";
-import { ArrowLeft, Eye, Sparkles, X } from "lucide-react";
+import {
+  Button,
+  Image,
+  Input,
+  message,
+  Modal,
+  notification,
+  Select,
+  Tag,
+} from "antd";
+import { ArrowLeft, Eye, Sparkles, Upload, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
+import { api } from "@/app/api/api"; // ✅ Import api instance
 import {
   getNewsTypeLabel,
   NewsStatus,
@@ -73,8 +83,8 @@ export default function NewsEditorForm({
     imageAllowedTypes: ["jpeg", "jpg", "png", "gif"],
     imageDefaultWidth: 0,
     pasteAllowLocalImages: true,
-    height: 300,
-    heightMin: 200, 
+    height: 600,
+    heightMin: 300,
   };
 
   useEffect(() => {
@@ -121,21 +131,22 @@ export default function NewsEditorForm({
 
   const generateAITitles = async () => {
     if (!formData.content?.trim()) {
-      notification.warning({ message: "Vui lòng nhập nội dung trước" });
+      message.warning("Vui lòng nhập nội dung trước khi tạo gợi ý tiêu đề");
       return;
     }
 
     setIsGeneratingTitles(true);
     try {
-      const response = await fetch("/api/generate-titles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: formData.content }),
+      const response = await api.post("/news/suggest-title", {
+        content: formData.content,
       });
-      const data = await response.json();
-      setSuggestedTitles(data.titles || []);
+
+      const titles = response.data.titles || [];
+      setSuggestedTitles(titles);
+      message.success("Đã tạo gợi ý tiêu đề!");
     } catch (error) {
-      notification.error({ message: "Lỗi tạo tiêu đề AI" });
+      console.error("Error generating titles:", error);
+      message.error("Không thể tạo gợi ý tiêu đề. Vui lòng thử lại!");
     } finally {
       setIsGeneratingTitles(false);
     }
@@ -178,6 +189,11 @@ export default function NewsEditorForm({
       return;
     }
 
+    if (!coverPreview && !selectedFile) {
+      notification.error({ message: "Vui lòng chọn ảnh bìa" });
+      return;
+    }
+
     setIsUploading(true);
 
     try {
@@ -196,7 +212,15 @@ export default function NewsEditorForm({
         }
       }
 
+      // 🔥 KIỂM TRA LẦN CUỐI TRƯỚC KHI GỬI
+      if (!finalImageUrl) {
+        notification.error({ message: "Không thể tải ảnh bìa lên" });
+        setIsUploading(false);
+        return;
+      }
+
       const finalData = {
+        id: news?.id,
         title: formData.title || "",
         type: formData.type || "",
         content: formData.content || "",
@@ -267,29 +291,28 @@ export default function NewsEditorForm({
                 Gợi ý tiêu đề từ AI
               </label>
               <Button
-                type="dashed"
                 size="small"
                 icon={<Sparkles size={16} />}
                 onClick={generateAITitles}
                 loading={isGeneratingTitles}
-                disabled={isProcessing}
+                disabled={isProcessing || !formData.content?.trim()}
               >
                 Tạo gợi ý
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {suggestedTitles.map((title, idx) => (
-                <Tag
-                  key={idx}
-                  className="cursor-pointer hover:bg-blue-100"
-                  onClick={() =>
-                    !isProcessing && setFormData((prev) => ({ ...prev, title }))
-                  }
-                >
-                  {title}
-                </Tag>
-              ))}
-            </div>
+            {suggestedTitles.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {suggestedTitles.map((title, idx) => (
+                  <Tag
+                    key={idx}
+                    className="cursor-pointer hover:bg-primary/10"
+                    onClick={() => setFormData((prev) => ({ ...prev, title }))}
+                  >
+                    {title}
+                  </Tag>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -316,7 +339,7 @@ export default function NewsEditorForm({
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">
-              Ảnh bìa
+              Ảnh bìa <span className="text-red-500">*</span>
             </label>
             {coverPreview ? (
               <div className="relative">
@@ -363,7 +386,7 @@ export default function NewsEditorForm({
                 onDragOver={(e) => e.preventDefault()}
               >
                 <div className="flex flex-col items-center justify-center">
-                  <Sparkles size={32} className="text-muted-foreground mb-2" />
+                  <Upload size={32} className="text-muted-foreground mb-2" />
                   <p className="text-sm text-muted-foreground">
                     <span className="font-bold">Nhấp để chọn</span> hoặc kéo thả
                   </p>
@@ -431,7 +454,7 @@ export default function NewsEditorForm({
         onCancel={() => setIsPreviewOpen(false)}
         footer={null}
         width="90%"
-        style={{ maxWidth: 1200 }}
+        style={{ maxWidth: 1200, top: 20 }}
       >
         <article className="p-8">
           {/* Breadcrumb */}
@@ -470,7 +493,7 @@ export default function NewsEditorForm({
 
           {/* Content */}
           <div
-            className="prose prose-lg max-w-none mb-8 text-justify"
+            className="prose prose-lg max-w-none mb-8 text-justify fr-view"
             dangerouslySetInnerHTML={{
               __html: formData.content || "<p>Nội dung tin tức...</p>",
             }}
