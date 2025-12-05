@@ -25,6 +25,7 @@ import type { ColumnsType } from "antd/es/table";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import NewsEditorForm from "./news-editor-form";
+import formatDateSafe from "@/utils/formatDateSafe";
 
 export default function NewsManagement() {
   const [editingMode, setEditingMode] = useState(false);
@@ -54,8 +55,12 @@ export default function NewsManagement() {
       queryClient.invalidateQueries({ queryKey: ["adminNews"] });
       handleCloseEditor();
     },
-    onError: () => {
-      notification.error({ message: "Tạo tin tức thất bại." });
+    onError: (error) => {
+      console.error("CHI TIẾT LỖI TẠO TIN:", error);
+      notification.error({
+        message: "Tạo tin tức thất bại",
+        description: error.message // Hiển thị chi tiết lỗi lên thông báo
+      });
     },
   });
 
@@ -193,10 +198,13 @@ export default function NewsManagement() {
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date: string) =>
-        date ? new Date(date).toLocaleDateString("vi-VN") : "",
-      sorter: (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      render: (date: string) => formatDateSafe(date),
+      sorter: (a, b) => {
+        // Cần xử lý an toàn cho cả sorter để tránh lỗi NaN
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return timeA - timeB;
+      },
       defaultSortOrder: "descend",
     },
     {

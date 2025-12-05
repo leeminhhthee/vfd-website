@@ -1,77 +1,54 @@
 import { plainToInstance } from "class-transformer";
 import { api } from "../../../../app/api/api";
-import newsMock from "../../../mockup/news.json";
+// import newsMock from "../../../mockup/news.json";
 import { NewsItem } from "../../../model/news.model";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+// const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+
+const API_BASE = "/news";
 
 // In-memory store cho MOCK để có thể CRUD trong phiên làm việc
-let mockNewsStore: NewsItem[] | null = null;
-const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const ensureMockStore = () => {
-  if (!mockNewsStore) {
-    mockNewsStore = plainToInstance(NewsItem, newsMock);
-  }
-  return mockNewsStore!;
-};
+// let mockNewsStore: NewsItem[] | null = null;
+// const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// const ensureMockStore = () => {
+//   if (!mockNewsStore) {
+//     mockNewsStore = plainToInstance(NewsItem, newsMock);
+//   }
+//   return mockNewsStore!;
+// };
 
 export const newsRepository = {
   async getNews(): Promise<NewsItem[]> {
-    if (USE_MOCK) {
-      await delay(300);
-      return ensureMockStore();
-    }
-
     // API public list (giữ nguyên endpoint đang dùng)
-    const response = await api.get<NewsItem[]>("/home/news");
+    const response = await api.get<NewsItem[]>(`${API_BASE}`);
+    console.log("Data news: ", response.data);
     return plainToInstance(NewsItem, response.data);
   },
 
   async getNewsById(id: number): Promise<NewsItem | null> {
-    if (USE_MOCK) {
-      await delay(300);
-      const store = ensureMockStore();
-      return store.find((item) => item.id === id) || null;
+    try {
+      const response = await api.get<NewsItem>(`${API_BASE}/${id}`);
+      return plainToInstance(NewsItem, response.data);
+    } catch (err: unknown) {
+      // Nếu không tìm thấy, trả về null
+      return null;
     }
-
-    const response = await api.get<NewsItem>(`/news/${id}`);
-    return plainToInstance(NewsItem, response.data);
   },
 
   async createNews(payload: Partial<NewsItem>): Promise<NewsItem> {
-    const response = await api.post<NewsItem>("/news", payload);
+    const response = await api.post<NewsItem>(`${API_BASE}`, payload, {
+      timeout: 60000, // Riêng cái này đợi 60 giây
+    });
     return plainToInstance(NewsItem, response.data);
   },
 
   async updateNews(id: number, payload: Partial<NewsItem>): Promise<NewsItem> {
-    if (USE_MOCK) {
-      await delay(300);
-      const store = ensureMockStore();
-      const idx = store.findIndex((n) => n.id === id);
-      if (idx === -1) throw new Error("News not found");
-      const updated = plainToInstance(NewsItem, {
-        ...store[idx],
-        ...payload,
-        id,
-      });
-      store[idx] = updated;
-      return updated;
-    }
-
-    const response = await api.put<NewsItem>(`/news/${id}`, payload);
+    const response = await api.put<NewsItem>(`${API_BASE}/${id}`, payload);
     return plainToInstance(NewsItem, response.data);
   },
 
   async deleteNews(id: number): Promise<{ success: boolean }> {
-    if (USE_MOCK) {
-      await delay(300);
-      const store = ensureMockStore();
-      const idx = store.findIndex((n) => n.id === id);
-      if (idx !== -1) store.splice(idx, 1);
-      return { success: true };
-    }
-
-    await api.delete(`/news/${id}`);
+    await api.delete(`${API_BASE}/${id}`);
     return { success: true };
   },
 };

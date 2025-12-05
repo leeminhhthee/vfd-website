@@ -11,12 +11,21 @@ export class NewsItem {
   content!: string;
   @Expose({ name: 'status' })
   status!: string;
-  @Expose({ name: 'author_id' })
-  authorId!: number;
-  @Expose({ name: 'image_url' })
+  // @Expose({ name: 'author_id' })
+  // authorId!: number;
+  @Expose({ name: 'imageUrl' })
   imageUrl!: string;
-  @Expose({ name: 'created_at' })
+  @Expose({ name: 'createdAt' })
   createdAt!: Date;
-  @Expose({ name: 'updated_at' })
+  @Expose({ name: 'updatedAt' })
   updatedAt?: Date | null;
+
+  @Expose() authorBy!: {
+    id: number;
+    fullName: string;
+    email: string;
+    imageUrl?: string | null;
+  };
+
+  @Expose() tags!: string;
 }
