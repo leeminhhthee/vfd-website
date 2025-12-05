@@ -60,12 +60,17 @@ export default function PartnersManagement() {
 
   const createMutation = useMutation<PartnerItem, Error, Partial<PartnerItem>>({
     mutationFn: (data) => partnerInteractor.createPartner(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Thêm đối tác thành công" });
-      queryClient.invalidateQueries({ queryKey: ["partners"] });
+      await queryClient.invalidateQueries({ queryKey: ["partners"] });
       handleCloseEditor();
     },
-    onError: () => notification.error({ message: "Thêm đối tác thất bại" }),
+    onError: (error) => {
+      notification.error({
+        message: "Thêm đối tác thất bại",
+        description: error.message,
+      });
+    },
   });
 
   const updateMutation = useMutation<
@@ -74,21 +79,31 @@ export default function PartnersManagement() {
     { id: number; data: Partial<PartnerItem> }
   >({
     mutationFn: ({ id, data }) => partnerInteractor.updatePartner(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Cập nhật thành công" });
-      queryClient.invalidateQueries({ queryKey: ["partners"] });
+      await queryClient.invalidateQueries({ queryKey: ["partners"] });
       handleCloseEditor();
     },
-    onError: () => notification.error({ message: "Cập nhật thất bại" }),
+    onError: (error) => {
+      notification.error({
+        message: "Cập nhật thất bại",
+        description: error.message,
+      });
+    },
   });
 
   const deleteMutation = useMutation<boolean, Error, number>({
     mutationFn: (id) => partnerInteractor.deletePartner(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa đối tác" });
-      queryClient.invalidateQueries({ queryKey: ["partners"] });
+      await queryClient.invalidateQueries({ queryKey: ["partners"] });
     },
-    onError: () => notification.error({ message: "Xóa thất bại" }),
+    onError: (error) => {
+      notification.error({
+        message: "Xóa thất bại",
+        description: error.message,
+      });
+    },
   });
 
   const filteredPartners = useMemo(() => {
@@ -133,8 +148,8 @@ export default function PartnersManagement() {
     },
     {
       title: "Logo",
-      dataIndex: "image",
-      key: "image",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
       width: 100,
       render: (url: string) => (
         <Avatar
@@ -182,7 +197,10 @@ export default function PartnersManagement() {
       key: "since",
       align: "center",
       width: 120,
-      sorter: (a, b) => parseInt(a.since || "0") - parseInt(b.since || "0"),
+      sorter: (a, b) => a.since.localeCompare(b.since),
+      render: (date: string) => {
+        return date ? date.split("-")[0] : "Chưa xác định";
+      },
     },
     {
       title: "Hành động",
@@ -201,7 +219,9 @@ export default function PartnersManagement() {
             danger
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record.id)}
-            loading={deleteMutation.isPending}
+            loading={
+              deleteMutation.isPending && deleteMutation.variables === record.id
+            }
           />
         </Space>
       ),
@@ -285,7 +305,8 @@ export default function PartnersManagement() {
               );
             } else {
               showLoading();
-              createMutation.mutate(data, {
+              const { id, ...createData } = data;
+              createMutation.mutate(createData, {
                 onSettled: () => {
                   hideLoading();
                 },
