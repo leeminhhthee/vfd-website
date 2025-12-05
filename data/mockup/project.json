@@ -1,68 +1,353 @@
 [
   {
     "id": 1,
-    "title": "Dự án phát triển bóng chuyền trẻ",
-    "overview": "Chương trình phát triển tài năng bóng chuyền cho các vận động viên trẻ tuổi, tập trung vào kỹ năng cơ bản và xây dựng tinh thần đội tuyển.",
-    "duration": "4 - 6 tháng",
+    "title": "Chương trình Huấn luyện Kỹ thuật Chuyên sâu",
+    "slug": "chuong-trinh-huan-luyen-ky-thuat-chuyen-sau",
+    "overview": "Chương trình huấn luyện được thiết kế dành cho vận động viên trẻ có định hướng thi đấu chuyên nghiệp. Nội dung bao gồm kỹ thuật đập bóng, chắn bóng, phòng thủ cá nhân và nâng cao thể lực. Học viên sẽ được làm việc trực tiếp với các chuyên gia hàng đầu và sử dụng hệ thống phân tích hình ảnh hiện đại.",
+    "duration": "3 tháng",
     "location": "Đà Nẵng",
-    "price": 0,
-    "image": "/project/volleyball-youth-training.jpg",
-    "category": "sport_event",
-    "created_at": "2025-10-01T10:00:00Z"
+    "price": 12000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "training",
+    "bank_qr_code": {
+      "id": 1,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "BIDV",
+      "account_number": "0011223344",
+      "account_name": "Trung tâm Huấn luyện Bóng chuyền Việt Nam",
+      "branch_name": "Đà Nẵng"
+    },
+    "goals": [
+      "Nâng cao kỹ thuật nền tảng và nâng cao.",
+      "Tăng tốc độ phản xạ và khả năng phối hợp đồng đội.",
+      "Hình thành phong cách thi đấu chuyên nghiệp."
+    ],
+    "created_at": "2025-01-12T10:00:00Z"
   },
   {
     "id": 2,
-    "title": "Xây dựng trung tâm đào tạo bóng chuyền",
-    "overview": "Dự án xây dựng trung tâm đào tạo chuyên nghiệp tại Đà Nẵng với đầy đủ tiện nghi hiện đại, phục vụ đội tuyển quốc gia và phát triển cơ sở hạ tầng.",
-    "duration": "12 - 18 tháng",
-    "location": "Khu công nghiệp, Đà Nẵng",
-    "price": 500000000,
-    "image": "/project/volleyball-training-center.jpg",
+    "title": "Phát triển Câu lạc bộ Bóng chuyền Trẻ Vùng Cao",
+    "slug": "phat-trien-clb-bong-chuyen-tre-vung-cao",
+    "overview": "Dự án hỗ trợ các câu lạc bộ bóng chuyền ở khu vực vùng cao thông qua việc cung cấp thiết bị tập luyện, đào tạo HLV và tạo sân chơi thi đấu định kỳ. Đây là bước đi chiến lược nhằm phát triển thể thao cộng đồng tại các khu vực còn thiếu điều kiện.",
+    "duration": "1 năm",
+    "location": "Tây Nguyên",
+    "price": 85000000,
+    "image": "/project/volleyball-community-program.jpg",
     "category": "community",
-    "created_at": "2023-10-01T10:00:00Z"
+    "bank_qr_code": {
+      "id": 2,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "Vietcombank",
+      "account_number": "987654321",
+      "account_name": "Quỹ Phát triển Bóng chuyền Việt Nam",
+      "branch_name": "Kon Tum"
+    },
+    "goals": [
+      "Phát triển phong trào bóng chuyền cộng đồng.",
+      "Phát hiện và nuôi dưỡng tài năng tại khu vực miền núi.",
+      "Cải thiện điều kiện tập luyện cho trẻ em vùng xa."
+    ],
+    "created_at": "2025-02-01T09:00:00Z"
   },
   {
     "id": 3,
-    "title": "Chương trình trao đổi quốc tế",
-    "overview": "Hợp tác với các liên đoàn bóng chuyền quốc tế để trao đổi kinh nghiệm, nâng cao trình độ, tham dự các giải đấu quốc tế.",
+    "title": "Chương trình Trao đổi Quốc tế Bóng chuyền",
+    "slug": "chuong-trinh-trao-doi-quoc-te-bong-chuyen",
+    "overview": "Chương trình hợp tác với nhiều quốc gia như Nhật Bản, Ba Lan, Hàn Quốc nhằm trao đổi vận động viên và huấn luyện viên. Người tham gia được huấn luyện trong môi trường quốc tế chuyên nghiệp, nâng cao trình độ chiến thuật và kỹ thuật.",
     "duration": "6 - 12 tháng",
-    "location": "Quốc tế",
-    "price": 5000000,
-    "image": "/project/volleyball-international-exchange.jpg",
+    "location": "Nhật Bản - Ba Lan - Hàn Quốc",
+    "price": 200000000,
+    "image": "/project/volleyball-community-program.jpg",
     "category": "sponsorship",
-    "created_at": "2024-10-01T10:00:00Z"
+    "bank_qr_code": {
+      "id": 1,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "Techcombank",
+      "account_number": "5566778899",
+      "account_name": "Liên đoàn Bóng chuyền Việt Nam",
+      "branch_name": "Hà Nội"
+    },
+    "goals": [
+      "Mở rộng cơ hội huấn luyện quốc tế.",
+      "Tiếp cận phương pháp đào tạo hiện đại.",
+      "Tăng trải nghiệm thi đấu thực tế cho vận động viên."
+    ],
+    "created_at": "2024-11-18T14:00:00Z"
   },
   {
     "id": 4,
-    "title": "Chương trình phát triển huấn luyện viên",
-    "overview": "Đào tạo và phát triển kỹ năng huấn luyện viên, cập nhật kiến thức huấn luyện hiện đại, lấy bằng cấp quốc tế.",
-    "duration": "3 - 6 tháng",
+    "title": "Phát triển Hệ thống Phân tích AI",
+    "slug": "phat-trien-he-thong-phan-tich-ai",
+    "overview": "Dự án xây dựng hệ thống AI phân tích chuyển động và hiệu suất thi đấu nhằm cung cấp dữ liệu chuyên sâu cho huấn luyện viên. Công nghệ AI có khả năng phân tích tốc độ, góc đánh bóng và các hành vi chiến thuật trong từng pha thi đấu.",
+    "duration": "9 tháng",
     "location": "Đà Nẵng",
-    "price": 15000000,
-    "image": "/project/volleyball-coaching-development.jpg",
-    "category": "training",
-    "created_at": "2024-01-15T10:00:00Z"
+    "price": 260000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "other",
+    "bank_qr_code": {
+      "id": 2,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "VPBank",
+      "account_number": "3344556677",
+      "account_name": "Trung tâm Công nghệ Thể thao Việt Nam",
+      "branch_name": "Đà Nẵng"
+    },
+    "goals": [
+      "Tự động hóa phân tích thi đấu.",
+      "Giảm gánh nặng cho huấn luyện viên.",
+      "Tối ưu hóa giáo án theo từng cá nhân."
+    ],
+    "created_at": "2025-01-22T11:30:00Z"
   },
   {
     "id": 5,
-    "title": "Nâng cấp cơ sở vật chất",
-    "overview": "Nâng cấp các sân tập, phòng gym, hệ thống chiếu sáng, và thiết bị đào tạo hiện đại theo tiêu chuẩn quốc tế.",
-    "duration": "8 - 12 tháng",
-    "location": "Trung tâm VFD, Đà Nẵng",
-    "price": 200000000,
-    "image": "/project/volleyball-facility-upgrade.jpg",
-    "category": "community",
-    "created_at": "2023-06-20T10:00:00Z"
+    "title": "Học viện Bóng chuyền Mùa Hè Quốc gia",
+    "slug": "hoc-vien-bong-chuyen-mua-he-quoc-gia",
+    "overview": "Học viện mùa hè quy mô lớn quy tụ các vận động viên trẻ trên toàn quốc, cung cấp giáo án nền tảng về kỹ thuật, thể lực và chiến thuật. Chương trình được dẫn dắt bởi các HLV đội tuyển quốc gia và chuyên gia thể lực nước ngoài.",
+    "duration": "2 tháng",
+    "location": "Đà Nẵng",
+    "price": 6000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "sport_event",
+    "bank_qr_code": {
+      "id": 105,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "MB Bank",
+      "account_number": "7788990011",
+      "account_name": "Trường Học viện Bóng chuyền Quốc gia",
+      "branch_name": "Đà Nẵng"
+    },
+    "goals": [
+      "Phát triển thế hệ vận động viên mới.",
+      "Xây dựng nền tảng vững chắc cho trẻ em.",
+      "Mở rộng phong trào bóng chuyền trẻ."
+    ],
+    "created_at": "2024-05-30T10:00:00Z"
   },
   {
     "id": 6,
-    "title": "Chương trình phát triển cộng đồng",
-    "overview": "Khuyến khích phát triển bóng chuyền ở cấp cơ sở, hỗ trợ các câu lạc bộ địa phương, tổ chức các giải đấu sơ tuyển.",
-    "duration": "Liên tục",
-    "location": "Toàn thành phố Đà Nẵng",
-    "price": 30000000,
+    "title": "Nâng cấp Sân tập và Trang thiết bị Đào tạo",
+    "slug": "nang-cap-san-tap-va-trang-thiet-bi-dao-tao",
+    "overview": "Dự án tập trung cải tạo mặt sân, hệ thống chiếu sáng, lưới và máy tập thể lực. Một trung tâm đạt chuẩn sẽ góp phần nâng cao hiệu quả huấn luyện và giảm thiểu chấn thương trong quá trình tập luyện.",
+    "duration": "8 tháng",
+    "location": "Trung tâm Đào tạo VFD",
+    "price": 320000000,
     "image": "/project/volleyball-community-program.jpg",
     "category": "community",
-    "created_at": "2022-11-05T10:00:00Z"
+    "bank_qr_code": {
+      "id": 106,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "Agribank",
+      "account_number": "1122334455",
+      "account_name": "Trung tâm VFD",
+      "branch_name": "Đà Nẵng"
+    },
+    "goals": [
+      "Tạo môi trường tập luyện tiêu chuẩn quốc tế.",
+      "Nâng cao tính an toàn khi tập luyện.",
+      "Thu hút thêm vận động viên chuyên nghiệp."
+    ],
+    "created_at": "2024-03-10T08:00:00Z"
+  },
+
+  {
+    "id": 7,
+    "title": "Ứng dụng Công nghệ VAR",
+    "slug": "ung-dung-cong-nghe-var",
+    "overview": "Hệ thống VAR dành cho bóng chuyền giúp trọng tài đưa ra quyết định chính xác hơn trong các tình huống gây tranh cãi. Dự án bao gồm camera tốc độ cao và phần mềm phân tích khung hình theo chuẩn quốc tế.",
+    "duration": "6 tháng",
+    "location": "Đà Nẵng",
+    "price": 150000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "other",
+    "bank_qr_code": {
+      "id": 1,
+      "bank_name": "MB Bank",
+      "branch_name": "CN Đà Nẵng",
+      "account_number": "0000123456789",
+      "account_name": "LIEN DOAN BONG CHUYEN DN",
+      "qr_code_url": "https://img.vietqr.io/image/MB-0000000000-compact.png"
+    },
+    "goals": [
+      "Tăng tính minh bạch thi đấu.",
+      "Ứng dụng công nghệ vào thể thao.",
+      "Hỗ trợ trọng tài đưa ra quyết định chính xác."
+    ],
+    "created_at": "2025-02-18T13:00:00Z"
+  },
+  {
+    "id": 8,
+    "title": "Chương trình Phát triển Vận động viên Nữ",
+    "slug": "chuong-trinh-phat-trien-van-dong-vien-nu",
+    "overview": "Dự án hướng đến việc đào tạo, hỗ trợ tài chính và cung cấp thiết bị cho vận động viên nữ. Đây là nỗ lực quan trọng nhằm thúc đẩy bình đẳng giới trong thể thao.",
+    "duration": "1 năm",
+    "location": "Hà Nội - Đà Nẵng",
+    "price": 95000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "community",
+    "bank_qr_code": {
+      "id": 108,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "VietinBank",
+      "account_number": "2233445566",
+      "account_name": "Quỹ Phát triển VĐV Nữ Việt Nam",
+      "branch_name": "Hà Nội"
+    },
+    "goals": [
+      "Phát triển lực lượng vận động viên nữ.",
+      "Tạo môi trường tập luyện chuyên nghiệp.",
+      "Xây dựng thế hệ nữ thi đấu quốc gia."
+    ],
+    "created_at": "2024-12-12T09:20:00Z"
+  },
+  {
+    "id": 9,
+    "title": "Nghiên cứu Thể lực Vận động viên Chuyên nghiệp",
+    "slug": "nghien-cuu-the-luc-van-dong-vien-chuyen-nghiep",
+    "overview": "Dự án tập trung nghiên cứu, đánh giá và tối ưu hóa các chỉ số thể lực quan trọng như VO2Max, sức mạnh cơ bắp, độ linh hoạt, nhằm nâng cao hiệu suất thi đấu.",
+    "duration": "9 tháng",
+    "location": "Đà Nẵng",
+    "price": 170000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "training",
+    "bank_qr_code": {
+      "id": 109,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "HSBC",
+      "account_number": "6677889900",
+      "account_name": "Viện Khoa học Thể thao Việt Nam",
+      "branch_name": "HCM"
+    },
+    "goals": [
+      "Nâng hiệu suất thi đấu của vận động viên.",
+      "Ứng dụng nghiên cứu vào thực chiến.",
+      "Xây dựng giáo án thể lực chuẩn hóa."
+    ],
+    "created_at": "2024-08-11T10:10:00Z"
+  },
+  {
+    "id": 10,
+    "title": "Xây dựng Kho dữ liệu Bóng chuyền Quốc gia",
+    "slug": "xay-dung-kho-du-lieu-bong-chuyen-quoc-gia",
+    "overview": "Dự án này lưu trữ và phân tích dữ liệu lịch sử thi đấu, thông số vận động viên và chiến thuật của các đội bóng trong nước. Kho dữ liệu sẽ hỗ trợ công tác nghiên cứu và huấn luyện dài hạn.",
+    "duration": "1 năm",
+    "location": "Hà Nội",
+    "price": 300000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "other",
+    "bank_qr_code": {
+      "id": 110,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "BIDV",
+      "account_number": "5566770011",
+      "account_name": "Liên đoàn Bóng chuyền Việt Nam",
+      "branch_name": "Hà Nội"
+    },
+    "goals": [
+      "Số hóa dữ liệu thi đấu.",
+      "Hỗ trợ nghiên cứu chuyên sâu.",
+      "Phân tích chiến thuật cho huấn luyện viên."
+    ],
+    "created_at": "2024-07-22T09:13:00Z"
+  },
+  {
+    "id": 11,
+    "title": "Dự án Học bổng Cho Vận động viên Trẻ",
+    "slug": "du-an-hoc-bong-cho-van-dong-vien-tre",
+    "overview": "Học bổng nhằm hỗ trợ tài chính cho vận động viên trẻ có hoàn cảnh khó khăn nhưng có tài năng và đam mê bóng chuyền. Dự án bao gồm chi phí học tập, tập luyện và trang thiết bị.",
+    "duration": "Liên tục",
+    "location": "Toàn quốc",
+    "price": 50000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "sponsorship",
+    "bank_qr_code": {
+      "id": 111,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "Sacombank",
+      "account_number": "2233557799",
+      "account_name": "Quỹ Học bổng VĐV Trẻ",
+      "branch_name": "Sài Gòn"
+    },
+    "goals": [
+      "Hỗ trợ tài năng trẻ tiếp tục theo đuổi sự nghiệp.",
+      "Giảm bớt gánh nặng tài chính cho gia đình.",
+      "Tăng cơ hội thi đấu cho vận động viên trẻ."
+    ],
+    "created_at": "2025-01-01T09:00:00Z"
+  },
+  {
+    "id": 12,
+    "title": "Tài trợ Trang thiết bị Thi đấu Quốc gia",
+    "slug": "tai-tro-trang-thiet-bi-thi-dau-quoc-gia",
+    "overview": "Dự án cung cấp hệ thống lưới, bóng thi đấu, bảng điểm điện tử và các trang bị tiêu chuẩn FIVB cho các giải đấu quốc gia và khu vực.",
+    "duration": "4 tháng",
+    "location": "Toàn quốc",
+    "price": 95000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "sponsorship",
+    "bank_qr_code": {
+      "id": 112,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "TPBank",
+      "account_number": "0011992288",
+      "account_name": "Ban Tổ chức Giải Bóng chuyền",
+      "branch_name": "Hà Nội"
+    },
+    "goals": [
+      "Chuẩn hóa trang thiết bị thi đấu.",
+      "Nâng cấp chất lượng các giải đấu.",
+      "Tăng tính chuyên nghiệp của bóng chuyền Việt Nam."
+    ],
+    "created_at": "2024-10-14T17:00:00Z"
+  },
+  {
+    "id": 13,
+    "title": "Giải đấu Bóng chuyền Thanh thiếu niên Mở rộng",
+    "slug": "giai-dau-bong-chuyen-thanh-thieu-nien-mo-rong",
+    "overview": "Giải đấu thường niên quy tụ các đội bóng trẻ từ khắp cả nước, nhằm tạo sân chơi lành mạnh và phát triển tinh thần thể thao trong cộng đồng.",
+    "duration": "1 tháng",
+    "location": "Đà Nẵng",
+    "price": 30000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "sport_event",
+    "bank_qr_code": {
+      "id": 113,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "Vietcombank",
+      "account_number": "9988776655",
+      "account_name": "BTC Giải trẻ Việt Nam",
+      "branch_name": "Đà Nẵng"
+    },
+    "goals": [
+      "Tạo sân chơi lành mạnh cho thanh thiếu niên.",
+      "Phát hiện các tài năng trẻ.",
+      "Gắn kết phong trào bóng chuyền học đường."
+    ],
+    "created_at": "2024-06-21T14:45:00Z"
+  },
+  {
+    "id": 14,
+    "title": "Học viện Huấn luyện viên Bóng chuyền",
+    "slug": "hoc-vien-huan-luyen-vien-bong-chuyen",
+    "overview": "Một học viện đào tạo chuyên sâu dành cho huấn luyện viên cấp cơ sở và bán chuyên. Nội dung bao gồm phân tích chiến thuật, xây dựng giáo án và kỹ năng quản lý đội bóng.",
+    "duration": "5 tháng",
+    "location": "Hồ Chí Minh",
+    "price": 65000000,
+    "image": "/project/volleyball-community-program.jpg",
+    "category": "training",
+    "bank_qr_code": {
+      "id": 114,
+      "qr_code_url": "/project/qrcode.webp",
+      "bank_name": "BIDV",
+      "account_number": "4455667788",
+      "account_name": "Học viện Huấn luyện viên Việt Nam",
+      "branch_name": "HCM"
+    },
+    "goals": [
+      "Nâng cao chất lượng đội ngũ huấn luyện viên.",
+      "Cập nhật kiến thức huấn luyện hiện đại.",
+      "Tạo ra lực lượng HLV đạt chuẩn quốc gia."
+    ],
+    "created_at": "2025-01-25T19:00:00Z"
   }
 ]

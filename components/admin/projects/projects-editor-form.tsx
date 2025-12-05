@@ -4,8 +4,11 @@ import {
   ProjectCategory,
   ProjectCategoryLabels,
 } from "@/data/constants/constants";
+import { aboutInteractor } from "@/data/datasource/about/interactor/about.interactor";
+import { BankQrItem } from "@/data/model/about.model";
 import { ProjectItem } from "@/data/model/project.model";
 import { uploadFile } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Image, Input, notification, Select } from "antd";
 import { Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -38,15 +41,27 @@ export default function ProjectsEditorForm({
     price: initialData?.price || 0,
     category: initialData?.category,
     image: initialData?.image || "",
+    goals: initialData?.goals || [],
+    bankQrCode: initialData?.bankQrCode || undefined,
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
     initialData?.image || ""
   );
+  const [selectedBankQrId, setSelectedBankQrId] = useState<number | undefined>(
+    initialData?.bankQrCode?.id
+  );
+  const [previewBankQrId, setPreviewBankQrId] = useState<number | undefined>();
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Fetch danh sách Bank QR
+  const { data: bankQrs = [] } = useQuery<BankQrItem[]>({
+    queryKey: ["bank-qrs"],
+    queryFn: () => aboutInteractor.getBankQrs(),
+  });
 
   const markAsChanged = () => {
     if (!hasUnsavedChanges) setHasUnsavedChanges(true);
@@ -75,8 +90,24 @@ export default function ProjectsEditorForm({
     markAsChanged();
   };
 
+  const handleGoalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const goalsArray = e.target.value.split("\n").filter((g) => g.trim());
+    setFormData((prev) => ({ ...prev, goals: goalsArray }));
+    markAsChanged();
+  };
+
   const handleCategoryChange = (value: ProjectCategory) => {
     setFormData((prev) => ({ ...prev, category: value }));
+    markAsChanged();
+  };
+
+  const handleBankQrChange = (value: number) => {
+    const selectedQr = bankQrs.find((qr) => qr.id === value);
+    setSelectedBankQrId(value);
+    setFormData((prev) => ({
+      ...prev,
+      bankQrCode: selectedQr,
+    }));
     markAsChanged();
   };
 
@@ -153,6 +184,8 @@ export default function ProjectsEditorForm({
   };
 
   const isProcessing = isLoading || isUploading;
+  const selectedBankQr = bankQrs.find((qr) => qr.id === selectedBankQrId);
+  const previewBankQr = bankQrs.find((qr) => qr.id === previewBankQrId);
 
   return (
     <div className="space-y-6">
@@ -195,7 +228,7 @@ export default function ProjectsEditorForm({
             type="number"
             value={formData.price}
             onChange={handleInputChange}
-            placeholder="Ví dụ: 500.000.000 VNĐ"
+            placeholder="Ví dụ: 500000000"
             disabled={isProcessing}
           />
         </div>
@@ -247,6 +280,19 @@ export default function ProjectsEditorForm({
 
       <div className="space-y-2 mb-3">
         <label className="block text-sm font-medium text-foreground">
+          Mục tiêu (mỗi dòng là 1 mục tiêu)
+        </label>
+        <Input.TextArea
+          rows={4}
+          value={formData.goals?.join("\n") || ""}
+          onChange={handleGoalsChange}
+          placeholder="Mục tiêu 1&#10;Mục tiêu 2&#10;Mục tiêu 3"
+          disabled={isProcessing}
+        />
+      </div>
+
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
           Hình ảnh dự án <span className="text-red-500">*</span>
         </label>
         {imagePreview ? (
@@ -276,17 +322,6 @@ export default function ProjectsEditorForm({
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer hover:bg-card"
             }`}
-            onDrop={(e) => {
-              if (isProcessing) return;
-              e.preventDefault();
-              const file = e.dataTransfer.files?.[0];
-              if (file && file.type.startsWith("image/")) {
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
-                markAsChanged();
-              }
-            }}
-            onDragOver={(e) => e.preventDefault()}
           >
             <div className="flex flex-col items-center justify-center">
               <Sparkles size={32} className="text-muted-foreground mb-2" />
@@ -305,6 +340,100 @@ export default function ProjectsEditorForm({
               disabled={isProcessing}
             />
           </label>
+        )}
+      </div>
+
+      <div className="border-t pt-6">
+        <h3 className="text-lg font-semibold mb-4">Thông tin ngân hàng</h3>
+
+        <div className="space-y-2 mb-4">
+          <label className="block text-sm font-medium text-foreground">
+            Chọn tài khoản ngân hàng <span className="text-red-500">*</span>
+          </label>
+          <Select
+            size="large"
+            style={{ width: "100%" }}
+            placeholder="Chọn tài khoản ngân hàng"
+            value={selectedBankQrId}
+            onChange={handleBankQrChange}
+            disabled={isProcessing}
+            options={bankQrs.map((qr) => ({
+              value: qr.id,
+              label: `${qr.bankName} - ${qr.accountNumber} (${qr.accountName})`,
+            }))}
+          />
+        </div>
+
+        {selectedBankQr && (
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3 mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm font-medium text-green-700">
+                Tài khoản đã chọn
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Tên ngân hàng
+                </label>
+                <Input
+                  value={selectedBankQr.bankName}
+                  disabled
+                  className="bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Số tài khoản
+                </label>
+                <Input
+                  value={selectedBankQr.accountNumber}
+                  disabled
+                  className="bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Tên chủ tài khoản
+                </label>
+                <Input
+                  value={selectedBankQr.accountName}
+                  disabled
+                  className="bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Chi nhánh
+                </label>
+                <Input
+                  value={selectedBankQr.branchName}
+                  disabled
+                  className="bg-white"
+                />
+              </div>
+            </div>
+
+            {selectedBankQr.qrCodeUrl && (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-2">
+                  QR Code thanh toán
+                </label>
+                <Image
+                  src={selectedBankQr.qrCodeUrl}
+                  alt="QR Code"
+                  className="w-48 h-48 object-cover rounded-lg border border-border"
+                  preview={{ mask: "Phóng to" }}
+                  width={200}
+                  height={200}
+                />
+              </div>
+            )}
+          </div>
         )}
       </div>
 

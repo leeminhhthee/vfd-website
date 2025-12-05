@@ -24,4 +24,24 @@ export const projectInteractor = {
     const result = await projectRepository.deleteProject(id);
     return result;
   },
+
+  async getProjectById(id: number) {
+    const project = await projectRepository.getProjectById(id);
+    return project;
+  },
+
+  async getProjectsByCategory(id: number) {
+    const list = await projectRepository.getProjectList();
+    const currentProject = list.find(p => p.id === id);
+
+    if (!currentProject) {
+      return [];
+    }
+
+    return list.filter(
+      (project) =>
+        project.id !== id &&
+        project.category.toLowerCase() === currentProject.category.toLowerCase()
+    );
+  }
 };

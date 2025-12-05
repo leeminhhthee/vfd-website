@@ -45,6 +45,7 @@ export default function TournamentEditorForm({
     banner: initialData?.banner || "",
     status: (initialData?.status as ScheduleStatus) || ScheduleStatus.COMING,
     isVisibleOnHome: initialData?.isVisibleOnHome ?? false,
+    registrationOpen: initialData?.registrationOpen ?? false, // Đổi từ isRegistrationOpen
   });
 
   const [bannerFile, setBannerFile] = useState<File | null>(null);
@@ -92,6 +93,11 @@ export default function TournamentEditorForm({
 
   const handleVisibilityChange = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, isVisibleOnHome: checked }));
+    markAsChanged();
+  };
+
+  const handleRegistrationChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, registrationOpen: checked })); // Đổi từ isRegistrationOpen
     markAsChanged();
   };
 
@@ -304,7 +310,7 @@ export default function TournamentEditorForm({
         </div>
       </div>
 
-      <div className="space-y-2 mb-3">
+      <div className="space-y-3">
         <div className="flex items-center gap-3 p-3 border border-border rounded-lg bg-gray-50">
           <Switch
             checked={formData.isVisibleOnHome}
@@ -313,6 +319,17 @@ export default function TournamentEditorForm({
           />
           <span className="text-sm font-medium text-foreground">
             Hiển thị trên trang chủ
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 border border-border rounded-lg bg-gray-50">
+          <Switch
+            checked={formData.registrationOpen}
+            onChange={handleRegistrationChange}
+            disabled={isProcessing}
+          />
+          <span className="text-sm font-medium text-foreground">
+            Mở đăng ký tham gia
           </span>
         </div>
       </div>
