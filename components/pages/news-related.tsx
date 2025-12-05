@@ -22,7 +22,7 @@ export default function NewsRelated({ currentNewsSlug }: NewsRelatedProps) {
 
   const { data: allNews = [], isLoading } = useQuery({
     queryKey: ["news"],
-    queryFn: newsInteractor.getNewsList,
+    queryFn: newsInteractor.getNewsListPublished,
   });
 
   const relatedNews = useMemo(() => {

@@ -30,7 +30,7 @@ export default function NewsGrid() {
     error,
   } = useQuery({
     queryKey: ["news"],
-    queryFn: newsInteractor.getNewsList,
+    queryFn: newsInteractor.getNewsListPublished,
   });
 
   // Filter news by search term

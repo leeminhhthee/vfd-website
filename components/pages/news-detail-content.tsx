@@ -34,7 +34,7 @@ export default function NewsDetailContent({
 
   const { data: allNews = [] } = useQuery({
     queryKey: ["news"],
-    queryFn: newsInteractor.getNewsList,
+    queryFn: newsInteractor.getNewsListPublished,
   });
 
   if (isLoading) {

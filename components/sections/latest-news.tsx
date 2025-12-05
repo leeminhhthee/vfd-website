@@ -14,7 +14,7 @@ export default function LatestNews() {
     error,
   } = useQuery({
     queryKey: ["latestNews"],
-    queryFn: newsInteractor.getNewsListForHome,
+    queryFn: newsInteractor.getNewsListPublished,
   });
 
   if (isLoading) {
@@ -61,7 +61,7 @@ export default function LatestNews() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {news.map((item) => (
+          {news.slice(0, 3).map((item) => (
             <article
               key={item.id}
               className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
