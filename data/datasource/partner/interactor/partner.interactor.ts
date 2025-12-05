@@ -4,7 +4,7 @@ import { partnerRepository } from "../repository/partner.repository";
 export const partnerInteractor = {
   async getPartnerList() {
     const list = await partnerRepository.getPartnerList();
-    return list;
+    return list.sort((a, b) => b.since.localeCompare(a.since));
   },
   async createPartner(data: Partial<PartnerItem>) {
     // Gọi repository ở đây

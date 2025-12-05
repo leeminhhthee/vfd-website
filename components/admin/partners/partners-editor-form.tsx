@@ -1,11 +1,11 @@
 "use client";
 
 import { PartnerItem } from "@/data/model/partner.model";
-import { confirmUnsavedChanges, uploadFile } from "@/lib/utils";
+import { uploadFile } from "@/lib/utils";
 import { Button, DatePicker, Image, Input, notification } from "antd";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { Sparkles, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   initialData?: PartnerItem;
@@ -25,17 +25,28 @@ export default function PartnersEditorForm({
   const [formData, setFormData] = useState<Partial<PartnerItem>>({
     name: initialData?.name || "",
     email: initialData?.email || "",
-    image: initialData?.image || "",
-    since: initialData?.since || new Date().getFullYear().toString(),
+    since: initialData?.since || `${new Date().getFullYear()}-01-01`,
   });
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(
-    initialData?.image || ""
-  );
+  const [currentImage, setCurrentImage] = useState<{
+    url: string;
+  } | null>(null);
 
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialData?.imageUrl) {
+      setCurrentImage({
+        url: initialData.imageUrl,
+      });
+    } else {
+      setCurrentImage(null);
+    }
+  }, [initialData]);
 
   const markAsChanged = () => {
     if (!hasUnsavedChanges) setHasUnsavedChanges(true);
@@ -65,53 +76,117 @@ export default function PartnersEditorForm({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+      if (!file.type.startsWith("image/")) {
+        notification.error({
+          message: "File không hợp lệ",
+          description: "Chỉ chấp nhận file ảnh (PNG, JPG, JPEG)",
+        });
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        notification.error({
+          message: "File quá lớn",
+          description: "Kích thước ảnh không được vượt quá 5MB",
+        });
+        return;
+      }
+
+      setSelectedImage(file);
+      setCurrentImage({
+        url: URL.createObjectURL(file),
+      });
+      markAsChanged();
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+    if (isUploading || isLoading) return;
+    e.preventDefault();
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        notification.error({
+          message: "File không hợp lệ",
+          description: "Chỉ chấp nhận file ảnh (PNG, JPG, JPEG)",
+        });
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        notification.error({
+          message: "File quá lớn",
+          description: "Kích thước ảnh không được vượt quá 5MB",
+        });
+        return;
+      }
+
+      setSelectedImage(file);
+      setCurrentImage({
+        url: URL.createObjectURL(file),
+      });
       markAsChanged();
     }
   };
 
   const removeImage = () => {
-    setImageFile(null);
-    setImagePreview("");
-    setFormData((prev) => ({ ...prev, image: "" }));
+    setCurrentImage(null);
+    setSelectedImage(null);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
     markAsChanged();
   };
 
   const handleSave = async () => {
     if (!formData.name?.trim()) {
-      return notification.error({ message: "Vui lòng nhập tên đối tác" });
+      notification.error({ message: "Vui lòng nhập tên đối tác" });
+      return;
     }
     if (!formData.since) {
-      return notification.error({ message: "Vui lòng chọn năm bắt đầu" });
+      notification.error({ message: "Vui lòng chọn năm bắt đầu" });
+      return;
     }
 
     setIsUploading(true);
 
     try {
-      let finalImageUrl = formData.image || "";
+      let finalImageUrl = initialData?.imageUrl || "";
 
-      if (imageFile) {
+      if (selectedImage) {
         try {
-          const uploadResult = await uploadFile(imageFile);
+          const uploadResult = await uploadFile(selectedImage);
           finalImageUrl = uploadResult.link;
         } catch (error) {
           notification.error({
-            message: "Lỗi upload ảnh: " + (error as Error).message,
+            message: "Lỗi upload ảnh",
+            description: (error as Error).message,
           });
           setIsUploading(false);
           return;
         }
+      } else if (currentImage && !selectedImage) {
+        finalImageUrl = currentImage.url;
       }
 
       const result: Partial<PartnerItem> = {
-        ...formData,
-        image: finalImageUrl,
+        ...(initialData?.id && { id: initialData.id }),
+        name: formData.name.trim(),
+        email: formData.email?.trim() || null,
+        since: formData.since,
+        imageUrl: finalImageUrl,
       };
 
+      console.log("📦 Saving partner:", result);
       onSave(result);
     } catch (error) {
-      notification.error({ message: "Có lỗi xảy ra khi lưu dữ liệu" });
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: (error as Error).message,
+      });
     } finally {
       setIsUploading(false);
     }
@@ -158,11 +233,12 @@ export default function PartnersEditorForm({
           size="large"
           style={{ width: "100%" }}
           placeholder="Chọn năm"
-          value={formData.since ? dayjs(formData.since, "YYYY") : null}
-          onChange={(date) => {
+          value={formData.since ? dayjs(formData.since, "YYYY-MM-DD") : null}
+          onChange={(date: Dayjs | null) => {
+            const dateString = date ? `${date.year()}-01-01` : undefined;
             setFormData((prev) => ({
               ...prev,
-              since: date ? date.format("YYYY") : "",
+              since: dateString,
             }));
             markAsChanged();
           }}
@@ -174,11 +250,12 @@ export default function PartnersEditorForm({
         <label className="block text-sm font-medium text-foreground">
           Logo đối tác
         </label>
-        {imagePreview ? (
+
+        {currentImage ? (
           <div className="relative w-fit">
-            <div className="border border-border rounded-lg p-2 bg-white">
+            <div className="border-2 border-border rounded-lg p-4 bg-muted/30">
               <Image
-                src={imagePreview}
+                src={currentImage.url}
                 alt="Logo preview"
                 className="object-contain"
                 width={200}
@@ -206,33 +283,26 @@ export default function PartnersEditorForm({
           </div>
         ) : (
           <label
-            className={`flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed border-border rounded-lg transition-colors ${
+            className={`flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed rounded-lg transition-colors ${
               isProcessing
                 ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer hover:bg-card"
+                : "cursor-pointer hover:bg-card border-border hover:border-accent"
             }`}
-            onDrop={(e) => {
-              if (isProcessing) return;
-              e.preventDefault();
-              const file = e.dataTransfer.files?.[0];
-              if (file && file.type.startsWith("image/")) {
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
-                markAsChanged();
-              }
-            }}
+            onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
           >
             <div className="flex flex-col items-center justify-center">
               <Sparkles size={24} className="text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">
-                <span className="font-bold">Nhấp để chọn</span> hoặc kéo thả
+                <span className="font-bold text-foreground">Nhấp để chọn</span>{" "}
+                hoặc kéo thả ảnh vào đây
               </p>
               <p className="text-xs text-muted-foreground">
-                PNG, JPG (tối đa 5MB)
+                PNG, JPG, JPEG (tối đa 5MB)
               </p>
             </div>
             <input
+              ref={imageInputRef}
               type="file"
               className="hidden"
               accept="image/*"
@@ -249,7 +319,7 @@ export default function PartnersEditorForm({
         </Button>
         <Button type="primary" onClick={handleSave} loading={isProcessing}>
           {isUploading
-            ? "Đang tải ảnh..."
+            ? "Đang tải ảnh lên..."
             : initialData
             ? "Cập nhật"
             : "Thêm đối tác"}
