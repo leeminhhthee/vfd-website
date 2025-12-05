@@ -3,6 +3,7 @@
 import { partnerInteractor } from "@/data/datasource/partner/interactor/partner.interactor";
 import { PartnerItem } from "@/data/model/partner.model";
 import { confirmUnsavedChanges } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -22,6 +23,7 @@ import { useMemo, useState } from "react";
 import PartnersEditorForm from "./partners-editor-form";
 
 export default function PartnersManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
   const [editingPartner, setEditingPartner] = useState<PartnerItem | null>(
     null
@@ -56,11 +58,7 @@ export default function PartnersManagement() {
     }
   };
 
-  const createMutation = useMutation<
-    PartnerItem,
-    Error,
-    Partial<PartnerItem>
-  >({
+  const createMutation = useMutation<PartnerItem, Error, Partial<PartnerItem>>({
     mutationFn: (data) => partnerInteractor.createPartner(data),
     onSuccess: () => {
       notification.success({ message: "Thêm đối tác thành công" });
@@ -115,7 +113,14 @@ export default function PartnersManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -147,7 +152,7 @@ export default function PartnersManagement() {
       dataIndex: "name",
       key: "name",
       width: 530,
-       render: (text: string) => (
+      render: (text: string) => (
         <div
           className="font-semibold text-base"
           style={{
@@ -266,12 +271,25 @@ export default function PartnersManagement() {
           initialData={editingPartner ?? undefined}
           onSave={(data) => {
             if (editingPartner?.id) {
-              updateMutation.mutate({
-                id: editingPartner.id,
-                data: data,
-              });
+              showLoading();
+              updateMutation.mutate(
+                {
+                  id: editingPartner.id,
+                  data: data,
+                },
+                {
+                  onSettled: () => {
+                    hideLoading();
+                  },
+                }
+              );
             } else {
-              createMutation.mutate(data);
+              showLoading();
+              createMutation.mutate(data, {
+                onSettled: () => {
+                  hideLoading();
+                },
+              });
             }
           }}
           onCancel={handleDrawerClose}

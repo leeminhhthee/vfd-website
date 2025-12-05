@@ -21,7 +21,6 @@ export const newsRepository = {
   async getNews(): Promise<NewsItem[]> {
     // API public list (giữ nguyên endpoint đang dùng)
     const response = await api.get<NewsItem[]>(`${API_BASE}`);
-    console.log("Data news: ", response.data);
     return plainToInstance(NewsItem, response.data);
   },
 

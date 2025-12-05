@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  getRoundLabel,
-  Round,
-  RoundLabels,
-} from "@/data/constants/constants";
+import { getRoundLabel, Round, RoundLabels } from "@/data/constants/constants";
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { MatchSchedule, TournamentItem } from "@/data/model/tournament.model";
 import { confirmUnsavedChanges, uploadFile } from "@/lib/utils";
@@ -29,7 +25,7 @@ import type { ColumnsType } from "antd/es/table";
 import type { RcFile } from "antd/es/upload";
 import dayjs from "dayjs";
 import { ArrowLeft, Plus, Sparkles, Trash2, UploadIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface ScheduleResultsEditorProps {
   tournament: TournamentItem;
@@ -66,6 +62,31 @@ export default function ScheduleResultsEditor({
   onCancel,
   isLoading,
 }: ScheduleResultsEditorProps) {
+  const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
+
+  const flashHighlights = (ids: number[]) => {
+    setHighlightedIds(ids);
+    // Sau 3 giây thì xóa danh sách highlight để trở về màu bình thường
+    setTimeout(() => {
+      setHighlightedIds([]);
+    }, 8000);
+  };
+
+  useEffect(() => {
+    if (highlightedIds.length > 0) {
+      // Lấy ID của trận mới nhất (hoặc trận đầu tiên trong danh sách vừa thêm)
+      const targetId = highlightedIds[0];
+
+      // Tìm element trong DOM bằng ID đã gán ở Table
+      const element = document.getElementById(`match-row-${targetId}`);
+
+      if (element) {
+        // Cuộn mượt đến vị trí đó và căn giữa màn hình
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [highlightedIds]);
+
   const [imageList, setImageList] = useState<ImageItem[]>(
     (tournament.scheduleImg || []).map((url, index) => ({
       uid: `old-${index}`,
@@ -78,13 +99,36 @@ export default function ScheduleResultsEditor({
     tournament.matchSchedules || []
   );
 
-  // --- SẮP XẾP TRẬN ĐẤU THEO THỜI GIAN ---
   const sortedMatches = useMemo(() => {
-    // Tạo bản sao để không mutate state gốc và sort
+    // 1. Định nghĩa thứ tự ưu tiên (Priority) cho từng vòng
+    // Số càng nhỏ thì càng hiển thị lên đầu
+    const roundPriority: Record<string, number> = {
+      [Round.GROUP_STAGE]: 1, // Vòng bảng
+      [Round.ROUND_OF_16]: 2, // Vòng 1/8
+      [Round.QUARTER_FINAL]: 3, // Tứ kết
+      [Round.SEMI_FINAL]: 4, // Bán kết
+      [Round.THRID_PLACE]: 5, // Tranh hạng 3 (Lưu ý: Check kỹ lại typo THRID hay THIRD trong file constants của bạn)
+      [Round.FINAL]: 6, // Chung kết
+    };
+
+    // Tạo bản sao mảng ([...matches]) để tránh mutate state gốc khi sort
     return [...matches].sort((a, b) => {
+      const priorityA = roundPriority[a.round] ?? 99; // Mặc định 99 cho các vòng lạ
+      const priorityB = roundPriority[b.round] ?? 99;
+
+      // --- BƯỚC 1: SO SÁNH THEO VÒNG ĐẤU ---
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+        // Nếu khác vòng, vòng nào có priority nhỏ hơn (Vòng bảng=1) sẽ đứng trước
+      }
+
+      // --- BƯỚC 2: SO SÁNH THEO THỜI GIAN ---
+      // Code chỉ chạy xuống đây khi priorityA === priorityB (tức là CÙNG VÒNG)
       const dateA = new Date(a.matchDate).getTime();
       const dateB = new Date(b.matchDate).getTime();
-      return dateA - dateB; // Tăng dần (cũ nhất -> mới nhất)
+
+      return dateA - dateB;
+      // Xếp tăng dần: Cũ nhất (nhỏ hơn) -> Mới nhất (lớn hơn)
     });
   }, [matches]);
 
@@ -192,6 +236,8 @@ export default function ScheduleResultsEditor({
 
       if (generatedMatches && generatedMatches.length > 0) {
         setMatches((prev) => [...prev, ...generatedMatches]);
+        const newIds = generatedMatches.map((m) => m.id);
+        flashHighlights(newIds);
         notification.success({
           message: "Tạo lịch thành công",
           description: `Đã tìm thấy ${generatedMatches.length} trận đấu mới.`,
@@ -276,6 +322,7 @@ export default function ScheduleResultsEditor({
         );
       } else {
         setMatches([...matches, updatedMatch]);
+        flashHighlights([updatedMatch.id]);
       }
       setDrawerVisible(false);
       setEditingMatch(null);
@@ -470,6 +517,14 @@ export default function ScheduleResultsEditor({
                 pagination={false}
                 size="small"
                 scroll={{ x: 600 }}
+                rowClassName={(record) =>
+                  highlightedIds.includes(record.id)
+                    ? "bg-green-100 transition-colors duration-1000"
+                    : "transition-colors duration-1000"
+                }
+                onRow={(record) => ({
+                  id: `match-row-${record.id}`,
+                })}
               />
             </div>
           </Card>

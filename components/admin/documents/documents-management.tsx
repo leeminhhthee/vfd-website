@@ -7,6 +7,7 @@ import {
 import { documentInteractor } from "@/data/datasource/document/interactor/document.interactor";
 import { DocumentItem } from "@/data/model/document.model";
 import { confirmUnsavedChanges, formatFileSize } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -25,6 +26,7 @@ import { useMemo, useState } from "react";
 import DocumentEditorForm from "./document-editor-form";
 
 export default function DocumentsManagement() {
+  const { showLoading, hideLoading } = useLoading();
   const [editingDoc, setEditingDoc] = useState<Partial<DocumentItem> | null>(
     null
   );
@@ -117,7 +119,14 @@ export default function DocumentsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => deleteMutation.mutate(id),
+      onOk: () => {
+        showLoading();
+        deleteMutation.mutate(id, {
+          onSettled: () => {
+            hideLoading();
+          },
+        });
+      },
     });
   };
 
@@ -275,12 +284,22 @@ export default function DocumentsManagement() {
           onAddCategory={(cat) => setCategories([...categories, cat])}
           onSaveDraft={(data) => {
             if (editingDoc?.id) {
-              updateMutation.mutate({
-                id: editingDoc.id,
-                data: data,
-              });
+              showLoading();
+              updateMutation.mutate(
+                { id: editingDoc.id, data: data },
+                {
+                  onSettled: () => {
+                    hideLoading();
+                  },
+                }
+              );
             } else {
-              createMutation.mutate(data);
+              showLoading();
+              createMutation.mutate(data, {
+                onSettled: () => {
+                  hideLoading();
+                },
+              });
             }
           }}
           onCancel={handleDrawerClose}

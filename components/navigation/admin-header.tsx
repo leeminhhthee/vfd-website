@@ -1,5 +1,6 @@
 "use client";
 import { authenticationInteractor } from "@/data/datasource/authentication/interactor/authentication.interactor";
+import { useLoading } from "@/providers/loading-provider";
 import {
   LogoutOutlined,
   SettingOutlined,
@@ -14,13 +15,13 @@ interface AdminHeaderProps {
 }
 
 export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
-
+  const { showLoading, hideLoading } = useLoading();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const router = useRouter();
 
-
   const doLogout = async () => {
+    showLoading();
     try {
       await authenticationInteractor.logout();
     } catch (e) {
@@ -31,7 +32,7 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       sessionStorage.removeItem("accessToken");
-
+      hideLoading();
       router.replace("/login");
     }
   };
@@ -88,7 +89,10 @@ export default function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
               <div className="text-sm font-semibold text-gray-700">
                 {user.name}
               </div>
-              <div className="text-xs text-gray-700">Quản trị viên: <span className="font-black">{user.fullName}</span></div>
+              <div className="text-xs text-gray-700">
+                Quản trị viên:{" "}
+                <span className="font-black">{user.fullName}</span>
+              </div>
             </div>
 
             <Avatar

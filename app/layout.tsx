@@ -1,8 +1,9 @@
-import "reflect-metadata";
+import { LoadingProvider } from "@/providers/loading-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import type React from "react";
+import "reflect-metadata";
 import "./globals.css";
 
 const headingFont = Montserrat({
@@ -32,7 +33,9 @@ export default function RootLayout({
       <body
         className={`${bodyFont.className} ${headingFont.variable} ${bodyFont.variable} antialiased`}
       >
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <LoadingProvider>{children}</LoadingProvider>
+        </QueryProvider>
       </body>
     </html>
   );

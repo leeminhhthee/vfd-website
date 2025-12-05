@@ -1,25 +1,35 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { RegistrationStatus } from "@/data/constants/constants";
 import { registrationInteractor } from "@/data/datasource/registration/interactor/registration.interactor";
 import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { RegistrationItem } from "@/data/model/registration.model";
 import { TournamentItem } from "@/data/model/tournament.model";
 import { uploadFile } from "@/lib/utils";
+import { useLoading } from "@/providers/loading-provider";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { notification } from "antd";
 import { AlertCircle, Check, Upload } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
 export default function TournamentRegistration() {
+  const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState<Partial<RegistrationItem>>({});
-
   const [file, setFile] = useState<File | null>(null);
-  const [submitted, setSubmitted] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   const { data: tournaments = [] } = useQuery<TournamentItem[]>({
     queryKey: ["upcoming-tournaments"],
@@ -30,14 +40,18 @@ export default function TournamentRegistration() {
     mutationFn: (data: Partial<RegistrationItem>) =>
       registrationInteractor.createRegistration(data),
     onSuccess: () => {
-      setSubmitted(true);
+      setShowSuccessDialog(true);
+
+      // Reset form
       setFormData({});
       setFile(null);
       setUploadedFileName(null);
-      setTimeout(() => setSubmitted(false), 5000);
     },
     onError: () => {
-      notification.error({ message: "Đăng ký thất bại. Vui lòng thử lại." });
+      setServerErrorMessage(
+        "Đã xảy ra lỗi khi gửi đơn đăng ký. Vui lòng thử lại sau."
+      );
+      setShowErrorDialog(true);
     },
   });
 
@@ -47,7 +61,6 @@ export default function TournamentRegistration() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      // Xử lý riêng cho trường số lượng (number)
       [name]: name === "players" ? parseInt(value) || 0 : value,
     }));
   };
@@ -82,26 +95,21 @@ export default function TournamentRegistration() {
     e.stopPropagation();
     setIsDragging(true);
   };
-
   const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   };
-
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
-
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
     const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      validateAndSetFile(files[0]);
-    }
+    if (files && files.length > 0) validateAndSetFile(files[0]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -112,6 +120,7 @@ export default function TournamentRegistration() {
       return;
     }
 
+    showLoading();
     try {
       const uploadResult = await uploadFile(file);
 
@@ -124,27 +133,70 @@ export default function TournamentRegistration() {
 
       createRegistrationMutation.mutate(payload);
     } catch (error) {
-      notification.error({ message: "Lỗi khi upload file." });
+      setServerErrorMessage("Lỗi khi tải lên tệp đính kèm.");
+      setShowErrorDialog(true);
+    } finally {
+      hideLoading();
     }
   };
 
   return (
     <div className="space-y-8">
-      {submitted && (
-        <div className="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-lg flex gap-3 animate-in fade-in">
-          <Check className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-emerald-900">
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                <Check className="w-6 h-6 text-emerald-600" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-2xl">
               Đăng ký thành công!
-            </p>
-            <p className="text-sm text-emerald-700">
+            </DialogTitle>
+            <DialogDescription className="text-center pt-4">
               Đơn đăng ký của bạn đã được gửi. Chúng tôi sẽ liên hệ với bạn
               trong vòng 24 giờ.
-            </p>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center pt-4">
+            <button
+              onClick={() => setShowSuccessDialog(false)}
+              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+              Đóng
+            </button>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
+      {/* --- POPUP LỖI SERVER --- */}
+      <Dialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-2xl">
+              Lỗi đăng ký
+            </DialogTitle>
+            <DialogDescription className="text-center pt-4 text-red-600 font-medium">
+              {serverErrorMessage}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center pt-4">
+            <button
+              onClick={() => setShowErrorDialog(false)}
+              className="px-6 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+            >
+              Đóng
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Info Alert */}
       <div className="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg flex gap-3">
         <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
         <div>
@@ -178,10 +230,9 @@ export default function TournamentRegistration() {
               </label>
               <select
                 name="tournament"
-                // 2. Thêm || "" để tránh lỗi uncontrolled input
                 value={formData.tournament || ""}
                 onChange={handleChange}
-                required
+                required // Browser sẽ tự chặn nếu chưa chọn
                 className="w-full px-4 py-3 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-background text-foreground"
               >
                 <option value="">-- Chọn giải đấu --</option>
@@ -202,7 +253,7 @@ export default function TournamentRegistration() {
                 name="organization"
                 value={formData.organization || ""}
                 onChange={handleChange}
-                required
+                required // Browser sẽ tự chặn
                 placeholder="Ví dụ: Câu lạc bộ bóng chuyền Hà Nội"
                 className="w-full px-4 py-3 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-background text-foreground placeholder:text-muted-foreground"
               />
@@ -243,7 +294,6 @@ export default function TournamentRegistration() {
                 <input
                   type="number"
                   name="players"
-                  // Số 0 || "" sẽ trả về "", giúp input trống khi chưa nhập
                   value={formData.players || ""}
                   onChange={handleChange}
                   required
@@ -349,7 +399,7 @@ export default function TournamentRegistration() {
           </div>
         </Card>
 
-        {/* Section 4: Upload tài liệu (Giữ nguyên vì file quản lý riêng) */}
+        {/* Section 4: Upload tài liệu */}
         <Card className="p-6 border-2 border-border">
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-full font-bold text-sm">
@@ -388,7 +438,7 @@ export default function TournamentRegistration() {
                     : "Bấm để chọn hoặc kéo thả file"}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  PDF hoặc DOCX (Tối đa 10MB)
+                  PDF hoặc DOCX (Tối đa 20MB)
                 </span>
                 <input
                   type="file"
@@ -413,7 +463,7 @@ export default function TournamentRegistration() {
         <div className="flex gap-3">
           <button
             type="submit"
-            className="flex-1 px-6 py-4 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors shadow-lg"
+            className="flex-1 px-6 py-4 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors shadow-lg disabled:opacity-50 cursor-pointer"
             disabled={createRegistrationMutation.isPending}
           >
             {createRegistrationMutation.isPending

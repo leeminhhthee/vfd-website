@@ -15,4 +15,8 @@ export const registrationInteractor = {
   async updateRegistrationStatus(id: number, status: RegistrationStatus) {
     return await registrationRepository.updateRegistrationStatus(id, status);
   },
+
+  async deleteRegistration(id: number) {
+    return await registrationRepository.deleteRegistration(id);
+  }
 };

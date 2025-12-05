@@ -3,10 +3,12 @@
 import {
   Calendar,
   ChevronRight,
+  File,
   FileText,
   Handshake,
   ImageIcon,
   LayoutDashboard,
+  Newspaper,
   Notebook,
   ScanEye,
   Settings,
@@ -29,7 +31,7 @@ export default function AdminSidebar({ open }: AdminSidebarProps) {
 
   const menuItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Tin tức", href: "/admin/news", icon: FileText },
+    { label: "Tin tức", href: "/admin/news", icon: Newspaper },
     { label: "Tài liệu", href: "/admin/documents", icon: FileText },
     {
       label: "Giải đấu - Kết quả",
