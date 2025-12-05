@@ -5,6 +5,8 @@ export class NewsItem {
   id!: number;
   @Expose({ name: 'title' })
   title!: string;
+  @Expose({ name: 'slug' })
+  slug!: string;
   @Expose({ name: 'type' })
   type!: string;
   @Expose({ name: 'content' })

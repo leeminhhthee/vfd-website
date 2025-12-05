@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 9;
 const SESSION_KEY = "news_current_page";
 
 export default function NewsGrid() {
@@ -30,7 +30,7 @@ export default function NewsGrid() {
     error,
   } = useQuery({
     queryKey: ["news"],
-    queryFn: newsInteractor.getNewsList,
+    queryFn: newsInteractor.getNewsListPublished,
   });
 
   // Filter news by search term
@@ -140,7 +140,7 @@ export default function NewsGrid() {
                 dangerouslySetInnerHTML={{ __html: featuredNews.content }}
               />
               <Link
-                href={`/news/${featuredNews.id}`}
+                href={`/news/${featuredNews.slug}`}
                 className="text-accent font-bold hover:text-accent-light transition-colors inline-flex items-center gap-2"
               >
                 {trans.readMore}
@@ -153,7 +153,7 @@ export default function NewsGrid() {
               sideSidebarNews.map((item) => (
                 <Link
                   key={item.id}
-                  href={`/news/${item.id}`}
+                  href={`/news/${item.slug}`}
                   className="flex gap-3 group cursor-pointer"
                 >
                   <Image
@@ -215,7 +215,7 @@ export default function NewsGrid() {
                     dangerouslySetInnerHTML={{ __html: item.content }}
                   />
                   <Link
-                    href={`/news/${item.id}`}
+                    href={`/news/${item.slug}`}
                     className="text-accent font-bold hover:text-accent-light transition-colors"
                   >
                     {trans.readMore}

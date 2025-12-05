@@ -14,7 +14,7 @@ export default function LatestNews() {
     error,
   } = useQuery({
     queryKey: ["latestNews"],
-    queryFn: newsInteractor.getNewsListForHome,
+    queryFn: newsInteractor.getNewsListPublished,
   });
 
   if (isLoading) {
@@ -61,7 +61,7 @@ export default function LatestNews() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {news.map((item) => (
+          {news.slice(0, 3).map((item) => (
             <article
               key={item.id}
               className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
@@ -82,10 +82,12 @@ export default function LatestNews() {
                 <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2"
-                  dangerouslySetInnerHTML={{ __html: item.content }} />
+                <p
+                  className="text-muted-foreground text-sm mb-4 line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
                 <Link
-                  href={`/news/${item.id}`}
+                  href={`/news/${item.slug}`}
                   className="text-accent font-bold hover:text-accent-light transition-colors"
                 >
                   {trans.readMore}
