@@ -42,7 +42,11 @@ export const newsRepository = {
   },
 
   async updateNews(id: number, payload: Partial<NewsItem>): Promise<NewsItem> {
-    const response = await api.put<NewsItem>(`${API_BASE}/${id}`, payload);
+    const response = await api.patch<NewsItem>(`${API_BASE}/${id}`, payload,
+      {
+        timeout: 60000, // Riêng cái này đợi 60 giây
+      }
+    );
     return plainToInstance(NewsItem, response.data);
   },
 

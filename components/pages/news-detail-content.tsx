@@ -6,6 +6,8 @@ import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
+import "froala-editor/css/froala_editor.pkgd.min.css";
+import "froala-editor/css/froala_style.min.css";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -96,7 +98,7 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
 
         {/* Article Content */}
         <div
-          className="prose prose-lg max-w-none mb-8 text-justify"
+          className="prose prose-lg max-w-none mb-8 text-justify fr-view"
           dangerouslySetInnerHTML={{ __html: news.content }}
         />
 

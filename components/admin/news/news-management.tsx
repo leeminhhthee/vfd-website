@@ -10,6 +10,7 @@ import { newsInteractor } from "@/data/datasource/news/interactor/news.interacto
 import { NewsItem } from "@/data/model/news.model";
 import { confirmUnsavedChanges } from "@/lib/utils";
 import { useLoading } from "@/providers/loading-provider";
+import formatDateSafe from "@/utils/formatDateSafe";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -26,7 +27,6 @@ import type { ColumnsType } from "antd/es/table";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import NewsEditorForm from "./news-editor-form";
-import formatDateSafe from "@/utils/formatDateSafe";
 
 export default function NewsManagement() {
   const { showLoading, hideLoading } = useLoading();
@@ -52,16 +52,17 @@ export default function NewsManagement() {
 
   const createNewsMutation = useMutation<NewsItem, Error, Partial<NewsItem>>({
     mutationFn: (newNews) => newsInteractor.createNews(newNews),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Tạo tin tức mới thành công!" });
-      queryClient.invalidateQueries({ queryKey: ["adminNews"] });
+      // 🔥 Đợi invalidate hoàn thành
+      await queryClient.invalidateQueries({ queryKey: ["adminNews"] });
       handleCloseEditor();
     },
     onError: (error) => {
       console.error("CHI TIẾT LỖI TẠO TIN:", error);
       notification.error({
         message: "Tạo tin tức thất bại",
-        description: error.message // Hiển thị chi tiết lỗi lên thông báo
+        description: error.message,
       });
     },
   });
@@ -72,24 +73,32 @@ export default function NewsManagement() {
     { id: number; data: Partial<NewsItem> }
   >({
     mutationFn: ({ id, data }) => newsInteractor.updateNews(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Cập nhật tin tức thành công!" });
-      queryClient.invalidateQueries({ queryKey: ["adminNews"] });
+      await queryClient.invalidateQueries({ queryKey: ["adminNews"] });
       handleCloseEditor();
     },
-    onError: () => {
-      notification.error({ message: "Cập nhật thất bại." });
+    onError: (error) => {
+      console.error("CHI TIẾT LỖI CẬP NHẬT:", error);
+      notification.error({
+        message: "Cập nhật thất bại.",
+        description: error.message,
+      });
     },
   });
 
   const deleteNewsMutation = useMutation<{ success: boolean }, Error, number>({
     mutationFn: (id) => newsInteractor.deleteNews(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa tin tức!" });
-      queryClient.invalidateQueries({ queryKey: ["adminNews"] });
+      await queryClient.invalidateQueries({ queryKey: ["adminNews"] });
     },
-    onError: () => {
-      notification.error({ message: "Xóa thất bại." });
+    onError: (error) => {
+      console.error("CHI TIẾT LỖI XÓA:", error);
+      notification.error({
+        message: "Xóa thất bại.",
+        description: error.message,
+      });
     },
   });
 
@@ -303,6 +312,7 @@ export default function NewsManagement() {
         onPublish={(data) => {
           if (editingNews?.id) {
             showLoading();
+            console.log(data);
             updateNewsMutation.mutate(
               {
                 id: editingNews.id,
