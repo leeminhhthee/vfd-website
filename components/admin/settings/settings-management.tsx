@@ -221,24 +221,27 @@ export default function SettingsManagement() {
   const bannerColumns: ColumnsType<HeroItem> = [
     {
       title: "Hình ảnh",
-      dataIndex: "image",
-      key: "image",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
       width: 150,
+      align: "center",
       render: (url) => (
-        <Image
-          src={url}
-          height={60}
-          width={100}
-          style={{ objectFit: "cover", borderRadius: 4 }}
-          alt="Banner"
-        />
+        <div className="flex justify-center">
+          <Image
+            src={url}
+            height={60}
+            width={100}
+            style={{ objectFit: "cover", borderRadius: 4 }}
+            alt="Banner"
+          />
+        </div>
       ),
     },
     {
       title: "Tiêu đề",
       dataIndex: "title",
       key: "title",
-      render: (text) => <strong>{text || "(Không có tiêu đề)"}</strong>,
+      render: (text) => <strong>{text || "--"}</strong>,
     },
     {
       title: "Loại",
@@ -445,6 +448,7 @@ export default function SettingsManagement() {
             rowKey="id"
             loading={qrLoading}
             pagination={false}
+            scroll={{ x: "max-content" }}
           />
         </div>
       </div>
@@ -475,6 +479,7 @@ export default function SettingsManagement() {
             rowKey="id"
             loading={bannersLoading}
             pagination={false}
+            scroll={{ x: "max-content" }}
           />
         </div>
       </div>
@@ -500,6 +505,7 @@ export default function SettingsManagement() {
             rowKey="id"
             loading={directorsLoading}
             pagination={false}
+            scroll={{ x: "max-content" }}
           />
         </div>
       </div>

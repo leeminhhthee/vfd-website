@@ -70,7 +70,7 @@ export default function Hero() {
           >
             <div className="relative w-full h-full">
               <Image
-                src={hero.image}
+                src={hero.imageUrl}
                 alt={hero.title ?? ""}
                 fill
                 sizes="100vw"
@@ -95,22 +95,28 @@ export default function Hero() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {hero.buttonText != null && hero.buttonHref != null && (
-                  <Link
-                    href={hero.buttonHref ?? "/"}
-                    className="px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-accent-light transition-all duration-300 shadow-xl hover:scale-[1.03]"
-                  >
-                    {hero.buttonText}
-                  </Link>
-                )}
-                {hero.buttonText2 != null && hero.buttonHref2 != null && (
-                  <Link
-                    href={hero.buttonHref2 ?? "/"}
-                    className="px-8 py-3 border-2 border-white/60 text-white font-bold rounded-full hover:bg-white/10 transition-all duration-300 shadow-xl hover:scale-[1.03]"
-                  >
-                    {hero.buttonText2}
-                  </Link>
-                )}
+                {hero.buttonText != null &&
+                  hero.buttonText.trim() !== "" &&
+                  hero.buttonHref != null &&
+                  hero.buttonHref.trim() !== "" && (
+                    <Link
+                      href={hero.buttonHref ?? "/"}
+                      className="px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-accent-light transition-all duration-300 shadow-xl hover:scale-[1.03]"
+                    >
+                      {hero.buttonText}
+                    </Link>
+                  )}
+                {hero.buttonText2 != null &&
+                  hero.buttonText2.trim() !== "" &&
+                  hero.buttonHref2 != null &&
+                  hero.buttonHref2.trim() !== "" && (
+                    <Link
+                      href={hero.buttonHref2 ?? "/"}
+                      className="px-8 py-3 border-2 border-white/60 text-white font-bold rounded-full hover:bg-white/10 transition-all duration-300 shadow-xl hover:scale-[1.03]"
+                    >
+                      {hero.buttonText2}
+                    </Link>
+                  )}
               </div>
             </div>
           </div>
