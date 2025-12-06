@@ -117,14 +117,36 @@ export function formatCurrencyVND(amount: number): string {
   return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 }
 
-//Check VN phone 10 digits start with 0
+/**
+ * Check if phone number is valid Vietnam phone number
+ * Must be 10 digits and start with 0
+ * @param phone 
+ * @returns 
+ */
 export const isValidVietnamPhoneNumber = (phone: string) => {
   const phoneRegex = /^(0)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5|8|9]|9[0-4|6-9])[0-9]{7}$/;
   return phoneRegex.test(phone);
 };
 
-//Check email valid
+/**
+ * Check if email is valid
+ * @param email 
+ * @returns 
+ */
 export const isValidEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
+};
+
+/**
+ * Extract plain text from HTML string
+ * Removes all HTML tags including images and returns only text content
+ * @param html HTML string to extract text from
+ * @returns Plain text without HTML tags
+ */
+export const extractPlainText = (html: string): string => {
+  if (typeof window === "undefined") return "";
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
 };

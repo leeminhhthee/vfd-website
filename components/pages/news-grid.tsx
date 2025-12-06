@@ -3,6 +3,7 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
+import { extractPlainText } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
@@ -128,10 +129,9 @@ export default function NewsGrid() {
               <h2 className="text-2xl font-bold text-foreground mb-4">
                 {featuredNews.title}
               </h2>
-              <p
-                className="text-muted-foreground text-base mb-4 line-clamp-3"
-                dangerouslySetInnerHTML={{ __html: featuredNews.content }}
-              />
+              <p className="text-muted-foreground text-base mb-4 line-clamp-3">
+                {extractPlainText(featuredNews.content)}
+              </p>
               <Link
                 href={`/news/${featuredNews.id}/${featuredNews.slug}`}
                 className="text-accent font-bold hover:text-accent-light transition-colors inline-flex items-center gap-2"
@@ -203,10 +203,9 @@ export default function NewsGrid() {
                   <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                     {item.title}
                   </h3>
-                  <p
-                    className="text-muted-foreground text-sm mb-4 line-clamp-2"
-                    dangerouslySetInnerHTML={{ __html: item.content }}
-                  />
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                    {extractPlainText(item.content)}
+                  </p>
                   <Link
                     href={`/news/${item.id}/${item.slug}`}
                     className="text-accent font-bold hover:text-accent-light transition-colors"

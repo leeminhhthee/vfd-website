@@ -1,6 +1,7 @@
 "use client";
 import { trans } from "@/app/generated/AppLocalization";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
+import { extractPlainText } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { ArrowRight } from "lucide-react";
@@ -43,7 +44,7 @@ export default function LatestNews() {
   return (
     <section className="py-12 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-12">
+        <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl md:text-3xl font-black text-foreground mb-2 uppercase">
               {trans.latestNews}
@@ -82,10 +83,9 @@ export default function LatestNews() {
                 <h3 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
                   {item.title}
                 </h3>
-                <p
-                  className="text-muted-foreground text-sm mb-4 line-clamp-2"
-                  dangerouslySetInnerHTML={{ __html: item.content }}
-                />
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                  {extractPlainText(item.content)}
+                </p>
                 <Link
                   href={`/news/${item.slug}`}
                   className="text-accent font-bold hover:text-accent-light transition-colors"
