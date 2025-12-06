@@ -37,6 +37,7 @@ export default function BoardOfDirectors() {
   const [dragStart, setDragStart] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [canScroll, setCanScroll] = useState(false);
+  const [scrollPercentage, setScrollPercentage] = useState(0);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -44,6 +45,15 @@ export default function BoardOfDirectors() {
       setCanScroll(container.scrollWidth > container.clientWidth);
     }
   }, [allDirector]);
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollWidth = container.scrollWidth - container.clientWidth;
+      const scrolled = (container.scrollLeft / scrollWidth) * 100;
+      setScrollPercentage(scrolled || 0);
+    }
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (allDirector.length <= 3) return;
@@ -56,7 +66,7 @@ export default function BoardOfDirectors() {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
     const x = e.pageX - (scrollContainerRef.current?.offsetLeft || 0);
-    const walk = (x - dragStart) * 1.5;
+    const walk = (x - dragStart) * 3.5;
     scrollContainerRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -173,7 +183,9 @@ export default function BoardOfDirectors() {
           <div className="relative group">
             <div
               ref={scrollContainerRef}
-              className={`flex gap-3 overflow-x-auto scroll-smooth ${
+              className={`flex ${
+                allDirector.length <= 3 ? "gap-4 justify-center" : "gap-3"
+              } overflow-x-auto scroll-smooth ${
                 isDragging ? "cursor-grabbing" : "cursor-grab"
               } scrollbar-hide`}
               style={{
@@ -184,11 +196,16 @@ export default function BoardOfDirectors() {
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
+              onScroll={handleScroll}
             >
               {allDirector.map((leader) => (
                 <div
                   key={leader.id}
-                  className="flex-shrink-0 w-[calc(33.333%-8px)] m-2"
+                  className={`p-1 flex-shrink-0 ${
+                    allDirector.length <= 3
+                      ? "w-[calc(33.333%-16px)]"
+                      : "w-[calc(33.333%-8px)]"
+                  }`}
                 >
                   <figure
                     className={`bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md h-full ${
@@ -229,11 +246,22 @@ export default function BoardOfDirectors() {
             </div>
 
             {canScroll && allDirector.length > 3 && (
-              <div className="absolute right-0 top-0 bottom-0 w-12  from-blue-50 to-transparent pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-12 from-blue-50 to-transparent pointer-events-none" />
             )}
           </div>
-          {allDirector.length > 3 && (
-            <p className="text-xs text-center text-foreground/60 mt-2 md:mt-3">Kéo ngang để xem</p>
+
+          {/* Custom Scrollbar Indicator */}
+          {canScroll && allDirector.length > 3 && (
+            <div className="mt-3 w-full px-1">
+              <div className="h-1 bg-gray-200 rounded-full relative">
+                <div
+                  className="h-full w-1/3 bg-blue-600 rounded-full transition-all duration-150 absolute left-0"
+                  style={{
+                    transform: `translateX(${scrollPercentage * 2}%)`,
+                  }}
+                />
+              </div>
+            </div>
           )}
         </div>
       </div>

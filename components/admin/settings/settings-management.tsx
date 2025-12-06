@@ -513,7 +513,7 @@ export default function SettingsManagement() {
       <div className="space-y-4 pt-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-foreground">
-            Danh sách Ban giám đốc
+            Danh sách Ban lãnh đạo
           </h2>
           <Button
             type="primary"
@@ -576,7 +576,7 @@ export default function SettingsManagement() {
         title={
           editingDirector
             ? "Cập nhật thông tin"
-            : "Thêm thành viên Ban giám đốc"
+            : "Thêm thành viên Ban lãnh đạo"
         }
         placement="right"
         onClose={() => handleDrawerClose(handleCloseEditorDirector)}

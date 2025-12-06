@@ -1,7 +1,13 @@
 "use client";
 
+import { aboutInteractor } from "@/data/datasource/about/interactor/about.interactor";
 import { BoardDirectorItem } from "@/data/model/about.model";
-import { uploadFile } from "@/lib/utils";
+import {
+  isValidEmail,
+  isValidVietnamPhoneNumber,
+  uploadFile,
+} from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Image, Input, notification } from "antd";
 import { Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -42,6 +48,16 @@ export default function DirectorEditorForm({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Validation states
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+
+  // Fetch all directors to check duplicate
+  const { data: allDirectors = [] } = useQuery({
+    queryKey: ["directors"],
+    queryFn: aboutInteractor.getBoardDirectors,
+  });
+
   const markAsChanged = () => {
     if (!hasUnsavedChanges) setHasUnsavedChanges(true);
   };
@@ -65,6 +81,48 @@ export default function DirectorEditorForm({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     markAsChanged();
+
+    // Real-time validation
+    if (name === "email") {
+      if (!value.trim()) {
+        setEmailError("");
+      } else if (!isValidEmail(value)) {
+        setEmailError("Email không hợp lệ");
+      } else {
+        // Check duplicate email
+        const isDuplicate = allDirectors.some(
+          (director) =>
+            director.email?.toLowerCase() === value.toLowerCase() &&
+            director.id !== initialData?.id
+        );
+        if (isDuplicate) {
+          setEmailError("Email này đã được sử dụng bởi thành viên khác");
+        } else {
+          setEmailError("");
+        }
+      }
+    }
+
+    if (name === "phoneNumber") {
+      if (!value.trim()) {
+        setPhoneError("");
+      } else if (!isValidVietnamPhoneNumber(value)) {
+        setPhoneError("Số điện thoại phải là 10 chữ số bắt đầu bằng 0");
+      } else {
+        // Check duplicate phone
+        const isDuplicate = allDirectors.some(
+          (director) =>
+            director.phoneNumber === value && director.id !== initialData?.id
+        );
+        if (isDuplicate) {
+          setPhoneError(
+            "Số điện thoại này đã được sử dụng bởi thành viên khác"
+          );
+        } else {
+          setPhoneError("");
+        }
+      }
+    }
   };
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -97,6 +155,13 @@ export default function DirectorEditorForm({
     }
     if (!formData.term?.trim()) {
       return notification.error({ message: "Vui lòng nhập nhiệm kỳ" });
+    }
+
+    if (emailError) {
+      return notification.error({ message: emailError });
+    }
+    if (phoneError) {
+      return notification.error({ message: phoneError });
     }
 
     setIsUploading(true);
@@ -193,7 +258,11 @@ export default function DirectorEditorForm({
           placeholder="Nhập email..."
           disabled={isProcessing}
           allowClear
+          status={emailError ? "error" : ""}
         />
+        {emailError && (
+          <p className="text-red-500 text-xs mt-1">{emailError}</p>
+        )}
       </div>
 
       <div className="space-y-2 mb-3">
@@ -208,7 +277,11 @@ export default function DirectorEditorForm({
           placeholder="Nhập số điện thoại..."
           disabled={isProcessing}
           allowClear
+          status={phoneError ? "error" : ""}
         />
+        {phoneError && (
+          <p className="text-red-500 text-xs mt-1">{phoneError}</p>
+        )}
       </div>
 
       <div className="space-y-2 mb-3">

@@ -1,11 +1,13 @@
 "use client";
 
 import { PartnerItem } from "@/data/model/partner.model";
-import { uploadFile } from "@/lib/utils";
+import { isValidEmail, uploadFile } from "@/lib/utils";
 import { Button, DatePicker, Image, Input, notification } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { partnerInteractor } from "@/data/datasource/partner/interactor/partner.interactor";
 
 interface Props {
   initialData?: PartnerItem;
@@ -36,7 +38,16 @@ export default function PartnersEditorForm({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Validation state
+  const [emailError, setEmailError] = useState<string>("");
+
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch all partners to check duplicate email
+  const { data: allPartners = [] } = useQuery({
+    queryKey: ["partners"],
+    queryFn: partnerInteractor.getPartnerList,
+  });
 
   useEffect(() => {
     if (initialData?.imageUrl) {
@@ -71,6 +82,27 @@ export default function PartnersEditorForm({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     markAsChanged();
+
+    // Real-time email validation
+    if (name === "email") {
+      if (!value.trim()) {
+        setEmailError("");
+      } else if (!isValidEmail(value)) {
+        setEmailError("Email không hợp lệ");
+      } else {
+        // Check duplicate email
+        const isDuplicate = allPartners.some(
+          (partner) =>
+            partner.email?.toLowerCase() === value.toLowerCase() &&
+            partner.id !== initialData?.id
+        );
+        if (isDuplicate) {
+          setEmailError("Email này đã được sử dụng bởi đối tác khác");
+        } else {
+          setEmailError("");
+        }
+      }
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +183,12 @@ export default function PartnersEditorForm({
       return;
     }
 
+    // Validate email before saving
+    if (emailError) {
+      notification.error({ message: emailError });
+      return;
+    }
+
     setIsUploading(true);
 
     try {
@@ -218,12 +256,17 @@ export default function PartnersEditorForm({
         <Input
           size="large"
           name="email"
+          type="email"
           value={formData.email || ""}
           onChange={handleInputChange}
           placeholder="contact@partner.com"
           disabled={isProcessing}
           allowClear
+          status={emailError ? "error" : ""}
         />
+        {emailError && (
+          <p className="text-red-500 text-xs mt-1">{emailError}</p>
+        )}
       </div>
 
       <div className="space-y-2 mb-3">
