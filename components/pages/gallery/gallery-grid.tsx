@@ -28,12 +28,12 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
           >
             {/* Image Container */}
             <Link
-              href={`/gallery/${image.id}`}
+              href={`/gallery/${image.id}/${image.slug}`}
               className="block cursor-pointer"
             >
               <div className="relative w-full h-64 bg-gray-200 overflow-hidden">
                 <Image
-                  src={image.images[0] || ASSETS.svg.placeholder}
+                  src={image.imageUrl[0] || ASSETS.svg.placeholder}
                   alt={image.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -269,6 +269,7 @@ export default function DocumentEditorForm({
           onChange={handleInputChange}
           placeholder="Nhập tên tài liệu..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 

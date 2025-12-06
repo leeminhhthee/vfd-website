@@ -19,7 +19,7 @@ export default function Partners() {
   if (isLoading) {
     return (
       <section className="pt-0 md:pt-10 pb-0 md:pb-0 bg-white">
-        <div className="w-full flex items-center justify-center bg-slate-50">
+        <div className="w-full h-[50vh] flex items-center justify-center">
           <Spin size="large" />
           <span className="text-gray-500 font-medium text-sm ml-5">
             {trans.loading}

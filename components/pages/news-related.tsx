@@ -37,7 +37,7 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+      <div className="w-full h-[50vh] flex items-center justify-center">
         <Spin size="large" />
         <span className="text-gray-500 font-medium text-sm ml-5">
           {trans.loading}

@@ -1,66 +1,46 @@
+import { api } from "@/app/api/api";
 import { plainToInstance } from "class-transformer";
-import galleryMock from "../../../mockup/gallery.json";
 import { GalleryAlbum } from "../../../model/gallery.model";
-import { api } from "../../../remote/api";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+// const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+
+const API_BASE = "/galleries";
+
+type GalleryAlbumPayload = Omit<Partial<GalleryAlbum>, 'tournament'> & {
+  tournament?: number;
+};
 
 export const galleryRepository = {
   async getGalleryList(): Promise<GalleryAlbum[]> {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 300));
-      return plainToInstance(GalleryAlbum, galleryMock);
-    }
-
-    const response = await api.get<GalleryAlbum[]>("/gallery");
+    const response = await api.get<GalleryAlbum[]>(`${API_BASE}`);
     return plainToInstance(GalleryAlbum, response.data);
   },
 
   async getGalleryById(id: number): Promise<GalleryAlbum | undefined> {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 300));
-      const item = plainToInstance(GalleryAlbum, galleryMock.find((item) => item.id === id));
-      return item;
-    }
-
     try {
-      const response = await api.get<GalleryAlbum>(`/gallery/${id}`);
+      const response = await api.get<GalleryAlbum>(`${API_BASE}/${id}`);
       return plainToInstance(GalleryAlbum, response.data);
     } catch (error) {
       return undefined;
     }
   },
 
-  async createGallery(data: Partial<GalleryAlbum>) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      console.log("Mock Create Gallery:", data);
-      return plainToInstance(GalleryAlbum, { id: Date.now(), ...data });
-    }
-
-    const response = await api.post<GalleryAlbum>("/gallery", data);
+  async createGallery(data: GalleryAlbumPayload) {
+    const response = await api.post<GalleryAlbum>(`${API_BASE}`, data, {
+      timeout: 60000,
+    });
     return plainToInstance(GalleryAlbum, response.data);
   },
 
-  async updateGallery(id: number, data: Partial<GalleryAlbum>) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      console.log("Mock Update Gallery:", id, data);
-      return plainToInstance(GalleryAlbum, { id, ...data });
-    }
-
-    const response = await api.put<GalleryAlbum>(`/gallery/${id}`, data);
+  async updateGallery(id: number, data: GalleryAlbumPayload) {
+    const response = await api.patch<GalleryAlbum>(`${API_BASE}/${id}`, data, {
+      timeout: 60000,
+    });
     return plainToInstance(GalleryAlbum, response.data);
   },
 
   async deleteGallery(id: number) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      console.log("Mock Delete Gallery:", id);
-      return true;
-    }
-
-    const response = await api.delete(`/gallery/${id}`);
+    const response = await api.delete(`${API_BASE}/${id}`);
     return response.data;
   }
 };

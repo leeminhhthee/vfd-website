@@ -7,6 +7,7 @@ import {
 } from "@/data/constants/constants";
 import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -81,8 +82,11 @@ export default function PhotoGalleryTeaser() {
         {/* --- Photo Grid mới: Lưới đồng nhất 2x4 trên Desktop --- */}
         <div className="p-4 mt-8">
           {isLoading ? (
-            <div className="col-span-full py-10 text-center text-gray-500">
-              {trans.loading}
+            <div className="w-full h-[50vh] flex items-center justify-center">
+              <Spin size="large" />
+              <span className="text-gray-500 font-medium text-sm ml-5">
+                {trans.loading}
+              </span>
             </div>
           ) : error ? (
             <div className="col-span-full py-10 text-center text-red-500">
@@ -97,14 +101,14 @@ export default function PhotoGalleryTeaser() {
                   return (
                     <Link
                       key={photo.id}
-                      href={`/gallery/${photo.id}`}
+                      href={`/gallery/${photo.id}/${photo.slug}`}
                       className={`
                         relative w-full aspect-[4/3] h-auto overflow-hidden rounded-xl shadow-lg group cursor-pointer 
                         col-span-1 
                       `}
                     >
                       <Image
-                        src={photo.images[0]}
+                        src={photo.imageUrl[0]}
                         alt={photo.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
