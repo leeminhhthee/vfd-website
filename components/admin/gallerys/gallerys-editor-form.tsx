@@ -4,15 +4,21 @@ import {
   GalleryCategory,
   GalleryCategoryLabels,
 } from "@/data/constants/constants";
+import { tournamentInteractor } from "@/data/datasource/tournament/interactor/tournament.interactor";
 import { GalleryAlbum } from "@/data/model/gallery.model";
 import { uploadFile } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Image, Input, notification, Select } from "antd";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
+
+type GalleryAlbumPayload = Omit<Partial<GalleryAlbum>, 'tournament'> & {
+  tournament?: number;
+};
 
 interface Props {
   initialData?: GalleryAlbum;
-  onSave: (data: Partial<GalleryAlbum>) => void;
+  onSave: (data: GalleryAlbumPayload) => void;
   onCancel: () => void;
   isLoading: boolean;
   hasUnsavedChanges?: (changed: boolean) => void;
@@ -33,17 +39,30 @@ export default function GallerysEditorForm({
   const [formData, setFormData] = useState<Partial<GalleryAlbum>>({
     title: initialData?.title || "",
     category: initialData?.category || undefined,
-    tournamentId: initialData?.tournamentId || undefined,
-    images: initialData?.images || [],
+    tournament: initialData?.tournament || undefined,
+    imageUrl: initialData?.imageUrl || [],
   });
 
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>(
-    initialData?.images || []
+    initialData?.imageUrl || []
   );
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Fetch tournaments
+  const { data: tournaments = [] } = useQuery({
+    queryKey: ["tournaments"],
+    queryFn: tournamentInteractor.getTournamentList,
+  });
+
+  // Create tournament options
+  const tournamentOptions = tournaments.map((tournament) => ({
+    value: tournament.id,
+    label: `${tournament.id} - ${tournament.name}`,
+  }));
 
   useEffect(() => {
     if (notifyUnsavedChanges) notifyUnsavedChanges(hasUnsavedChanges);
@@ -75,24 +94,67 @@ export default function GallerysEditorForm({
     markAsChanged();
   };
 
+  const handleTournamentChange = (value: number | null) => {
+    const selectedTournament = value
+      ? tournaments.find((t) => t.id === value)
+      : undefined;
+
+    setFormData((prev) => ({ ...prev, tournament: selectedTournament }));
+    markAsChanged();
+  };
+
+  const processFiles = (files: FileList | File[]) => {
+    const filesArray = Array.from(files).filter(file => file.type.startsWith('image/'));
+    
+    if (filesArray.length === 0) {
+      notification.warning({ message: "Vui lòng chỉ tải lên file hình ảnh" });
+      return;
+    }
+
+    setNewFiles((prev) => [...prev, ...filesArray]);
+    const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
+    setPreviewUrls((prev) => [...prev, ...newPreviews]);
+    markAsChanged();
+  };
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const filesArray = Array.from(e.target.files);
-      setNewFiles((prev) => [...prev, ...filesArray]);
+      processFiles(e.target.files);
+    }
+  };
 
-      const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
-      setPreviewUrls((prev) => [...prev, ...newPreviews]);
-      markAsChanged();
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    if (isProcessing) return;
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      processFiles(files);
     }
   };
 
   const handleRemoveImage = (index: number) => {
-    const totalOldImages = formData.images?.length || 0;
+    const totalOldImages = formData.imageUrl?.length || 0;
 
     if (index < totalOldImages) {
-      const updatedOldImages = [...(formData.images || [])];
+      const updatedOldImages = [...(formData.imageUrl || [])];
       updatedOldImages.splice(index, 1);
-      setFormData((prev) => ({ ...prev, images: updatedOldImages }));
+      setFormData((prev) => ({ ...prev, imageUrl: updatedOldImages }));
     } else {
       const newFileIndex = index - totalOldImages;
       const updatedNewFiles = [...newFiles];
@@ -138,12 +200,12 @@ export default function GallerysEditorForm({
         }
       }
 
-      const finalImages = [...(formData.images || []), ...uploadedUrls];
+      const finalImages = [...(formData.imageUrl || []), ...uploadedUrls];
 
-      const result: Partial<GalleryAlbum> = {
+      const result: GalleryAlbumPayload = {
         ...formData,
-        images: finalImages,
-        createdAt: initialData?.createdAt || new Date(),
+        imageUrl: finalImages,
+        tournament: formData.tournament?.id,
       };
 
       onSave(result);
@@ -169,38 +231,45 @@ export default function GallerysEditorForm({
           onChange={handleInputChange}
           placeholder="Nhập tên album..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-2 mb-3">
-          <label className="block text-sm font-medium text-foreground">
-            Danh mục <span className="text-red-500">*</span>
-          </label>
-          <Select
-            size="large"
-            style={{ width: "100%" }}
-            placeholder="Chọn danh mục"
-            value={formData.category}
-            onChange={handleCategoryChange}
-            options={CATEGORY_OPTIONS}
-            disabled={isProcessing}
-          />
-        </div>
-        <div className="space-y-2 mb-3">
-          <label className="block text-sm font-medium text-foreground">
-            ID Giải đấu (nếu có)
-          </label>
-          <Input
-            size="large"
-            type="number"
-            name="tournamentId"
-            value={formData.tournamentId || ""}
-            onChange={handleInputChange}
-            placeholder="Nhập ID giải đấu liên quan"
-            disabled={isProcessing}
-          />
-        </div>
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
+          Danh mục <span className="text-red-500">*</span>
+        </label>
+        <Select
+          size="large"
+          style={{ width: "100%" }}
+          placeholder="Chọn danh mục"
+          value={formData.category}
+          onChange={handleCategoryChange}
+          options={CATEGORY_OPTIONS}
+          disabled={isProcessing}
+        />
+      </div>
+
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
+          Giải đấu (nếu có)
+        </label>
+        <Select
+          size="large"
+          style={{ width: "100%" }}
+          placeholder="Chọn giải đấu"
+          value={formData.tournament?.id}
+          onChange={handleTournamentChange}
+          options={tournamentOptions}
+          disabled={isProcessing}
+          allowClear
+          showSearch
+          placement="bottomLeft"
+          listHeight={300}
+          filterOption={(input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+        />
       </div>
 
       <div className="space-y-2 mb-3">
@@ -208,7 +277,17 @@ export default function GallerysEditorForm({
           Hình ảnh <span className="text-red-500">*</span>
         </label>
 
-        <div className="grid grid-cols-4 gap-4 mb-4">
+        {/* Image Grid with Add Button */}
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`grid grid-cols-4 gap-4 p-4 border-2 border-dashed rounded-lg transition-all ${
+            isDragging
+              ? "border-primary bg-primary/5"
+              : "border-border"
+          } ${isProcessing ? "opacity-50 pointer-events-none" : ""}`}
+        >
           {previewUrls.map((url, index) => (
             <div
               key={index}
@@ -224,7 +303,7 @@ export default function GallerysEditorForm({
               <button
                 type="button"
                 onClick={() => handleRemoveImage(index)}
-                className="absolute top-1 right-1 bg-white/80 p-1 rounded-full text-red-500 hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                className="cursor-pointer absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100"
                 disabled={isProcessing}
               >
                 <Trash2 size={16} />
@@ -232,15 +311,16 @@ export default function GallerysEditorForm({
             </div>
           ))}
 
+          {/* Add Image Button - Small Icon at the end */}
           <label
             className={`flex flex-col items-center justify-center aspect-square border-2 border-dashed border-border rounded-lg transition-colors ${
               isProcessing
                 ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer hover:bg-card"
+                : "cursor-pointer hover:bg-card hover:border-primary"
             }`}
           >
             <div className="flex flex-col items-center justify-center text-muted-foreground">
-              <Plus size={24} />
+              <Plus size={32} />
               <span className="text-xs mt-1">Thêm ảnh</span>
             </div>
             <input
@@ -255,7 +335,7 @@ export default function GallerysEditorForm({
         </div>
       </div>
 
-      <div className="flex justify-end gap-2 pt-4 border-t border-border">
+      <div className="flex justify-end gap-2 pt-4 border-border">
         <Button onClick={onCancel} disabled={isProcessing}>
           Hủy
         </Button>

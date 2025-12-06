@@ -1,38 +1,42 @@
-"use client"
+"use client";
 
-import { useParams } from "next/navigation"
-import UserLayout from "@/components/layouts/user-layout"
-import GalleryDetailSlider from "@/components/pages/gallery/gallery-detail-slider"
-import GalleryRelatedAlbums from "@/components/pages/gallery/gallery-related-albums"
-import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor"
-import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
-import { trans } from "@/app/generated/AppLocalization"
+import { trans } from "@/app/generated/AppLocalization";
+import UserLayout from "@/components/layouts/user-layout";
+import GalleryDetailSlider from "@/components/pages/gallery/gallery-detail-slider";
+import GalleryRelatedAlbums from "@/components/pages/gallery/gallery-related-albums";
+import { galleryInteractor } from "@/data/datasource/gallery/interactor/gallery.interactor";
+import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function GalleryDetailPage() {
-  const params = useParams()
-  const id = (params?.id as string) ?? ""
+  const params = useParams();
+  const id = Number(params.id);
 
   const { data: album, isLoading: isLoadingAlbum } = useQuery({
     queryKey: ["gallery", id],
     queryFn: () => galleryInteractor.getGalleryById(id),
     enabled: !!id,
-  })
+  });
 
   const { data: relatedAlbums = [] } = useQuery({
     queryKey: ["relatedAlbums", id],
-    queryFn: () => galleryInteractor.getRelatedAlbums(Number.parseInt(id, 10), 4),
+    queryFn: () => galleryInteractor.getRelatedAlbums(id, 4),
     enabled: !!id && !!album,
-  })
+  });
 
   if (isLoadingAlbum) {
     return (
       <UserLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <p className="text-lg text-gray-500">{trans.loading}</p>
+        <div className="w-full h-[50vh] flex items-center justify-center">
+          <Spin size="large" />
+          <span className="text-gray-500 font-medium text-sm ml-5">
+            {trans.loading}
+          </span>
         </div>
       </UserLayout>
-    )
+    );
   }
 
   if (!album) {
@@ -40,21 +44,26 @@ export default function GalleryDetailPage() {
       <UserLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-primary mb-4">{trans.albumNotFound}</h1>
+            <h1 className="text-3xl font-bold text-primary mb-4">
+              {trans.albumNotFound}
+            </h1>
             <Link href="/gallery" className="text-accent hover:underline">
               {trans.backToGallery}
             </Link>
           </div>
         </div>
       </UserLayout>
-    )
+    );
   }
 
   return (
     <UserLayout>
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b">
-          <Link href="/gallery" className="text-accent hover:text-primary transition-colors">
+          <Link
+            href="/gallery"
+            className="text-accent hover:text-primary transition-colors"
+          >
             {trans.photoGallery}
           </Link>
           <span className="mx-2 text-gray-400">/</span>
@@ -62,10 +71,15 @@ export default function GalleryDetailPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-primary mb-12">{album.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-primary mb-12">
+            {album.title}
+          </h1>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <GalleryDetailSlider images={album.images} title={album.title} />
+              <GalleryDetailSlider
+                images={album.imageUrl}
+                title={album.title}
+              />
             </div>
             <div>
               <GalleryRelatedAlbums albums={relatedAlbums} />
@@ -74,5 +88,5 @@ export default function GalleryDetailPage() {
         </div>
       </div>
     </UserLayout>
-  )
+  );
 }

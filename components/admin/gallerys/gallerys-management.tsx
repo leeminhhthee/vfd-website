@@ -35,6 +35,10 @@ import GallerysEditorForm from "./gallerys-editor-form";
 
 const { Meta } = Card;
 
+type GalleryAlbumPayload = Omit<Partial<GalleryAlbum>, "tournament"> & {
+  tournament?: number;
+};
+
 export default function GallerysManagement() {
   const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
@@ -69,15 +73,11 @@ export default function GallerysManagement() {
     }
   };
 
-  const createMutation = useMutation<
-    GalleryAlbum,
-    Error,
-    Partial<GalleryAlbum>
-  >({
+  const createMutation = useMutation<GalleryAlbum, Error, GalleryAlbumPayload>({
     mutationFn: (data) => galleryInteractor.createGallery(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Tạo album thành công" });
-      queryClient.invalidateQueries({ queryKey: ["galleries"] });
+      await queryClient.invalidateQueries({ queryKey: ["galleries"] });
       handleCloseEditor();
     },
     onError: () => notification.error({ message: "Tạo album thất bại" }),
@@ -86,12 +86,12 @@ export default function GallerysManagement() {
   const updateMutation = useMutation<
     GalleryAlbum,
     Error,
-    { id: number; data: Partial<GalleryAlbum> }
+    { id: number; data: GalleryAlbumPayload }
   >({
     mutationFn: ({ id, data }) => galleryInteractor.updateGallery(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Cập nhật thành công" });
-      queryClient.invalidateQueries({ queryKey: ["galleries"] });
+      await queryClient.invalidateQueries({ queryKey: ["galleries"] });
       handleCloseEditor();
     },
     onError: () => notification.error({ message: "Cập nhật thất bại" }),
@@ -99,9 +99,9 @@ export default function GallerysManagement() {
 
   const deleteMutation = useMutation<boolean, Error, number>({
     mutationFn: (id) => galleryInteractor.deleteGallery(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa album" });
-      queryClient.invalidateQueries({ queryKey: ["galleries"] });
+      await queryClient.invalidateQueries({ queryKey: ["galleries"] });
     },
     onError: () => notification.error({ message: "Xóa thất bại" }),
   });
@@ -130,13 +130,13 @@ export default function GallerysManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => {
+      onOk: async () => {
         showLoading();
-        deleteMutation.mutate(id, {
-          onSettled: () => {
-            hideLoading();
-          },
-        });
+        try {
+          await deleteMutation.mutateAsync(id);
+        } finally {
+          hideLoading();
+        }
       },
     });
   };
@@ -196,8 +196,8 @@ export default function GallerysManagement() {
                     <Image
                       alt={album.title}
                       src={
-                        album.images && album.images.length > 0
-                          ? album.images[0]
+                        album.imageUrl && album.imageUrl.length > 0
+                          ? album.imageUrl[0]
                           : "/placeholder.svg"
                       }
                       fill
@@ -205,7 +205,7 @@ export default function GallerysManagement() {
                     />
                     <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
                       <PictureOutlined />
-                      {album.images?.length || 0}
+                      {album.imageUrl?.length || 0}
                     </div>
                   </div>
                 }
@@ -268,28 +268,20 @@ export default function GallerysManagement() {
       >
         <GallerysEditorForm
           key={editingAlbum ? editingAlbum.id : "create-new"}
-          initialData={editingAlbum ?? undefined}
-          onSave={(data) => {
-            if (editingAlbum?.id) {
-              showLoading();
-              updateMutation.mutate(
-                {
+          initialData={editingAlbum as GalleryAlbum}
+          onSave={async (data) => {
+            showLoading();
+            try {
+              if (editingAlbum?.id) {
+                await updateMutation.mutateAsync({
                   id: editingAlbum.id,
                   data: data,
-                },
-                {
-                  onSettled: () => {
-                    hideLoading();
-                  },
-                }
-              );
-            } else {
-              showLoading();
-              createMutation.mutate(data, {
-                onSettled: () => {
-                  hideLoading();
-                },
-              });
+                });
+              } else {
+                await createMutation.mutateAsync(data);
+              }
+            } finally {
+              hideLoading();
             }
           }}
           onCancel={handleDrawerClose}

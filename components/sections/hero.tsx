@@ -40,7 +40,7 @@ export default function Hero() {
   if (isLoading) {
     return (
       <section className="relative w-full overflow-hidden pt-20 min-h-[calc(100vh-5rem)] lg:min-h-[calc(100vh-5rem)] flex items-center justify-center">
-        <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <div className="w-full h-[50vh] flex items-center justify-center">
           <Spin size="large" />
           <span className="text-gray-500 font-medium text-sm ml-5">
             {trans.loading}

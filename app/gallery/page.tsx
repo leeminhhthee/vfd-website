@@ -51,7 +51,7 @@ export default function GalleryPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["gallery"],
+    queryKey: ["galleries"],
     queryFn: galleryInteractor.getGalleryList,
   });
 
@@ -88,7 +88,7 @@ export default function GalleryPage() {
   if (isLoading) {
     return (
       <UserLayout>
-        <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+        <div className="w-full h-[50vh] flex items-center justify-center">
           <Spin size="large" />
           <span className="text-gray-500 font-medium text-sm ml-5">
             {trans.loading}
@@ -101,7 +101,7 @@ export default function GalleryPage() {
   if (error) {
     return (
       <UserLayout>
-        <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="min-h-[50vh] bg-white flex items-center justify-center">
           <p className="text-lg text-red-500">{trans.loadingImageError}</p>
         </div>
       </UserLayout>

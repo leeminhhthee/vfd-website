@@ -137,9 +137,15 @@ export default function NewsEditorForm({
 
     setIsGeneratingTitles(true);
     try {
-      const response = await api.post("/news/suggest-title", {
-        content: formData.content,
-      });
+      const response = await api.post(
+        "/news/suggest-title",
+        {
+          content: formData.content,
+        },
+        {
+          timeout: 80000,
+        }
+      );
 
       const titles = response.data.titles || [];
       setSuggestedTitles(titles);
@@ -280,6 +286,7 @@ export default function NewsEditorForm({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, title: e.target.value }))
               }
+              allowClear
               disabled={isProcessing}
             />
           </div>

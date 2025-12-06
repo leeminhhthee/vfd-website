@@ -207,6 +207,7 @@ export default function PartnersEditorForm({
           onChange={handleInputChange}
           placeholder="Ví dụ: Techcombank, Vingroup..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -221,6 +222,7 @@ export default function PartnersEditorForm({
           onChange={handleInputChange}
           placeholder="contact@partner.com"
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
