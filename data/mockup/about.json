@@ -84,7 +84,9 @@
       "branch_name": "CN Đà Nẵng",
       "account_number": "0000123456789",
       "account_name": "LIEN DOAN BONG CHUYEN DN",
-      "qr_code_url": "https://img.vietqr.io/image/MB-0000000000-compact.png"
+      "qr_code_url": "https://img.vietqr.io/image/MB-0000000000-compact.png",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
     },
     {
       "id": 2,

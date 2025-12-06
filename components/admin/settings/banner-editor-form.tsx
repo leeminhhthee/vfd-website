@@ -22,18 +22,19 @@ export default function BannerEditorForm({
   hasUnsavedChanges: notifyUnsavedChanges,
 }: Props) {
   const [formData, setFormData] = useState<Partial<HeroItem>>({
-    title: initialData?.title || "",
-    subTitle: initialData?.subTitle || "",
-    image: initialData?.image || "",
-    buttonText: initialData?.buttonText || "",
-    buttonHref: initialData?.buttonHref || "",
-    buttonText2: initialData?.buttonText2 || "",
-    buttonHref2: initialData?.buttonHref2 || "",
+    id: initialData?.id,
+    title: initialData?.title?.trim() || null,
+    subTitle: initialData?.subTitle?.trim() || null,
+    imageUrl: initialData?.imageUrl,
+    buttonText: initialData?.buttonText?.trim() || "",
+    buttonHref: initialData?.buttonHref?.trim() || "",
+    buttonText2: initialData?.buttonText2?.trim() || "",
+    buttonHref2: initialData?.buttonHref2?.trim() || "",
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    initialData?.image || ""
+    initialData?.imageUrl || ""
   );
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -69,19 +70,19 @@ export default function BannerEditorForm({
   const removeImage = () => {
     setImageFile(null);
     setImagePreview("");
-    setFormData((prev) => ({ ...prev, image: "" }));
+    setFormData((prev) => ({ ...prev, imageUrl: "" }));
     markAsChanged();
   };
 
   const handleSave = async () => {
-    if (!formData.image && !imageFile) {
+    if (!formData.imageUrl && !imageFile) {
       return notification.error({ message: "Vui lòng chọn hình ảnh banner" });
     }
 
     setIsUploading(true);
 
     try {
-      let finalImageUrl = formData.image || "";
+      let finalImageUrl = formData.imageUrl || "";
 
       if (imageFile) {
         try {
@@ -96,7 +97,7 @@ export default function BannerEditorForm({
 
       const result: Partial<HeroItem> = {
         ...formData,
-        image: finalImageUrl,
+        imageUrl: finalImageUrl,
       };
 
       onSave(result);
@@ -172,6 +173,7 @@ export default function BannerEditorForm({
           onChange={handleInputChange}
           placeholder="VD: Liên đoàn bóng chuyền Đà Nẵng"
           disabled={isLoading}
+          allowClear
         />
       </div>
 
@@ -186,6 +188,7 @@ export default function BannerEditorForm({
           onChange={handleInputChange}
           placeholder="Mô tả ngắn gọn..."
           disabled={isLoading}
+          allowClear
         />
       </div>
 
@@ -200,6 +203,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="VD: Đăng ký ngay"
             disabled={isLoading}
+            allowClear
           />
         </div>
         <div className="space-y-2">
@@ -212,6 +216,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="/path/to/page"
             disabled={isLoading}
+            allowClear
           />
         </div>
       </div>
@@ -227,6 +232,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="VD: Xem thêm"
             disabled={isLoading}
+            allowClear
           />
         </div>
         <div className="space-y-2">
@@ -239,6 +245,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="/path/to/page"
             disabled={isLoading}
+            allowClear
           />
         </div>
       </div>

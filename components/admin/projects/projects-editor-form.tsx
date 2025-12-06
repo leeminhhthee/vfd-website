@@ -359,7 +359,7 @@ export default function ProjectsEditorForm({
             disabled={isProcessing}
             options={bankQrs.map((qr) => ({
               value: qr.id,
-              label: `${qr.bankName} - ${qr.accountNumber} (${qr.accountName})`,
+              label: `${qr.bankName} - ${qr.accountNumber} (${qr.fullName})`,
             }))}
           />
         </div>
@@ -401,7 +401,7 @@ export default function ProjectsEditorForm({
                   Tên chủ tài khoản
                 </label>
                 <Input
-                  value={selectedBankQr.accountName}
+                  value={selectedBankQr.fullName}
                   disabled
                   className="bg-white"
                 />
@@ -411,20 +411,20 @@ export default function ProjectsEditorForm({
                   Chi nhánh
                 </label>
                 <Input
-                  value={selectedBankQr.branchName}
+                  value={selectedBankQr.branch}
                   disabled
                   className="bg-white"
                 />
               </div>
             </div>
 
-            {selectedBankQr.qrCodeUrl && (
+            {selectedBankQr.imageUrl && (
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-2">
                   QR Code thanh toán
                 </label>
                 <Image
-                  src={selectedBankQr.qrCodeUrl}
+                  src={selectedBankQr.imageUrl}
                   alt="QR Code"
                   className="w-48 h-48 object-cover rounded-lg border border-border"
                   preview={{ mask: "Phóng to" }}

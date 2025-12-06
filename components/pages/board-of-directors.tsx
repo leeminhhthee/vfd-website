@@ -1,13 +1,15 @@
 "use client";
 
+import type React from "react";
+
 import { trans } from "@/app/generated/AppLocalization";
 import { ASSETS } from "@/app/generated/assets";
 import { aboutInteractor } from "@/data/datasource/about/interactor/about.interactor";
-import { BoardDirectorItem } from "@/data/model/about.model";
 import { useQuery } from "@tanstack/react-query";
-import { Spin } from "antd";
+import { Avatar, Spin } from "antd";
+import { Mail, Phone } from "lucide-react";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function BoardOfDirectors() {
   const {
@@ -19,10 +21,8 @@ export default function BoardOfDirectors() {
     queryFn: aboutInteractor.getBoardDirectors,
   });
 
-  // Leader được chọn để hiển thị ở khối trên
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  // Tính toán selected từ allDirector và selectedId
   const selected = useMemo(() => {
     if (selectedId !== null) {
       return (
@@ -32,20 +32,51 @@ export default function BoardOfDirectors() {
     return allDirector[0] || null;
   }, [allDirector, selectedId]);
 
-  // Trang hóa carousel (4 thẻ/trang) — an toàn với React Compiler
-  const pages = useMemo(() => chunk(allDirector, 4), [allDirector]);
-  const [page, setPage] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [canScroll, setCanScroll] = useState(false);
+  const [scrollPercentage, setScrollPercentage] = useState(0);
 
-  // Ref để cuộn mượt tới khối chi tiết khi chọn từ carousel
-  const detailRef = useRef<HTMLDivElement>(null);
-  const showDetail = (leader: BoardDirectorItem) => {
-    setSelectedId(leader.id);
-    detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      setCanScroll(container.scrollWidth > container.clientWidth);
+    }
+  }, [allDirector]);
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollWidth = container.scrollWidth - container.clientWidth;
+      const scrolled = (container.scrollLeft / scrollWidth) * 100;
+      setScrollPercentage(scrolled || 0);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (allDirector.length <= 3) return;
+    setIsDragging(true);
+    setDragStart(e.pageX - (scrollContainerRef.current?.offsetLeft || 0));
+    setScrollLeft(scrollContainerRef.current?.scrollLeft || 0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - (scrollContainerRef.current?.offsetLeft || 0);
+    const walk = (x - dragStart) * 3.5;
+    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
   };
 
   if (isLoading) {
     return (
-      <div className="w-full h-[50vh] flex items-center justify-center">
+      <div className="w-full h-[40vh] flex items-center justify-center">
         <Spin size="large" />
         <span className="text-gray-500 font-medium text-sm ml-5">
           {trans.loading}
@@ -55,7 +86,7 @@ export default function BoardOfDirectors() {
   }
 
   if (error) {
-    return <div className="text-center py-12">{trans.loadingError}</div>;
+    return <div className="text-center py-8">{trans.loadingError}</div>;
   }
 
   if (!selected) {
@@ -63,127 +94,177 @@ export default function BoardOfDirectors() {
   }
 
   return (
-    <section className="bg-blue-50">
-      {/* Khối chi tiết/"Chủ tịch hiện tại" */}
-      <div
-        ref={detailRef}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10"
-      >
-        <h2 className="text-xl md:text-2xl font-extrabold uppercase text-center text-blue-700 mb-8 leading-tight">
+    <section className="bg-blue-50 py-8 md:py-10">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
+        {/* Title */}
+        <h2 className="text-lg md:text-2xl font-bold uppercase text-center text-blue-700 mb-6 md:mb-8 leading-tight">
           {trans.boardDirectorsVFD}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:gap-8 items-start">
-          <div>
-            <p className="text-base md:text-lg font-semibold text-foreground mb-1">
-              {trans.mrMs} {selected.name}
-            </p>
-            <p className="text-sm md:text-base text-foreground/80 mb-3">
-              {selected.role} {selected.term ? `• ${selected.term}` : ""}{" "}
-              {selected.note ? `• ${selected.note}` : ""}
-            </p>
+        {/* Detail Section - Compact Layout */}
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6 md:mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 md:gap-5 items-start">
+            {/* Image with Avatar - Use Avatar for fixed dimensions */}
+            <div className="flex justify-center md:justify-start">
+              <Avatar
+                size={300}
+                src={selected.imageUrl || ASSETS.logo.vfd_logo}
+                alt={`Ảnh ${selected.fullName}`}
+                shape="square"
+                className="rounded-md shadow-sm"
+              />
+            </div>
 
-            {/* giới hạn chiều cao để không tràn màn hình */}
-            <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-foreground/90 max-h-48 md:max-h-56 overflow-y-auto pr-1">
-              {(selected.bio?.length
-                ? selected.bio
-                : ["Đang cập nhật thông tin."]
-              ).map((line, idx) => (
-                <li key={idx}>{line}</li>
-              ))}
-            </ul>
-          </div>
+            {/* Info */}
+            <div className="md:pl-2">
+              <p className="text-base md:text-lg font-bold text-foreground">
+                {trans.mrMs} {selected.fullName}
+              </p>
+              <p className="text-sm md:text-base text-blue-600 font-semibold mb-3">
+                {selected.role} {selected.term ? `• ${selected.term}` : ""}
+              </p>
 
-          <div className="order-first md:order-last flex justify-end items-end">
-            <Image
-              src={selected.imageUrl || ASSETS.svg.placeholder}
-              width={300}
-              height={320}
-              alt={`Ảnh ${selected.name}`}
-              className="w-[500px] h-[200px] md:h-80 object-cover rounded-lg shadow-md"
-            />
+              {/* Email and Phone Section */}
+              {(selected.email || selected.phoneNumber) && (
+                <div className="flex flex-col gap-2 mb-3 text-xs md:text-sm">
+                  {selected.email && (
+                    <a
+                      href={`mailto:${selected.email}`}
+                      className="text-blue-600 hover:underline flex items-center gap-2"
+                    >
+                      <Mail size={16} className="flex-shrink-0" />
+                      {selected.email}
+                    </a>
+                  )}
+                  {selected.phoneNumber && (
+                    <a
+                      href={`tel:${selected.phoneNumber}`}
+                      className="text-blue-600 hover:underline flex items-center gap-2"
+                    >
+                      <Phone size={16} className="flex-shrink-0" />
+                      {selected.phoneNumber}
+                    </a>
+                  )}
+                </div>
+              )}
+
+              {/* Bio - Compact scrollable */}
+              <div className="max-h-36 md:max-h-40 overflow-y-auto pr-2 space-y-1">
+                {(selected.bio
+                  ? selected.bio
+                      .split("\n")
+                      .filter((line) => line.trim() !== "")
+                  : ["Đang cập nhật thông tin."]
+                ).map((line, idx) => (
+                  <p
+                    key={idx}
+                    className="text-xs md:text-sm text-foreground/85 leading-relaxed"
+                  >
+                    • {line}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Carousel các lãnh đạo */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-10">
-        <div className="relative overflow-hidden rounded-lg">
-          <div
-            className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${page * 100}%)` }}
-            aria-live="polite"
-          >
-            {pages.map((group, idx) => (
-              <div key={idx} className="min-w-full py-4 px-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-                  {group.map((leader) => (
-                    <figure
-                      key={leader.id}
-                      className={`bg-white rounded-lg shadow-sm p-3 text-center cursor-pointer transition
-                        hover:shadow-md ${
-                          selected.id === leader.id
-                            ? "ring-2 ring-blue-600"
-                            : ""
-                        }`}
-                      onClick={() => showDetail(leader)}
-                      aria-pressed={selected.id === leader.id}
-                    >
-                      <Image
-                        src={leader.imageUrl || ASSETS.svg.placeholder}
-                        width={360}
-                        height={200}
-                        alt={`Ảnh ${leader.name}`}
-                        className="w-full h-60 md:h-48 object-cover rounded-md mb-3"
-                      />
-                      <figcaption>
-                        <p className="text-xs md:text-sm text-foreground">
-                          {trans.mrMs}{" "}
-                          <span className="font-semibold">{leader.name}</span>
-                        </p>
-                        <p className="text-xs md:text-sm text-foreground/80">
-                          {leader.role}
-                        </p>
-                        {leader.term && (
-                          <p className="text-xs text-foreground/70">
-                            {leader.term}
-                          </p>
-                        )}
-                        {leader.note && (
-                          <p className="text-xs text-foreground/60">
-                            {leader.note}
-                          </p>
-                        )}
-                      </figcaption>
-                    </figure>
-                  ))}
+        {/* Carousel Section - Scroll Drag */}
+        <div className="max-w-4xl mx-auto">
+          <style jsx>{`
+            .scrollbar-hide {
+              scrollbar-width: none;
+              -ms-overflow-style: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+
+          <div className="relative group">
+            <div
+              ref={scrollContainerRef}
+              className={`flex ${
+                allDirector.length <= 3 ? "gap-4 justify-center" : "gap-3"
+              } overflow-x-auto scroll-smooth ${
+                isDragging ? "cursor-grabbing" : "cursor-grab"
+              } scrollbar-hide`}
+              style={{
+                scrollBehavior: "smooth",
+                WebkitOverflowScrolling: "touch",
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onScroll={handleScroll}
+            >
+              {allDirector.map((leader) => (
+                <div
+                  key={leader.id}
+                  className={`p-1 flex-shrink-0 ${
+                    allDirector.length <= 3
+                      ? "w-[calc(33.333%-16px)]"
+                      : "w-[calc(33.333%-8px)]"
+                  }`}
+                >
+                  <figure
+                    className={`bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md h-full ${
+                      selected.id === leader.id
+                        ? "ring-2 ring-blue-600 shadow-md"
+                        : "hover:ring-1 hover:ring-blue-300"
+                    }`}
+                    onClick={() => {
+                      if (!isDragging) {
+                        setSelectedId(leader.id);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") setSelectedId(leader.id);
+                    }}
+                  >
+                    <Image
+                      src={leader.imageUrl || ASSETS.logo.vfd_logo}
+                      width={320}
+                      height={180}
+                      alt={`Ảnh ${leader.fullName}`}
+                      className="w-full h-36 md:h-40 object-cover"
+                      draggable={false}
+                    />
+                    <figcaption className="p-3 bg-white">
+                      <p className="text-sm font-semibold text-foreground truncate">
+                        {leader.fullName}
+                      </p>
+                      <p className="text-xs text-foreground/70 line-clamp-2">
+                        {leader.role}
+                      </p>
+                    </figcaption>
+                  </figure>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {canScroll && allDirector.length > 3 && (
+              <div className="absolute right-0 top-0 bottom-0 w-12 from-blue-50 to-transparent pointer-events-none" />
+            )}
           </div>
 
-          {/* Điều hướng trang */}
-          <div className="flex items-center justify-center gap-2.5 mt-4">
-            {pages.map((_, i) => (
-              <button
-                key={i}
-                aria-label={`Trang ${i + 1}`}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  page === i ? "bg-blue-600" : "bg-blue-300 hover:bg-blue-400"
-                }`}
-                onClick={() => setPage(i)}
-              />
-            ))}
-          </div>
+          {/* Custom Scrollbar Indicator */}
+          {canScroll && allDirector.length > 3 && (
+            <div className="mt-3 w-full px-1">
+              <div className="h-1 bg-gray-200 rounded-full relative">
+                <div
+                  className="h-full w-1/3 bg-blue-600 rounded-full transition-all duration-150 absolute left-0"
+                  style={{
+                    transform: `translateX(${scrollPercentage * 2}%)`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
-}
-
-// Utilities
-function chunk<T>(arr: T[], size: number): T[][] {
-  const res: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) res.push(arr.slice(i, i + size));
-  return res;
 }

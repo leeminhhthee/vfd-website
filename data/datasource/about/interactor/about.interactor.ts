@@ -30,8 +30,14 @@ export const aboutInteractor = {
     return await aboutRepository.deleteBoardDirector(id);
   },
 
+  // --- Bank QR Codes (CRUD) ---
   async getBankQrs() {
-    return await aboutRepository.getBankQrs();
+    const data = await aboutRepository.getBankQrs();
+    return data
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
   },
 
   async createBankQr(data: Partial<BankQrItem>) {

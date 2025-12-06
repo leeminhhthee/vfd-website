@@ -117,7 +117,7 @@ export default function ProjectDetailPage() {
                   <div className="flex flex-col items-center gap-6 p-6">
                     {/* Hình ảnh QR */}
                     <Image
-                      src={project.bankQrCode.qrCodeUrl || "/placeholder.svg"}
+                      src={project.bankQrCode.imageUrl || "/placeholder.svg"}
                       alt="Bank QR Code"
                       className="rounded-lg object-contain -mt-6"
                       width={200}
@@ -169,7 +169,7 @@ export default function ProjectDetailPage() {
                           Chủ tài khoản
                         </p>
                         <p className="font-bold text-base uppercase text-gray-700">
-                          {project.bankQrCode.accountName}
+                          {project.bankQrCode.fullName}
                         </p>
                       </div>
 
@@ -179,7 +179,7 @@ export default function ProjectDetailPage() {
                           Chi nhánh
                         </p>
                         <p className="font-bold text-base uppercase text-gray-700">
-                          {project.bankQrCode.branchName}
+                          {project.bankQrCode.branch}
                         </p>
                       </div>
                     </div>

@@ -1,7 +1,13 @@
 "use client";
 
+import { aboutInteractor } from "@/data/datasource/about/interactor/about.interactor";
 import { BoardDirectorItem } from "@/data/model/about.model";
-import { uploadFile } from "@/lib/utils";
+import {
+  isValidEmail,
+  isValidVietnamPhoneNumber,
+  uploadFile,
+} from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Image, Input, notification } from "antd";
 import { Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -22,17 +28,17 @@ export default function DirectorEditorForm({
   hasUnsavedChanges: notifyUnsavedChanges,
 }: Props) {
   const [formData, setFormData] = useState<Partial<BoardDirectorItem>>({
-    name: initialData?.name || "",
+    id: initialData?.id,
+    fullName: initialData?.fullName || "",
+    email: initialData?.email || "",
+    phoneNumber: initialData?.phoneNumber || "",
     role: initialData?.role || "",
     term: initialData?.term || "",
     imageUrl: initialData?.imageUrl || "",
-    note: initialData?.note || "",
-    bio: initialData?.bio || [],
+    bio: initialData?.bio || "",
   });
 
-  const [bioText, setBioText] = useState<string>(
-    initialData?.bio?.join("\n") || ""
-  );
+  const [bioText, setBioText] = useState<string>(initialData?.bio || "");
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
@@ -41,6 +47,16 @@ export default function DirectorEditorForm({
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Validation states
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+
+  // Fetch all directors to check duplicate
+  const { data: allDirectors = [] } = useQuery({
+    queryKey: ["directors"],
+    queryFn: aboutInteractor.getBoardDirectors,
+  });
 
   const markAsChanged = () => {
     if (!hasUnsavedChanges) setHasUnsavedChanges(true);
@@ -65,6 +81,48 @@ export default function DirectorEditorForm({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     markAsChanged();
+
+    // Real-time validation
+    if (name === "email") {
+      if (!value.trim()) {
+        setEmailError("");
+      } else if (!isValidEmail(value)) {
+        setEmailError("Email không hợp lệ");
+      } else {
+        // Check duplicate email
+        const isDuplicate = allDirectors.some(
+          (director) =>
+            director.email?.toLowerCase() === value.toLowerCase() &&
+            director.id !== initialData?.id
+        );
+        if (isDuplicate) {
+          setEmailError("Email này đã được sử dụng bởi thành viên khác");
+        } else {
+          setEmailError("");
+        }
+      }
+    }
+
+    if (name === "phoneNumber") {
+      if (!value.trim()) {
+        setPhoneError("");
+      } else if (!isValidVietnamPhoneNumber(value)) {
+        setPhoneError("Số điện thoại phải là 10 chữ số bắt đầu bằng 0");
+      } else {
+        // Check duplicate phone
+        const isDuplicate = allDirectors.some(
+          (director) =>
+            director.phoneNumber === value && director.id !== initialData?.id
+        );
+        if (isDuplicate) {
+          setPhoneError(
+            "Số điện thoại này đã được sử dụng bởi thành viên khác"
+          );
+        } else {
+          setPhoneError("");
+        }
+      }
+    }
   };
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -89,7 +147,7 @@ export default function DirectorEditorForm({
   };
 
   const handleSave = async () => {
-    if (!formData.name?.trim()) {
+    if (!formData.fullName?.trim()) {
       return notification.error({ message: "Vui lòng nhập họ tên" });
     }
     if (!formData.role?.trim()) {
@@ -98,9 +156,12 @@ export default function DirectorEditorForm({
     if (!formData.term?.trim()) {
       return notification.error({ message: "Vui lòng nhập nhiệm kỳ" });
     }
-    // Validation bắt buộc có hình ảnh
-    if (!formData.imageUrl && !imageFile) {
-      return notification.error({ message: "Vui lòng chọn hình ảnh" });
+
+    if (emailError) {
+      return notification.error({ message: emailError });
+    }
+    if (phoneError) {
+      return notification.error({ message: phoneError });
     }
 
     setIsUploading(true);
@@ -121,15 +182,10 @@ export default function DirectorEditorForm({
         }
       }
 
-      const bioArray = bioText
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0);
-
       const result: Partial<BoardDirectorItem> = {
         ...formData,
         imageUrl: finalImageUrl,
-        bio: bioArray,
+        bio: bioText.trim(),
       };
 
       onSave(result);
@@ -150,11 +206,12 @@ export default function DirectorEditorForm({
         </label>
         <Input
           size="large"
-          name="name"
-          value={formData.name}
+          name="fullName"
+          value={formData.fullName}
           onChange={handleInputChange}
           placeholder="Nhập họ và tên..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -169,6 +226,7 @@ export default function DirectorEditorForm({
           onChange={handleInputChange}
           placeholder="Ví dụ: Chủ tịch Liên đoàn..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -183,7 +241,47 @@ export default function DirectorEditorForm({
           onChange={handleInputChange}
           placeholder="Ví dụ: Nhiệm kỳ 2020 – 2025"
           disabled={isProcessing}
+          allowClear
         />
+      </div>
+
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
+          Email
+        </label>
+        <Input
+          size="large"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="Nhập email..."
+          disabled={isProcessing}
+          allowClear
+          status={emailError ? "error" : ""}
+        />
+        {emailError && (
+          <p className="text-red-500 text-xs mt-1">{emailError}</p>
+        )}
+      </div>
+
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
+          Số điện thoại
+        </label>
+        <Input
+          size="large"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleInputChange}
+          placeholder="Nhập số điện thoại..."
+          disabled={isProcessing}
+          allowClear
+          status={phoneError ? "error" : ""}
+        />
+        {phoneError && (
+          <p className="text-red-500 text-xs mt-1">{phoneError}</p>
+        )}
       </div>
 
       <div className="space-y-2 mb-3">
@@ -196,12 +294,13 @@ export default function DirectorEditorForm({
           onChange={handleBioChange}
           placeholder="- Sinh năm 19xx&#10;- Nguyên giám đốc..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
       <div className="space-y-2 mb-3">
         <label className="block text-sm font-medium text-foreground">
-          Hình ảnh <span className="text-red-500">*</span>
+          Hình ảnh
         </label>
         {imagePreview ? (
           <div className="relative w-fit">

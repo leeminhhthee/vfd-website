@@ -116,3 +116,15 @@ export const getStatusColor = (status: string) => {
 export function formatCurrencyVND(amount: number): string {
   return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 }
+
+//Check VN phone 10 digits start with 0
+export const isValidVietnamPhoneNumber = (phone: string) => {
+  const phoneRegex = /^(0)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5|8|9]|9[0-4|6-9])[0-9]{7}$/;
+  return phoneRegex.test(phone);
+};
+
+//Check email valid
+export const isValidEmail = (email: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
