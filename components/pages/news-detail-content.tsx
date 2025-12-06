@@ -87,7 +87,7 @@ export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
         </div>
 
         {/* Featured Image */}
-        <div className="mb-8 rounded-lg overflow-hidden">
+        <div className="mb-8 overflow-hidden">
           <Image
             src={news.imageUrl || "/placeholder.svg"}
             alt={news.title}

@@ -13,9 +13,14 @@ import { Button, Image, Input, notification, Select } from "antd";
 import { Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+// Define payload type that sends bankQrCodeId as number
+type ProjectPayload = Omit<Partial<ProjectItem>, "bankQrCode"> & {
+  bankId?: number;
+};
+
 interface Props {
   initialData?: ProjectItem;
-  onSave: (data: Partial<ProjectItem>) => void;
+  onSave: (data: ProjectPayload) => void;
   onCancel: () => void;
   isLoading: boolean;
   hasUnsavedChanges?: (changed: boolean) => void;
@@ -34,25 +39,29 @@ export default function ProjectsEditorForm({
   hasUnsavedChanges: notifyUnsavedChanges,
 }: Props) {
   const [formData, setFormData] = useState<Partial<ProjectItem>>({
+    id: initialData?.id,
     title: initialData?.title || "",
     overview: initialData?.overview || "",
     duration: initialData?.duration || "",
     location: initialData?.location || "",
-    price: initialData?.price || 0,
+    price: initialData?.price || "",
     category: initialData?.category,
-    image: initialData?.image || "",
+    imageUrl: initialData?.imageUrl || "",
     goals: initialData?.goals || [],
     bankQrCode: initialData?.bankQrCode || undefined,
   });
 
+  const [goalsText, setGoalsText] = useState<string>(
+    initialData?.goals?.join("\n") || ""
+  );
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    initialData?.image || ""
+    initialData?.imageUrl || ""
   );
   const [selectedBankQrId, setSelectedBankQrId] = useState<number | undefined>(
     initialData?.bankQrCode?.id
   );
-  const [previewBankQrId, setPreviewBankQrId] = useState<number | undefined>();
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -91,7 +100,9 @@ export default function ProjectsEditorForm({
   };
 
   const handleGoalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const goalsArray = e.target.value.split("\n").filter((g) => g.trim());
+    const value = e.target.value;
+    setGoalsText(value);
+    const goalsArray = value.split("\n").filter((g) => g.trim());
     setFormData((prev) => ({ ...prev, goals: goalsArray }));
     markAsChanged();
   };
@@ -123,7 +134,7 @@ export default function ProjectsEditorForm({
   const removeImage = () => {
     setImageFile(null);
     setImagePreview("");
-    setFormData((prev) => ({ ...prev, image: "" }));
+    setFormData((prev) => ({ ...prev, imageUrl: "" }));
     markAsChanged();
   };
 
@@ -148,14 +159,21 @@ export default function ProjectsEditorForm({
     if (!formData.overview?.trim()) {
       return notification.error({ message: "Vui lòng nhập mô tả tổng quan" });
     }
-    if (!formData.image && !imageFile) {
+    if (!formData.imageUrl && !imageFile) {
       return notification.error({ message: "Vui lòng chọn hình ảnh dự án" });
+    }
+    if (!selectedBankQrId) {
+      return notification.error({
+        message: "Vui lòng chọn tài khoản ngân hàng",
+        description:
+          "Dự án cần có thông tin tài khoản ngân hàng để nhận quyên góp",
+      });
     }
 
     setIsUploading(true);
 
     try {
-      let finalImageUrl = formData.image || "";
+      let finalImageUrl = formData.imageUrl || "";
 
       if (imageFile) {
         try {
@@ -170,9 +188,18 @@ export default function ProjectsEditorForm({
         }
       }
 
-      const result: Partial<ProjectItem> = {
-        ...formData,
-        image: finalImageUrl,
+      // Create payload with bankQrCodeId as number
+      const result: ProjectPayload = {
+        id: formData.id,
+        title: formData.title,
+        overview: formData.overview,
+        duration: formData.duration,
+        location: formData.location,
+        price: formData.price,
+        category: formData.category,
+        goals: formData.goals,
+        imageUrl: finalImageUrl,
+        bankId: selectedBankQrId, // Send only ID
       };
 
       onSave(result);
@@ -185,7 +212,6 @@ export default function ProjectsEditorForm({
 
   const isProcessing = isLoading || isUploading;
   const selectedBankQr = bankQrs.find((qr) => qr.id === selectedBankQrId);
-  const previewBankQr = bankQrs.find((qr) => qr.id === previewBankQrId);
 
   return (
     <div className="space-y-6">
@@ -200,6 +226,7 @@ export default function ProjectsEditorForm({
           onChange={handleInputChange}
           placeholder="Nhập tên dự án..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -230,6 +257,7 @@ export default function ProjectsEditorForm({
             onChange={handleInputChange}
             placeholder="Ví dụ: 500000000"
             disabled={isProcessing}
+            allowClear
           />
         </div>
       </div>
@@ -244,8 +272,9 @@ export default function ProjectsEditorForm({
             name="duration"
             value={formData.duration}
             onChange={handleInputChange}
-            placeholder="Ví dụ: 3 tháng, Năm 2024"
+            placeholder="Ví dụ: Từ tháng 01/2024 đến 03/2024"
             disabled={isProcessing}
+            allowClear
           />
         </div>
         <div className="space-y-2 mb-3">
@@ -257,8 +286,9 @@ export default function ProjectsEditorForm({
             name="location"
             value={formData.location}
             onChange={handleInputChange}
-            placeholder="Ví dụ: TP. Hồ Chí Minh"
+            placeholder="Ví dụ: TP. Đà Nẵng"
             disabled={isProcessing}
+            allowClear
           />
         </div>
       </div>
@@ -275,6 +305,7 @@ export default function ProjectsEditorForm({
           onChange={handleInputChange}
           placeholder="Mô tả chi tiết về dự án..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -284,10 +315,11 @@ export default function ProjectsEditorForm({
         </label>
         <Input.TextArea
           rows={4}
-          value={formData.goals?.join("\n") || ""}
+          value={goalsText}
           onChange={handleGoalsChange}
-          placeholder="Mục tiêu 1&#10;Mục tiêu 2&#10;Mục tiêu 3"
+          placeholder={`Mục tiêu 1\nMục tiêu 2\nMục tiêu 3`}
           disabled={isProcessing}
+          allowClear
         />
       </div>
 

@@ -7,6 +7,8 @@ export class ProjectItem {
   id!: number;
   @Expose({ name: 'title' })
   title!: string;
+  @Expose({ name: 'slug' })
+  slug!: string;
   @Expose({ name: 'overview' })
   overview!: string;
   @Expose({ name: 'duration' })
@@ -14,16 +16,18 @@ export class ProjectItem {
   @Expose({ name: 'location' })
   location!: string;
   @Expose({ name: 'price' })
-  price!: number;
-  @Expose({ name: 'image' })
-  image!: string;
+  price!: string;
+  @Expose({ name: 'imageUrl' })
+  imageUrl!: string;
   @Expose({ name: 'category' })
   category!: ProjectCategory;
-  @Expose({ name: 'bank_qr_code' })
+  @Expose({ name: 'bank' })
   @Type(() => BankQrItem)
   bankQrCode!: BankQrItem;
   @Expose({ name: 'goals' })
   goals!: string[];
-  @Expose({ name: 'created_at' })
+  @Expose({ name: 'createdAt' })
   createdAt!: Date;
+  @Expose({ name: 'updatedAt' })
+  updatedAt!: Date;
 }

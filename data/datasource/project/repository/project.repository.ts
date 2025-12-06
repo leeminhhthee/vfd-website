@@ -1,58 +1,37 @@
+import { api } from "@/app/api/api";
 import { plainToInstance } from "class-transformer";
-import projectMock from "../../../mockup/project.json";
 import { ProjectItem } from "../../../model/project.model";
-import { api } from "../../../remote/api";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+// const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+const API_BASE = '/projects'
+
+type ProjectPayload = Omit<Partial<ProjectItem>, 'bankQrCode'> & {
+  bankId?: number;
+};
 
 export const projectRepository = {
   async getProjectList(): Promise<ProjectItem[]> {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 300));
-      return plainToInstance(ProjectItem, projectMock);
-    }
-
-    const response = await api.get<ProjectItem[]>("/project");
+    const response = await api.get<ProjectItem[]>(`${API_BASE}`);
     return plainToInstance(ProjectItem, response.data);
   },
 
-  async createProject(data: Partial<ProjectItem>) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      console.log("Mock Create Partner:", data);
-      return plainToInstance(ProjectItem, { id: Date.now(), ...data });
-    }
-    const response = await api.post<ProjectItem>("/project", data);
+  async createProject(data: ProjectPayload) {
+    const response = await api.post<ProjectItem>(`${API_BASE}`, data);
     return plainToInstance(ProjectItem, response.data);
   },
 
-  async updateProject(id: number, data: Partial<ProjectItem>) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      console.log("Mock Update Partner:", id, data);
-      return plainToInstance(ProjectItem, { id, ...data });
-    }
-    const response = await api.put<ProjectItem>(`/project/${id}`, data);
+  async updateProject(id: number, data: ProjectPayload) {
+    const response = await api.patch<ProjectItem>(`${API_BASE}/${id}`, data);
     return plainToInstance(ProjectItem, response.data);
   },
 
   async deleteProject(id: number) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      console.log("Mock Delete Partner:", id);
-      return { success: true };
-    }
-    const response = await api.delete(`/project/${id}`);
+    const response = await api.delete(`${API_BASE}/${id}`);
     return response.data;
   },
 
   async getProjectById(id: number) {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 300));
-      const project = projectMock.find((p) => p.id === id);
-      return plainToInstance(ProjectItem, project);
-    }
-    const response = await api.get<ProjectItem>(`/project/${id}`);
+    const response = await api.get<ProjectItem>(`${API_BASE}/${id}`);
     return plainToInstance(ProjectItem, response.data);
   }
 };

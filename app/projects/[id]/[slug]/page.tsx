@@ -72,7 +72,7 @@ export default function ProjectDetailPage() {
         {/* Hero Banner */}
         <div className="relative h-[400px] lg:h-[500px] w-full group">
           <Image
-            src={project.image || "/placeholder.svg"}
+            src={project.imageUrl || "/placeholder.svg"}
             alt={project.title}
             className="w-full h-full object-cover"
             fill
@@ -236,7 +236,7 @@ export default function ProjectDetailPage() {
                       Mục tiêu tài chính
                     </p>
                     <p className="font-semibold text-gray-900 mt-1 text-lg">
-                      {formatCurrency(project.price)}
+                      {formatCurrency(Number(project.price))}
                     </p>
                   </div>
                 </Card>
@@ -298,7 +298,7 @@ export default function ProjectDetailPage() {
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden">
                         <Image
-                          src={project.image || "/placeholder.svg"}
+                          src={project.imageUrl || "/placeholder.svg"}
                           alt={project.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           fill
@@ -332,7 +332,7 @@ export default function ProjectDetailPage() {
                               Kinh phí dự kiến
                             </span>
                             <span className="font-bold text-primary">
-                              {formatCurrency(project.price)}
+                              {formatCurrency(Number(project.price))}
                             </span>
                           </div>
                         </div>

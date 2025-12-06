@@ -3,6 +3,7 @@
 import { trans } from "@/app/generated/AppLocalization";
 import { getNewsTypeLabel } from "@/data/constants/constants";
 import { newsInteractor } from "@/data/datasource/news/interactor/news.interactor";
+import { extractPlainText } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { ChevronRight } from "lucide-react";
@@ -87,10 +88,9 @@ export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
                 <h3 className="font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
                   {item.title}
                 </h3>
-                <p
-                  className="text-foreground group-hover:text-primary transition-colors line-clamp-1 text-sm"
-                  dangerouslySetInnerHTML={{ __html: item.content }}
-                />
+                <p className="text-foreground group-hover:text-primary transition-colors line-clamp-1 text-sm">
+                  {extractPlainText(item.content)}
+                </p>
               </div>
             </div>
           </Link>
