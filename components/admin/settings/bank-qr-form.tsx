@@ -22,16 +22,17 @@ export default function BankQrEditorForm({
   hasUnsavedChanges: notifyUnsavedChanges,
 }: Props) {
   const [formData, setFormData] = useState<Partial<BankQrItem>>({
+    id: initialData?.id,
     bankName: initialData?.bankName || "",
-    branchName: initialData?.branchName || "",
+    branch: initialData?.branch || "",
     accountNumber: initialData?.accountNumber || "",
-    accountName: initialData?.accountName || "",
-    qrCodeUrl: initialData?.qrCodeUrl || "",
+    fullName: initialData?.fullName || "",
+    imageUrl: initialData?.imageUrl || "",
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    initialData?.qrCodeUrl || ""
+    initialData?.imageUrl || ""
   );
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -74,7 +75,7 @@ export default function BankQrEditorForm({
   const removeImage = () => {
     setImageFile(null);
     setImagePreview("");
-    setFormData((prev) => ({ ...prev, qrCodeUrl: "" }));
+    setFormData((prev) => ({ ...prev, imageUrl: "" }));
     markAsChanged();
   };
 
@@ -85,18 +86,18 @@ export default function BankQrEditorForm({
     if (!formData.accountNumber?.trim()) {
       return notification.error({ message: "Vui lòng nhập số tài khoản" });
     }
-    if (!formData.accountName?.trim()) {
+    if (!formData.fullName?.trim()) {
       return notification.error({ message: "Vui lòng nhập tên chủ tài khoản" });
     }
 
-    if (!formData.qrCodeUrl && !imageFile) {
+    if (!formData.imageUrl && !imageFile) {
       return notification.error({ message: "Vui lòng tải lên mã QR" });
     }
 
     setIsUploading(true);
 
     try {
-      let finalImageUrl = formData.qrCodeUrl || "";
+      let finalImageUrl = formData.imageUrl || "";
 
       if (imageFile) {
         try {
@@ -113,7 +114,7 @@ export default function BankQrEditorForm({
 
       const result: Partial<BankQrItem> = {
         ...formData,
-        qrCodeUrl: finalImageUrl,
+        imageUrl: finalImageUrl,
       };
 
       onSave(result);
@@ -226,8 +227,8 @@ export default function BankQrEditorForm({
           </label>
           <Input
             size="large"
-            name="branchName"
-            value={formData.branchName}
+            name="branch"
+            value={formData.branch}
             onChange={handleInputChange}
             placeholder="Ví dụ: CN Đà Nẵng"
             disabled={isLoading || isUploading}
@@ -255,8 +256,8 @@ export default function BankQrEditorForm({
         </label>
         <Input
           size="large"
-          name="accountName"
-          value={formData.accountName}
+          name="fullName"
+          value={formData.fullName}
           onChange={handleInputChange}
           placeholder="LIEN DOAN BONG CHUYEN..."
           disabled={isLoading || isUploading}

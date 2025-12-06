@@ -51,9 +51,9 @@ export default function SettingsManagement() {
     queryFn: aboutInteractor.getBoardDirectors,
   });
 
-  const { data: bankQrs = [], isLoading: qrLoading } = useQuery({
-    queryKey: ["bankQrs"],
-    queryFn: aboutInteractor.getBankQrs, // Sửa thành getBankQrs (số nhiều)
+  const { data: banks = [], isLoading: qrLoading } = useQuery({
+    queryKey: ["banks"],
+    queryFn: aboutInteractor.getBankQrs,
   });
 
   const { data: banners = [], isLoading: bannersLoading } = useQuery({
@@ -62,17 +62,17 @@ export default function SettingsManagement() {
   });
 
   // ---------------- MUTATIONS ----------------
-  // ... (Mutations cho Director & Banner GIỮ NGUYÊN) ...
   const createDirectorMutation = useMutation({
     mutationFn: (data: Partial<BoardDirectorItem>) =>
       aboutInteractor.createBoardDirector(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Thành công" });
-      queryClient.invalidateQueries({ queryKey: ["directors"] });
+      await queryClient.invalidateQueries({ queryKey: ["directors"] });
       handleCloseEditorDirector();
     },
     onError: () => notification.error({ message: "Thêm thất bại" }),
   });
+
   const updateDirectorMutation = useMutation({
     mutationFn: ({
       id,
@@ -81,57 +81,59 @@ export default function SettingsManagement() {
       id: number;
       data: Partial<BoardDirectorItem>;
     }) => aboutInteractor.updateBoardDirector(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Thành công" });
-      queryClient.invalidateQueries({ queryKey: ["directors"] });
+      await queryClient.invalidateQueries({ queryKey: ["directors"] });
       handleCloseEditorDirector();
     },
     onError: () => notification.error({ message: "Cập nhật thất bại" }),
   });
+
   const deleteDirectorMutation = useMutation({
     mutationFn: (id: number) => aboutInteractor.deleteBoardDirector(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa" });
-      queryClient.invalidateQueries({ queryKey: ["directors"] });
+      await queryClient.invalidateQueries({ queryKey: ["directors"] });
     },
     onError: () => notification.error({ message: "Xóa thất bại" }),
   });
 
   const createBannerMutation = useMutation({
     mutationFn: (data: Partial<HeroItem>) => homeInteractor.createHero(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Thành công" });
-      queryClient.invalidateQueries({ queryKey: ["heroes"] });
+      await queryClient.invalidateQueries({ queryKey: ["heroes"] });
       handleCloseEditorBanner();
     },
     onError: () => notification.error({ message: "Thêm thất bại" }),
   });
+
   const updateBannerMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<HeroItem> }) =>
       homeInteractor.updateHero(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Thành công" });
-      queryClient.invalidateQueries({ queryKey: ["heroes"] });
+      await queryClient.invalidateQueries({ queryKey: ["heroes"] });
       handleCloseEditorBanner();
     },
     onError: () => notification.error({ message: "Cập nhật thất bại" }),
   });
+
   const deleteBannerMutation = useMutation({
     mutationFn: (id: number) => homeInteractor.deleteHero(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa" });
-      queryClient.invalidateQueries({ queryKey: ["heroes"] });
+      await queryClient.invalidateQueries({ queryKey: ["heroes"] });
     },
     onError: () => notification.error({ message: "Xóa thất bại" }),
   });
 
-  // --- Mutations QR ---
   const createQrMutation = useMutation({
     mutationFn: (data: Partial<BankQrItem>) =>
       aboutInteractor.createBankQr(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Thêm tài khoản thành công" });
-      queryClient.invalidateQueries({ queryKey: ["bankQrs"] });
+      await queryClient.invalidateQueries({ queryKey: ["banks"] });
       handleCloseEditorQr();
     },
     onError: () => notification.error({ message: "Thêm thất bại" }),
@@ -140,9 +142,9 @@ export default function SettingsManagement() {
   const updateQrMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<BankQrItem> }) =>
       aboutInteractor.updateBankQr(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Cập nhật thành công" });
-      queryClient.invalidateQueries({ queryKey: ["bankQrs"] });
+      await queryClient.invalidateQueries({ queryKey: ["banks"] });
       handleCloseEditorQr();
     },
     onError: () => notification.error({ message: "Cập nhật thất bại" }),
@@ -150,9 +152,9 @@ export default function SettingsManagement() {
 
   const deleteQrMutation = useMutation({
     mutationFn: (id: number) => aboutInteractor.deleteBankQr(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa tài khoản" });
-      queryClient.invalidateQueries({ queryKey: ["bankQrs"] });
+      await queryClient.invalidateQueries({ queryKey: ["banks"] });
     },
     onError: () => notification.error({ message: "Xóa thất bại" }),
   });
@@ -166,7 +168,6 @@ export default function SettingsManagement() {
     }
   };
 
-  // Director & Banner Handlers (GIỮ NGUYÊN)
   const handleCloseEditorDirector = () => {
     setEditingModeDirector(false);
     setEditingDirector(null);
@@ -189,7 +190,6 @@ export default function SettingsManagement() {
     setIsFormDirty(false);
   };
 
-  // QR Handlers
   const handleCloseEditorQr = () => {
     setEditingModeQr(false);
     setEditingQr(null);
@@ -206,19 +206,18 @@ export default function SettingsManagement() {
     Modal.confirm({
       title: "Xóa tài khoản ngân hàng này?",
       okType: "danger",
-      onOk: () => {
+      onOk: async () => {
         showLoading();
-        deleteQrMutation.mutate(id, {
-          onSettled: () => {
-            hideLoading();
-          },
-        });
+        try {
+          await deleteQrMutation.mutateAsync(id);
+        } finally {
+          hideLoading();
+        }
       },
     });
   };
 
   // ---------------- COLUMNS ----------------
-  // ... (Banner & Director Columns giữ nguyên) ...
   const bannerColumns: ColumnsType<HeroItem> = [
     {
       title: "Hình ảnh",
@@ -279,13 +278,13 @@ export default function SettingsManagement() {
                 Modal.confirm({
                   title: "Xóa banner này?",
                   okType: "danger",
-                  onOk: () => {
+                  onOk: async () => {
                     showLoading();
-                    deleteBannerMutation.mutate(record.id, {
-                      onSettled: () => {
-                        hideLoading();
-                      },
-                    });
+                    try {
+                      await deleteBannerMutation.mutateAsync(record.id);
+                    } finally {
+                      hideLoading();
+                    }
                   },
                 })
               }
@@ -334,13 +333,13 @@ export default function SettingsManagement() {
               Modal.confirm({
                 title: "Xóa Lãnh đạo?",
                 okType: "danger",
-                onOk: () => {
+                onOk: async () => {
                   showLoading();
-                  deleteDirectorMutation.mutate(record.id, {
-                    onSettled: () => {
-                      hideLoading();
-                    },
-                  });
+                  try {
+                    await deleteDirectorMutation.mutateAsync(record.id);
+                  } finally {
+                    hideLoading();
+                  }
                 },
               })
             }
@@ -353,32 +352,35 @@ export default function SettingsManagement() {
   const qrColumns: ColumnsType<BankQrItem> = [
     {
       title: "QR Code",
-      dataIndex: "qrCodeUrl",
-      key: "qrCodeUrl",
-      width: 100,
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      width: 150,
+      align: "center",
       render: (url) => (
-        <Image
-          src={url}
-          width={60}
-          height={60}
-          style={{
-            objectFit: "contain",
-            border: "1px solid #f0f0f0",
-            borderRadius: 4,
-          }}
-          alt="QR"
-        />
+        <div className="flex justify-center">
+          <Image
+            src={url}
+            width={60}
+            height={60}
+            style={{
+              objectFit: "contain",
+              border: "1px solid #f0f0f0",
+              borderRadius: 4,
+            }}
+            alt="QR"
+          />
+        </div>
       ),
     },
     {
       title: "Ngân hàng",
       dataIndex: "bankName",
       key: "bankName",
-      width: 150,
+      width: 300,
       render: (text, r) => (
         <div>
           <div className="font-bold">{text}</div>
-          <div className="text-xs text-gray-500">{r.branchName}</div>
+          <div className="text-xs text-gray-500">{r.branch}</div>
         </div>
       ),
     },
@@ -388,7 +390,7 @@ export default function SettingsManagement() {
       render: (_, r) => (
         <div>
           <div className="font-medium text-blue-600">{r.accountNumber}</div>
-          <div className="text-xs uppercase text-gray-500">{r.accountName}</div>
+          <div className="text-xs uppercase text-gray-500">{r.fullName}</div>
         </div>
       ),
     },
@@ -439,7 +441,7 @@ export default function SettingsManagement() {
         <div className="bg-white rounded-lg border border-border overflow-hidden">
           <Table
             columns={qrColumns}
-            dataSource={bankQrs}
+            dataSource={banks}
             rowKey="id"
             loading={qrLoading}
             pagination={false}
@@ -515,24 +517,19 @@ export default function SettingsManagement() {
       >
         <BannerEditorForm
           initialData={editingBanner ?? undefined}
-          onSave={(data) => {
-            if (editingBanner?.id) {
-              showLoading();
-              updateBannerMutation.mutate(
-                { id: editingBanner.id, data },
-                {
-                  onSettled: () => {
-                    hideLoading();
-                  },
-                }
-              );
-            } else {
-              showLoading();
-              createBannerMutation.mutate(data, {
-                onSettled: () => {
-                  hideLoading();
-                },
-              });
+          onSave={async (data) => {
+            showLoading();
+            try {
+              if (editingBanner?.id) {
+                await updateBannerMutation.mutateAsync({
+                  id: editingBanner.id,
+                  data,
+                });
+              } else {
+                await createBannerMutation.mutateAsync(data);
+              }
+            } finally {
+              hideLoading();
             }
           }}
           onCancel={() => handleDrawerClose(handleCloseEditorBanner)}
@@ -558,24 +555,19 @@ export default function SettingsManagement() {
       >
         <DirectorEditorForm
           initialData={editingDirector ?? undefined}
-          onSave={(data) => {
-            if (editingDirector?.id) {
-              showLoading();
-              updateDirectorMutation.mutate(
-                { id: editingDirector.id, data },
-                {
-                  onSettled: () => {
-                    hideLoading();
-                  },
-                }
-              );
-            } else {
-              showLoading();
-              createDirectorMutation.mutate(data, {
-                onSettled: () => {
-                  hideLoading();
-                },
-              });
+          onSave={async (data) => {
+            showLoading();
+            try {
+              if (editingDirector?.id) {
+                await updateDirectorMutation.mutateAsync({
+                  id: editingDirector.id,
+                  data,
+                });
+              } else {
+                await createDirectorMutation.mutateAsync(data);
+              }
+            } finally {
+              hideLoading();
             }
           }}
           onCancel={() => handleDrawerClose(handleCloseEditorDirector)}
@@ -597,24 +589,16 @@ export default function SettingsManagement() {
       >
         <BankQrEditorForm
           initialData={editingQr ?? undefined}
-          onSave={(data) => {
-            if (editingQr?.id) {
-              showLoading();
-              updateQrMutation.mutate(
-                { id: editingQr.id, data },
-                {
-                  onSettled: () => {
-                    hideLoading();
-                  },
-                }
-              );
-            } else {
-              showLoading();
-              createQrMutation.mutate(data, {
-                onSettled: () => {
-                  hideLoading();
-                },
-              });
+          onSave={async (data) => {
+            showLoading();
+            try {
+              if (editingQr?.id) {
+                await updateQrMutation.mutateAsync({ id: editingQr.id, data });
+              } else {
+                await createQrMutation.mutateAsync(data);
+              }
+            } finally {
+              hideLoading();
             }
           }}
           onCancel={() => handleDrawerClose(handleCloseEditorQr)}

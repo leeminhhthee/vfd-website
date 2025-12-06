@@ -40,16 +40,20 @@ export class BoardDirectorItem {
 export class BankQrItem {
     @Expose({ name: 'id' })
     id!: number;
-    @Expose({ name: 'account_number' })
+    @Expose({ name: 'accountNumber' })
     accountNumber!: string;
-    @Expose({ name: 'account_name' })
-    accountName!: string;
-    @Expose({ name: 'qr_code_url' })
-    qrCodeUrl!: string;
-    @Expose({ name: 'bank_name' })
+    @Expose({ name: 'fullName' })
+    fullName!: string;
+    @Expose({ name: 'imageUrl' })
+    imageUrl!: string;
+    @Expose({ name: 'bankName' })
     bankName!: string;
-    @Expose({ name: 'branch_name' })
-    branchName!: string;
+    @Expose({ name: 'branch' })
+    branch!: string;
+    @Expose({ name: 'createdAt' })
+    createdAt!: Date;
+    @Expose({ name: 'updatedAt' })
+    updatedAt!: Date;
 }
 
 export class AboutModel {

@@ -1,17 +1,18 @@
+import { api } from "@/app/api/api";
 import aboutMock from "@/data/mockup/about.json";
 import {
   AboutModel,
   BankQrItem,
   BoardDirectorItem,
 } from "@/data/model/about.model";
-import { api } from "@/data/remote/api";
 import { plainToInstance } from "class-transformer";
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
 // Biến local dùng để giả lập lưu trữ khi edit/delete trong phiên làm việc (khi dùng Mock)
 let localDirectors = [...aboutMock.board_directors];
-let localBankQrs = aboutMock.bank_qrs || [];
+
+const API_BANK_BASE = '/banks';
 
 export const aboutRepository = {
   // --- 1. Dữ liệu Tĩnh (Introduction, Affected Object) ---
@@ -67,49 +68,22 @@ export const aboutRepository = {
   // --- 3. Dữ liệu QR Code ---
 
   async getBankQrs(): Promise<BankQrItem[]> {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 300));
-      return plainToInstance(BankQrItem, localBankQrs);
-    }
-    const response = await api.get<BankQrItem[]>("/settings/bank-qrs");
+    const response = await api.get<BankQrItem[]>(`${API_BANK_BASE}`);
     return plainToInstance(BankQrItem, response.data);
   },
 
   async createBankQr(data: Partial<BankQrItem>): Promise<BankQrItem> {
-    // if (USE_MOCK) {
-    //     await new Promise((r) => setTimeout(r, 500));
-    //     const newItem = { 
-    //         ...data, 
-    //         id: Date.now() 
-    //     } as BankQrItem;
-    //     localBankQrs.push(newItem);
-    //     return plainToInstance(BankQrItem, newItem);
-    // }
-    const response = await api.post<BankQrItem>("/settings/bank-qrs", data);
+    const response = await api.post<BankQrItem>(`${API_BANK_BASE}`, data);
     return plainToInstance(BankQrItem, response.data);
   },
 
   async updateBankQr(id: number, data: Partial<BankQrItem>): Promise<BankQrItem> {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      const index = localBankQrs.findIndex(q => q.id === id);
-      if (index !== -1) {
-        localBankQrs[index] = { ...localBankQrs[index], ...data };
-        return plainToInstance(BankQrItem, localBankQrs[index]);
-      }
-      throw new Error("Not found");
-    }
-    const response = await api.put<BankQrItem>(`/settings/bank-qrs/${id}`, data);
+    const response = await api.patch<BankQrItem>(`${API_BANK_BASE}/${id}`, data);
     return plainToInstance(BankQrItem, response.data);
   },
 
-  async deleteBankQr(id: number): Promise<boolean> {
-    if (USE_MOCK) {
-      await new Promise((r) => setTimeout(r, 500));
-      localBankQrs = localBankQrs.filter(q => q.id !== id);
-      return true;
-    }
-    await api.delete(`/settings/bank-qrs/${id}`);
-    return true;
+  async deleteBankQr(id: number): Promise<{ success: boolean }> {
+    await api.delete(`${API_BANK_BASE}/${id}`);
+    return { success: true };
   }
 };
