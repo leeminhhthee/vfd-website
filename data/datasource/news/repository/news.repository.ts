@@ -56,7 +56,7 @@ export const newsRepository = {
 
   async createNews(payload: Partial<NewsItem>): Promise<NewsItem> {
     const response = await api.post<NewsItem>(`${API_BASE}`, payload, {
-      timeout: 60000, // Riêng cái này đợi 60 giây
+      timeout: 60000, 
     });
     return plainToInstance(NewsItem, response.data);
   },
@@ -64,7 +64,7 @@ export const newsRepository = {
   async updateNews(id: number, payload: Partial<NewsItem>): Promise<NewsItem> {
     const response = await api.patch<NewsItem>(`${API_BASE}/${id}`, payload,
       {
-        timeout: 60000, // Riêng cái này đợi 60 giây
+        timeout: 60000, 
       }
     );
     return plainToInstance(NewsItem, response.data);

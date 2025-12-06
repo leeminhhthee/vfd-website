@@ -42,7 +42,9 @@ export const aboutRepository = {
     id: number,
     data: Partial<BoardDirectorItem>
   ): Promise<BoardDirectorItem> {
-    const response = await api.patch<BoardDirectorItem>(`${API_DIRECTORS_BASE}/${id}`, data);
+    const response = await api.patch<BoardDirectorItem>(`${API_DIRECTORS_BASE}/${id}`, data, {
+      timeout: 60000,
+    });
     return plainToInstance(BoardDirectorItem, response.data);
   },
 
