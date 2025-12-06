@@ -27,6 +27,11 @@ import { X } from "lucide-react";
 import { useMemo, useState } from "react";
 import ProjectsEditorForm from "./projects-editor-form";
 
+// Define payload type
+type ProjectPayload = Omit<Partial<ProjectItem>, "bankQrCode"> & {
+  bankId?: number;
+};
+
 export default function ProjectsManagement() {
   const { showLoading, hideLoading } = useLoading();
   const [editingMode, setEditingMode] = useState(false);
@@ -63,11 +68,11 @@ export default function ProjectsManagement() {
     }
   };
 
-  const createMutation = useMutation<ProjectItem, Error, Partial<ProjectItem>>({
+  const createMutation = useMutation<ProjectItem, Error, ProjectPayload>({
     mutationFn: (data) => projectInteractor.createProject(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Tạo dự án thành công" });
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      await queryClient.invalidateQueries({ queryKey: ["projects"] });
       handleCloseEditor();
     },
     onError: () => notification.error({ message: "Tạo dự án thất bại" }),
@@ -76,12 +81,12 @@ export default function ProjectsManagement() {
   const updateMutation = useMutation<
     ProjectItem,
     Error,
-    { id: number; data: Partial<ProjectItem> }
+    { id: number; data: ProjectPayload }
   >({
     mutationFn: ({ id, data }) => projectInteractor.updateProject(id, data),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Cập nhật thành công" });
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      await queryClient.invalidateQueries({ queryKey: ["projects"] });
       handleCloseEditor();
     },
     onError: () => notification.error({ message: "Cập nhật thất bại" }),
@@ -89,9 +94,9 @@ export default function ProjectsManagement() {
 
   const deleteMutation = useMutation<boolean, Error, number>({
     mutationFn: (id) => projectInteractor.deleteProject(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       notification.success({ message: "Đã xóa dự án" });
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      await queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
     onError: () => notification.error({ message: "Xóa thất bại" }),
   });
@@ -121,13 +126,13 @@ export default function ProjectsManagement() {
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
-      onOk: () => {
+      onOk: async () => {
         showLoading();
-        deleteMutation.mutate(id, {
-          onSettled: () => {
-            hideLoading();
-          },
-        });
+        try {
+          await deleteMutation.mutateAsync(id);
+        } finally {
+          hideLoading();
+        }
       },
     });
   };
@@ -137,12 +142,12 @@ export default function ProjectsManagement() {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      width: 60,
+      width: 50,
     },
     {
       title: "Hình ảnh",
-      dataIndex: "image",
-      key: "image",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
       width: 100,
       render: (url: string) => (
         <Avatar
@@ -159,17 +164,18 @@ export default function ProjectsManagement() {
       title: "Tên dự án",
       dataIndex: "title",
       key: "title",
-      width: 350,
+      width: 320,
       render: (text: string) => (
         <div
           className="font-semibold text-base"
           style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
             wordBreak: "break-word",
-            maxWidth: 350,
-            display: "inline-block",
+            maxWidth: 320,
           }}
         >
           {text}
@@ -193,7 +199,7 @@ export default function ProjectsManagement() {
       title: "Ngân sách",
       dataIndex: "price",
       key: "price",
-      render: (price: number) => formatCurrencyVND(price) || "-",
+      render: (price: string) => formatCurrencyVND(price) || "-",
     },
     {
       title: "Thời gian",
@@ -205,12 +211,26 @@ export default function ProjectsManagement() {
       title: "Địa điểm",
       dataIndex: "location",
       key: "location",
-      render: (location: string) => location || "-",
+      render: (text: string) => (
+        <div
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            wordBreak: "break-word",
+            maxWidth: 150,
+            display: "inline-block",
+          }}
+        >
+          {text}
+        </div>
+      ),
     },
     {
       title: "Hành động",
       key: "action",
       align: "center",
+      fixed: "right",
       render: (_, record) => (
         <Space size="middle">
           <Button
@@ -291,27 +311,19 @@ export default function ProjectsManagement() {
         <ProjectsEditorForm
           key={editingProject ? editingProject.id : "create-new"}
           initialData={editingProject ?? undefined}
-          onSave={(data) => {
-            if (editingProject?.id) {
-              showLoading();
-              updateMutation.mutate(
-                {
+          onSave={async (data) => {
+            showLoading();
+            try {
+              if (editingProject?.id) {
+                await updateMutation.mutateAsync({
                   id: editingProject.id,
                   data: data,
-                },
-                {
-                  onSettled: () => {
-                    hideLoading();
-                  },
-                }
-              );
-            } else {
-              showLoading();
-              createMutation.mutate(data, {
-                onSettled: () => {
-                  hideLoading();
-                },
-              });
+                });
+              } else {
+                await createMutation.mutateAsync(data);
+              }
+            } finally {
+              hideLoading();
             }
           }}
           onCancel={handleDrawerClose}

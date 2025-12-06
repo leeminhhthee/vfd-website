@@ -113,9 +113,20 @@ export const getStatusColor = (status: string) => {
   }
 };
 
-export function formatCurrencyVND(amount: number): string {
-  return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+//function to change string as number to currency VND format
+export function formatCurrencyVND(value: string): string {
+  const num = Number(value);
+  if (isNaN(num)) return "";
+
+  return num.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 }
+
+// export function formatCurrencyVND(amount: number): string {
+//   return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+// }
 
 /**
  * Check if phone number is valid Vietnam phone number

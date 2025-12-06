@@ -1,4 +1,5 @@
 import { ProjectItem } from "@/data/model/project.model";
+import { formatCurrencyVND } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +19,7 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
           {/* Image */}
           <div className="relative h-48 overflow-hidden">
             <Image
-              src={project.image || "/placeholder.svg?height=200&width=400"}
+              src={project.imageUrl || "/placeholder.svg?height=200&width=400"}
               fill
               alt={project.title}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -57,13 +58,13 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                 <span className="font-bold text-foreground min-w-fit">
                   Budget:
                 </span>
-                <span className="text-accent font-bold">{project.price}</span>
+                <span className="text-accent font-bold">{formatCurrencyVND(project.price)}</span>
               </div>
             </div>
 
             {/* Button */}
             <Link
-              href={`/projects/${project.id}`}
+              href={`/projects/${project.id}/${project.slug}`}
               className="inline-flex items-center gap-2 px-4 py-2 border-2 border-accent text-accent font-bold rounded-lg hover:bg-accent hover:text-white transition-colors duration-200"
             >
               Xem chi tiết
