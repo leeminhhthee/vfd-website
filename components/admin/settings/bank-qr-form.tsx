@@ -219,6 +219,7 @@ export default function BankQrEditorForm({
             onChange={handleInputChange}
             placeholder="Ví dụ: MB Bank"
             disabled={isLoading || isUploading}
+            allowClear
           />
         </div>
         <div className="space-y-2 mb-3">
@@ -232,6 +233,7 @@ export default function BankQrEditorForm({
             onChange={handleInputChange}
             placeholder="Ví dụ: CN Đà Nẵng"
             disabled={isLoading || isUploading}
+            allowClear
           />
         </div>
       </div>
@@ -247,6 +249,7 @@ export default function BankQrEditorForm({
           onChange={handleInputChange}
           placeholder="0000xxxxx"
           disabled={isLoading || isUploading}
+          allowClear
         />
       </div>
 
@@ -261,6 +264,7 @@ export default function BankQrEditorForm({
           onChange={handleInputChange}
           placeholder="LIEN DOAN BONG CHUYEN..."
           disabled={isLoading || isUploading}
+          allowClear
         />
       </div>
 

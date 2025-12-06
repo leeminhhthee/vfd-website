@@ -173,6 +173,7 @@ export default function BannerEditorForm({
           onChange={handleInputChange}
           placeholder="VD: Liên đoàn bóng chuyền Đà Nẵng"
           disabled={isLoading}
+          allowClear
         />
       </div>
 
@@ -187,6 +188,7 @@ export default function BannerEditorForm({
           onChange={handleInputChange}
           placeholder="Mô tả ngắn gọn..."
           disabled={isLoading}
+          allowClear
         />
       </div>
 
@@ -201,6 +203,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="VD: Đăng ký ngay"
             disabled={isLoading}
+            allowClear
           />
         </div>
         <div className="space-y-2">
@@ -213,6 +216,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="/path/to/page"
             disabled={isLoading}
+            allowClear
           />
         </div>
       </div>
@@ -228,6 +232,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="VD: Xem thêm"
             disabled={isLoading}
+            allowClear
           />
         </div>
         <div className="space-y-2">
@@ -240,6 +245,7 @@ export default function BannerEditorForm({
             onChange={handleInputChange}
             placeholder="/path/to/page"
             disabled={isLoading}
+            allowClear
           />
         </div>
       </div>

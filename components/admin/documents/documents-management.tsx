@@ -255,6 +255,7 @@ export default function DocumentsManagement() {
               title: "Hành động",
               key: "action",
               align: "center",
+              fixed: "right",
               render: (_, record) => (
                 <Space size="middle">
                   <Button

@@ -206,6 +206,7 @@ export default function PartnersManagement() {
       title: "Hành động",
       key: "action",
       align: "center",
+      fixed: "right",
       width: 120,
       render: (_, record) => (
         <Space size="middle">

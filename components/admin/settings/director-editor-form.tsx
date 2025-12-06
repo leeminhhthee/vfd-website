@@ -22,17 +22,17 @@ export default function DirectorEditorForm({
   hasUnsavedChanges: notifyUnsavedChanges,
 }: Props) {
   const [formData, setFormData] = useState<Partial<BoardDirectorItem>>({
-    name: initialData?.name || "",
+    id: initialData?.id,
+    fullName: initialData?.fullName || "",
+    email: initialData?.email || "",
+    phoneNumber: initialData?.phoneNumber || "",
     role: initialData?.role || "",
     term: initialData?.term || "",
     imageUrl: initialData?.imageUrl || "",
-    note: initialData?.note || "",
-    bio: initialData?.bio || [],
+    bio: initialData?.bio || "",
   });
 
-  const [bioText, setBioText] = useState<string>(
-    initialData?.bio?.join("\n") || ""
-  );
+  const [bioText, setBioText] = useState<string>(initialData?.bio || "");
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
@@ -89,7 +89,7 @@ export default function DirectorEditorForm({
   };
 
   const handleSave = async () => {
-    if (!formData.name?.trim()) {
+    if (!formData.fullName?.trim()) {
       return notification.error({ message: "Vui lòng nhập họ tên" });
     }
     if (!formData.role?.trim()) {
@@ -97,10 +97,6 @@ export default function DirectorEditorForm({
     }
     if (!formData.term?.trim()) {
       return notification.error({ message: "Vui lòng nhập nhiệm kỳ" });
-    }
-    // Validation bắt buộc có hình ảnh
-    if (!formData.imageUrl && !imageFile) {
-      return notification.error({ message: "Vui lòng chọn hình ảnh" });
     }
 
     setIsUploading(true);
@@ -121,15 +117,10 @@ export default function DirectorEditorForm({
         }
       }
 
-      const bioArray = bioText
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0);
-
       const result: Partial<BoardDirectorItem> = {
         ...formData,
         imageUrl: finalImageUrl,
-        bio: bioArray,
+        bio: bioText.trim(),
       };
 
       onSave(result);
@@ -150,11 +141,12 @@ export default function DirectorEditorForm({
         </label>
         <Input
           size="large"
-          name="name"
-          value={formData.name}
+          name="fullName"
+          value={formData.fullName}
           onChange={handleInputChange}
           placeholder="Nhập họ và tên..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -169,6 +161,7 @@ export default function DirectorEditorForm({
           onChange={handleInputChange}
           placeholder="Ví dụ: Chủ tịch Liên đoàn..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -183,6 +176,38 @@ export default function DirectorEditorForm({
           onChange={handleInputChange}
           placeholder="Ví dụ: Nhiệm kỳ 2020 – 2025"
           disabled={isProcessing}
+          allowClear
+        />
+      </div>
+
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
+          Email
+        </label>
+        <Input
+          size="large"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="Nhập email..."
+          disabled={isProcessing}
+          allowClear
+        />
+      </div>
+
+      <div className="space-y-2 mb-3">
+        <label className="block text-sm font-medium text-foreground">
+          Số điện thoại
+        </label>
+        <Input
+          size="large"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleInputChange}
+          placeholder="Nhập số điện thoại..."
+          disabled={isProcessing}
+          allowClear
         />
       </div>
 
@@ -196,12 +221,13 @@ export default function DirectorEditorForm({
           onChange={handleBioChange}
           placeholder="- Sinh năm 19xx&#10;- Nguyên giám đốc..."
           disabled={isProcessing}
+          allowClear
         />
       </div>
 
       <div className="space-y-2 mb-3">
         <label className="block text-sm font-medium text-foreground">
-          Hình ảnh <span className="text-red-500">*</span>
+          Hình ảnh
         </label>
         {imagePreview ? (
           <div className="relative w-fit">

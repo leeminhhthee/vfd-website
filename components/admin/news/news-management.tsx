@@ -242,6 +242,7 @@ export default function NewsManagement() {
       title: "Hành động",
       key: "action",
       align: "center",
+      fixed: "right",
       render: (_: unknown, record) => (
         <Space size="middle">
           <Button
