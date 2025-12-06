@@ -23,11 +23,27 @@ export const newsInteractor = {
   },
 
   async getNewsById(id: number): Promise<NewsItem | null> {
-    return await newsRepository.getNewsById(id);
+    const news = await newsRepository.getNewsById(id);
+    if (news && news.status === NewsStatus.PUBLISHED) {
+      return news;
+    }
+    return null;
   },
 
   async getNewsBySlug(slug: string): Promise<NewsItem | null> {
-    return await newsRepository.getNewsBySlug(slug);
+    const news = await newsRepository.getNewsBySlug(slug);
+    if (news && news.status === NewsStatus.PUBLISHED) {
+      return news;
+    }
+    return null;
+  },
+
+  async getNewsByIdAndSlug(id: number, slug: string): Promise<NewsItem | null> {
+    const news = await newsRepository.getNewsByIdAndSlug(id, slug);
+    if (news && news.status === NewsStatus.PUBLISHED) {
+      return news;
+    }
+    return null;
   },
 
   async createNews(payload: Partial<NewsItem>): Promise<NewsItem> {

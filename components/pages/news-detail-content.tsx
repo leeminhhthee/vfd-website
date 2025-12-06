@@ -14,22 +14,22 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface NewsDetailContentProps {
-  newsSlug: string;
+  newsId: number;
 }
 
-export default function NewsDetailContent({
-  newsSlug,
-}: NewsDetailContentProps) {
+export default function NewsDetailContent({ newsId }: NewsDetailContentProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  console.log(newsId);
 
   const {
     data: news,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["news", newsSlug],
-    queryFn: () => newsInteractor.getNewsBySlug(newsSlug),
-    enabled: !!newsSlug,
+    queryKey: ["news", newsId],
+    queryFn: () => newsInteractor.getNewsById(newsId),
+    enabled: !!newsId,
   });
 
   const { data: allNews = [] } = useQuery({
@@ -39,7 +39,7 @@ export default function NewsDetailContent({
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-slate-50">
+      <div className="w-full h-[50vh] flex items-center justify-center bg-slate-50">
         <Spin size="large" />
         <span className="text-gray-500 font-medium text-sm ml-5">
           {trans.loading}
@@ -147,7 +147,7 @@ export default function NewsDetailContent({
             {recentNews.map((item) => (
               <Link
                 key={item.id}
-                href={`/news/${item.slug}`}
+                href={`/news/${item.id}/${item.slug}`}
                 className="block group"
               >
                 <div className="flex gap-3 mb-3">

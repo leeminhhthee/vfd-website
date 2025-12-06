@@ -11,16 +11,16 @@ import { useParams } from "next/navigation";
 
 export default function NewsDetailPage() {
   const params = useParams();
-  const slug = params.slug as string;
+  const id = Number(params.id);
 
   const {
     data: news,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["news", slug],
-    queryFn: () => newsInteractor.getNewsBySlug(slug),
-    enabled: !!slug,
+    queryKey: ["news", id],
+    queryFn: () => newsInteractor.getNewsById(id),
+    enabled: !!id,
   });
 
   if (isLoading) {
@@ -47,9 +47,9 @@ export default function NewsDetailPage() {
   return (
     <UserLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <NewsDetailContent newsSlug={slug} />
+        <NewsDetailContent newsId={id} />
         <div className="mt-16 border-t border-border pt-12">
-          <NewsRelated currentNewsSlug={slug} />
+          <NewsRelated currentNewsId={id} />
         </div>
       </div>
     </UserLayout>

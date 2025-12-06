@@ -312,7 +312,6 @@ export default function NewsManagement() {
         onPublish={(data) => {
           if (editingNews?.id) {
             showLoading();
-            console.log(data);
             updateNewsMutation.mutate(
               {
                 id: editingNews.id,

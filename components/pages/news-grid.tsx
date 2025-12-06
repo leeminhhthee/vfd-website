@@ -140,7 +140,7 @@ export default function NewsGrid() {
                 dangerouslySetInnerHTML={{ __html: featuredNews.content }}
               />
               <Link
-                href={`/news/${featuredNews.slug}`}
+                href={`/news/${featuredNews.id}/${featuredNews.slug}`}
                 className="text-accent font-bold hover:text-accent-light transition-colors inline-flex items-center gap-2"
               >
                 {trans.readMore}
@@ -153,7 +153,7 @@ export default function NewsGrid() {
               sideSidebarNews.map((item) => (
                 <Link
                   key={item.id}
-                  href={`/news/${item.slug}`}
+                  href={`/news/${item.id}/${item.slug}`}
                   className="flex gap-3 group cursor-pointer"
                 >
                   <Image
@@ -215,7 +215,7 @@ export default function NewsGrid() {
                     dangerouslySetInnerHTML={{ __html: item.content }}
                   />
                   <Link
-                    href={`/news/${item.slug}`}
+                    href={`/news/${item.id}/${item.slug}`}
                     className="text-accent font-bold hover:text-accent-light transition-colors"
                   >
                     {trans.readMore}

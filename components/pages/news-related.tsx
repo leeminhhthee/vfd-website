@@ -10,14 +10,14 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 interface NewsRelatedProps {
-  currentNewsSlug: string;
+  currentNewsId: number;
 }
 
-export default function NewsRelated({ currentNewsSlug }: NewsRelatedProps) {
+export default function NewsRelated({ currentNewsId }: NewsRelatedProps) {
   const { data: currentNews } = useQuery({
-    queryKey: ["news", currentNewsSlug],
-    queryFn: () => newsInteractor.getNewsBySlug(currentNewsSlug),
-    enabled: !!currentNewsSlug,
+    queryKey: ["news", currentNewsId],
+    queryFn: () => newsInteractor.getNewsById(currentNewsId),
+    enabled: !!currentNewsId,
   });
 
   const { data: allNews = [], isLoading } = useQuery({
@@ -64,7 +64,7 @@ export default function NewsRelated({ currentNewsSlug }: NewsRelatedProps) {
         {relatedNews.map((item) => (
           <Link
             key={item.id}
-            href={`/news/${item.slug}`}
+            href={`/news/${item.id}/${item.slug}`}
             className="group block"
           >
             <div className="flex items-start gap-3 p-4 rounded-lg border border-border hover:bg-background transition-colors">
